@@ -39,6 +39,15 @@ def getdivname (cur):
  osp=cur.fetchall()
  #divname=osp[0][0]
  return osp[0][0]
+def preprocessing(cur,con,systcp,dbcp,sql):
+ sql2='update ext_request set ext_request.processed=2  where  '+str(sql)
+ try:
+  cur.execute(sql2.decode(systcp).encode(dbcp))
+ except Exception, e:
+  print sql2, str(e)
+ con.commit()
+ return
+
 def getnotprocessed(cur,systcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code):
  sql2="select ext_request.pack_id  from ext_request where mvv_agent_code='" + mvv_agent_code +  "' and mvv_agreement_code='"+ mvv_agreement_code +"' and mvv_agent_dept_code='"+mvv_dept_code+"'  and ext_request.processed = 0 group by pack_id"
  #print "SQL=",sql2
