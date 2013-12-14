@@ -1,33 +1,6 @@
 #!/usr/bin/python
 #coding: utf8
-er_ext_request_id=0
-er_debtor_inn=1
-er_debtor_kpp=2
-er_req_date=3
-er_pack_date=4
-er_debtor_birthday=5
-er_debtor_ogrn=6
-er_ip_sum=7
-er_proceed=8
-er_ip_num=9
-er_req_number=10
-er_mvv_agent_code=11
-er_debtor_document=12
-er_mvv_agreement_code=13
-er_mvv_agent_dept_code=14
-er_pack_number=15
-er_req_id=16
-er_pack_id=17
-er_h_spi=18
-er_fio_spi=19
-er_osp_number=20
-er_debtor_name=21
-er_debtor_adress=22 #
-er_debtor_birthplace=23
-er_entity_type=24
-er_spi_id=25
-er_ip_id=26
-er_ip_risedate=27
+const={'er_ext_request_id':0,'er_debtor_inn':1,'er_debtor_kpp':2,'er_req_date':3,'er_pack_date':4,'er_debtor_birthday':5,'er_debtor_ogrn':6,'er_ip_sum':7,'er_processed':8,'er_ip_num':9,'er_req_number':10,'er_mvv_agent_code':11,'er_debtor_document':12,'er_mvv_agreement_code':13,'er_mvv_agent_dept_code':14,'er_pack_number':15,'er_req_id':16,'er_pack_id':17,'er_h_spi':18, 'er_fio_spi':19,'er_osp_number':20,'er_debtor_name':21,'er_debtor_address':22,'er_debtor_birthplace':23,'er_entity_type':24,'er_spi_id':25,'er_ip_id':26,'er_ip_risedate':27}
 numstr=('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','X','Y','Z')
 getdivnamesql="select osp.div_fullname_title from osp"
 getsbnumsql="select counter from sbcount where sbcount.req_date="
@@ -106,7 +79,7 @@ def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
  return val
 #def getfizur()
 def dbfaddrecord(rec,dbfscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
- fizur=(dbvalues[er_entity_type] in (95,2))
+ fizur=(dbvalues[const['er_entity_type']] in (95,2))
  if fizur:
   fizurnum=1
  else:
@@ -201,7 +174,7 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
  # dbvalue=dbvalues[dbscheme[i]]
  # print  len(str(dbvalue)),str(type(dbvalue))
  # el.text=dbv
- fizur=(dbvalues[er_entity_type] in (95,2))
+ fizur=(dbvalues[const['er_entity_type']] in (95,2))
  if fizur:
   fizurnum=1
  else:
@@ -246,6 +219,8 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
      el=etree.SubElement(zapros,xmlscheme[i][0])
      el.text=convtotype(xmlscheme[i],dbvalues[dbscheme[i][j-1]],dbcp,dbfcp).decode('UTF-8')
  return root
+def strtoconst(str):
+ return
 #def main():
 #if __name__ == "__main__":
 #    main()
