@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #coding: utf8
-from regmvv import *
+import regmvv
 from config import Config
 import sys
 def main():
@@ -14,7 +14,10 @@ def main():
   print e
   sys.exit(2)
  cfg = Config(f) 
+ cfg.add_namespace(regmvv)
  print cfg.hostname
+ #print const[cfg.reqxml[0]['node']] 
+ print cfg.reqxml[0]['node']
  f.close()
 if __name__ == "__main__":
     main()
