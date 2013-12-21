@@ -13,19 +13,35 @@ def getdivname (cur):
  #divname=osp[0][0]
  return osp[0][0]
 def preprocessing(cur,con,systcp,dbcp,sql):
- sql2='update ext_request set ext_request.processed=2  where  '+str(sql)
+ sql2=('update ext_request set ext_request.processed=2  where  '+str(sql)).decode(systcp).encode(dbcp)
  try:
-  cur.execute(sql2.decode(systcp).encode(dbcp))
+  cur.execute(sql2)
  except Exception, e:
   print sql2, str(e)
  con.commit()
  return
 
 def getnotprocessed(cur,systcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code):
+ print str(type(mvv_agent_code))
+# if str(type(mvv_agent_code))=="<type 'unicode'>":
+#  mvv_agent_code=mvv_agent_code.encode(dbcp)
+# else:
+#  mvv_agent_code=mvv_agent_code.decode(systcp).encode(dbcp)
+#
+# if str(type(mvv_agreement_code))=="<type 'unicode'>":
+#  mvv_agreement_code=mvv_agreement_code.encode(dbcp)
+# else:
+#  mvv_agreement_code=mvv_agreement_code.decode(systcp).encode(dbcp)
+#
+# if str(type(mvv_agent_code))=="<type 'unicode'>":
+#  mvv_dept_code=mvv_dept_code.encode(dbcp)
+# else:
+#  mvv_dept_code=mvv_dept_code.decode(systcp).encode(dbcp)
+
  sql2="select ext_request.pack_id  from ext_request where mvv_agent_code='" + mvv_agent_code +  "' and mvv_agreement_code='"+ mvv_agreement_code +"' and mvv_agent_dept_code='"+mvv_dept_code+"'  and ext_request.processed = 0 group by pack_id"
- #print "SQL=",sql2
+ print "SQL=",sql2
  try:
-  cur.execute(sql2.decode(systcp).encode(dbcp))
+  cur.execute(sql2)
  except Exception ,e:
   print sql2,e
  pack=cur.fetchall() #множества пакетов
