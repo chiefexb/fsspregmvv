@@ -49,8 +49,25 @@ def main():
  filiescheme=filepar.find('scheme')
  #создание root
  print filiescheme.getchildren()[0].tag
- root=etree.Element(filiescheme.getchildren()[0].tag)
+ root2=filiescheme.getchildren()[0]
  #Определение заголовка
+ ch=root2.getchildren()	
+ 
+ reqq=[]
+ int2str=[]
+ for i in range(len(ch)):
+  req=[]
+  if ch[i].attrib<>{}:
+   if 'records' in ch[i].attrib.keys(): 
+    print ch[i].attrib, ch[i].tag
+    zapros=ch[i]
+    break
+  req.append(ch[i].tag)
+  req.append('C')
+  reqq.append(req)
+  int2str.append(ch[i].text)
+ print reqq,int2str[0]
+ print zapros.tag
 
 #Соединяемся с базой ОСП
  try:
@@ -70,6 +87,7 @@ def main():
  #p=3
  for pp in range(0,p):
   print packets[pp][0]
+  root=etree.Element(root2.tag)
   r=getrecords(cur,packets[pp][0])
   print "LEN="+str(len(r))
  f.close()
