@@ -41,7 +41,7 @@ def main():
  #f.close()
 #Определяем тип и путь файла
  filepar=cfgroot.find('file')
- fliecodepage=filepar.find('codepage').text
+ filecodepage=filepar.find('codepage').text
  output_path=filepar.find('output_path').text
  filetype=filepar.find('type').text
  filenum=filepar.find('numeric').text
@@ -68,7 +68,15 @@ def main():
   int2str.append(ch[i].text)
  print reqq,int2str[0]
  print zapros.tag
-
+ ch=zapros.getchildren()
+ reqq2=[]
+ int2str2=[]
+ for i in range(len(ch)):
+  req2=[]
+  req2.append(ch[i].tag)
+  req2.append('C')
+  reqq2.append(req2)
+  int2str2.append(ch[i].text)
 #Соединяемся с базой ОСП
  try:
   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
@@ -89,7 +97,20 @@ def main():
   print packets[pp][0]
   root=etree.Element(root2.tag)
   r=getrecords(cur,packets[pp][0])
+  rr=r[0]
+  xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
+  root2=etree.SubElement(root,zapros.tag)
+  
+  xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
+  num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
+  filename='rr_'+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
+  print filename,num
+  f2=open(output_path+filename,'w')
+  f2.write(xml)
+  f2.close()
+
   print "LEN="+str(len(r))
+  print xml
  f.close()
  con.close()
 if __name__ == "__main__":

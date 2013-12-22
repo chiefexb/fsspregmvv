@@ -48,7 +48,7 @@ def getnotprocessed(cur,systcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_c
  return pack
 def getnumfrompacknumber(cur,systcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,packdate,packnum):
  sql2="select ext_request.pack_id  from ext_request where mvv_agent_code='" + mvv_agent_code +  "' and mvv_agreement_code='"+ mvv_agreement_code +"'  and ext_request.pack_date='"+str(packdate.strftime('%d.%m.%y'))+"'  group by pack_id" 
- cur.execute(sql2.decode(systcp).encode(dbcp))
+ cur.execute(sql2)
  num=-1
  pp=cur.fetchall()
  #print 'sql2=',sql2,'len=',len(pp),packnum,'num=',num
@@ -176,7 +176,7 @@ def setprocessed(cur,con,systcp,dbcp,packet):
   print sql2, str(e) 
  con.commit()
  return 
-def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
+def xmladdrecordold(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
  if root.tag==elname:
   zapros=root
  else:
@@ -209,7 +209,7 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
 #,str(type(dbvalues[dbscheme[i]]))
    if str(type(dbscheme[i]))=="<type 'unicode'>":
     el=etree.SubElement(zapros,xmlscheme[i][0])
-    el.text=str(dbscheme[i].encode(dbfcp))
+    #el.text=str(dbscheme[i].encode(dbfcp))
     #print el.text
    elif str(type(dbscheme[i]))=="<type 'str'>" :
     if  dbscheme[i]=='fizur':
@@ -237,6 +237,38 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
  return root
 def strtoconst(str):
  return
+def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
+ if root.tag==elname:
+  zapros=root
+ else:
+  zapros=etree.SubElement(root,elname)
+ fizur=(dbvalues[const['er_entity_type']] in (95,2))
+ if fizur:
+  fizurnum=1
+ else:
+  fizurnum=2
+ for i in range(0,len(xmlscheme)):
+  if str(type(dbscheme[i]))=="<type 'tuple'>":
+   j=fizurnum
+  else:
+   j=0
+  if j==0:
+   print dbscheme[i] in const.keys()
+   if dbscheme[i] in const.keys():
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    el.text=convtotype(xmlscheme[i],dbvalues[const[dbscheme[i]]],dbcp,dbfcp).decode(dbsystcp)
+   else:
+    st=dbscheme[i].split(';')
+    print st[1]
+    st2=''
+    for k in range(len(st)): 
+     if st[k] in const.keys():
+      st2=st2+convtotype(['tp','C'],dbvalues[const[st[i]]],dbcp,dbfcp).decode(dbsystcp)
+     else:
+      st2=st2+st[k]
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    el.text=st2#.decode(dbsystcp)
+  #in consts.keys() 
 #def main():
 #if __name__ == "__main__":
 #    main()
