@@ -43,6 +43,8 @@ def main():
  filepar=cfgroot.find('file')
  filecodepage=filepar.find('codepage').text
  output_path=filepar.find('output_path').text
+ intput_path=filepar.find('input_path').text
+ intput_arc_path=filepar.find('input_arc_path').text
  filetype=filepar.find('type').text
  filenum=filepar.find('numeric').text
  #Определение схемы файла должна быть ветка для типов файлов пока разбираем xml
@@ -61,6 +63,7 @@ def main():
   print("Ошибка при открытии базы данных:\n"+str(e))
   sys.exit(2)
  cur = con.cursor() 
+#Получить список файлов в папке input
 
  f.close()
  con.close()
