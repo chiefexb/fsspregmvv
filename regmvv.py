@@ -268,6 +268,14 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
       st2=st2+st[k]
     el=etree.SubElement(zapros,xmlscheme[i][0])
     el.text=st2#.decode(dbsystcp)
+def getanswertype(ansfields,ansnodes):
+ #Если данных нет возвращаем []
+ #Если есть данные возвращаем список полей которые есть
+ ans=[]
+ for i in range(len(ansfields)):
+  if ansnodes.find(ansfields[i]):
+   ans.append(ansfields[i])  
+ return ans
   #in consts.keys() 
 #def main():
 #if __name__ == "__main__":
