@@ -272,9 +272,10 @@ def getanswertype(ansfields,ansnodes):
  #Если данных нет возвращаем []
  #Если есть данные возвращаем список полей которые есть
  ans=[]
- for i in range(len(ansfields)):
-  if ansnodes.find(ansfields[i]):
-   ans.append(ansfields[i])  
+ for i in ansfields:
+  nd=ansnodes.find(i)
+  if str(type(nd)) =="<type 'lxml.etree._Element'>":
+   ans.append(nd.tag)  
  return ans
   #in consts.keys() 
 #def main():

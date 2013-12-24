@@ -44,18 +44,40 @@ def main():
  filecodepage=filepar.find('codepage').text
  output_path=filepar.find('output_path').text
  intput_path=filepar.find('input_path').text
- intput_arc_path=filepar.find('input_arc_path').text
+ intput_arc_path=filepar.find('input_path_arc').text
  filetype=filepar.find('type').text
  filenum=filepar.find('numeric').text
  #Определение схемы файла должна быть ветка для типов файлов пока разбираем xml
  filiescheme=filepar.findall('scheme')
  #создание root
- print filiescheme.getchildren()[0].tag
  try:
-  root2=filiescheme[1].getchildren()[0]
+  ans_scheme=filiescheme[1].getchildren()[0]
  except:
   sys.exit(2)
- 
+ #Ищем поля ответа
+ print ans_scheme.tag,ans_scheme.keys()
+ #Проверяем явлется ли root контейнером ответов
+ if 'answers' in ans_scheme.keys():
+  ans=anscheme
+ else:
+  for ch in ans_scheme.getchildren():
+   if 'answers' in ch.keys():
+    print ch.tag
+    answer=ch.getchildren()[0]
+    answers=ch.tag
+    break
+ #Ищем поля сведений
+ ansnodes=[]
+ for ch in answer.getchildren():
+  if 'answer' in ch.keys():
+   ansnodes.append(ch.tag)
+ print ansnodes
+ #Ищем в значениях тег request_id
+ for ch in answer.getchildren():
+  print ch.tag,ch.text
+  if ch.text=='request_id':
+   reqidtag=ch.tag
+   print ch.tag
 #Соединяемся с базой ОСП
  try:
   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
@@ -64,7 +86,25 @@ def main():
   sys.exit(2)
  cur = con.cursor() 
 #Получить список файлов в папке input
-
+ xmlfile=file(intput_path+'RR_092_06_12_13_1_reply.xml')
+ xml=etree.parse(xmlfile)
+ xmlroot=xml.getroot()
+ print xmlroot.tag
+ #Ищем контейнер ответов
+ xmlanswers=xmlroot.find(answers)
+ #Начинаем разбор ответов
+ cn=0
+ for a in xmlanswers.getchildren():
+  if len(getanswertype(ansnodes,a))==0:
+   request_id=a.find(reqidtag).text
+   id=0
+   packid=0
+   ipid=0
+   datastr="Нет сведений "
+   #setnodata 
+ #print len (xmlanswers),cn
+ print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
+ xmlfile.close()
  f.close()
  con.close()
 if __name__ == "__main__":
