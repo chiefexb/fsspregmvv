@@ -94,16 +94,16 @@ def main():
  xmlanswers=xmlroot.find(answers)
  #Начинаем разбор ответов
  cn=0
- for a in xmlanswers.getchildren():
-  if len(getanswertype(ansnodes,a))==0:
-   request_id=a.find(reqidtag).text
-   id=0
-   packid=0
-   ipid=0
-   datastr="Нет сведений "
-   #setnodata 
+ #for a in xmlanswers.getchildren():
+ a=xmlanswers.getchildren()[1]
+ #Проверить запрос с этим id был или нет загружен
+ if len(getanswertype(ansnodes,a))==0:
+  request_id=a.find(reqidtag).text
+  request_dt="06.12.2013"
+  setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,request_dt) 
  #print len (xmlanswers),cn
  print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
+ #print ipid,id
  xmlfile.close()
  f.close()
  con.close()
