@@ -69,8 +69,36 @@ def main():
  #Ищем поля сведений
  ansnodes=[]
  for ch in answer.getchildren():
+  #ans2=[]
   if 'answer' in ch.keys():
-   ansnodes.append(ch.tag)
+   #Заполняем ключи для данных
+   ans2={}
+   if ch.attrib.values()[0]=='01':
+    for chh in ch:
+     if chh.text=='ser_doc':
+      ans2['ser_doc']=chh.tag
+     if chh.text=='num_doc':
+      ans2['num_doc']=chh.tag
+     if chh.text=='date_doc':
+      ans2['date_doc']=chh.tag
+   if ch.attrib.values()[0]=='11':
+    chh=ch.getchildren()[0]
+    ans2['right']=chh.tag
+    for chh2 in chh:
+     print chh2.attrib.keys()
+     if chh2.text=='kadastr_n':
+      ans2['kadastr_n']=chh2.tag
+     if chh2.text=='inv_n_nedv':
+      ans2['inv_n_nedv']=chh2.tag 
+     if chh2.text=='nfloor':
+      ans2['nfloor']=chh2.tag
+     if 'childrens' in chh2.attrib.keys():
+      print "ADDR"
+      for chh3 in chh2:
+       if chh3.text=='adres_nedv':
+        ans2['adres_nedv']=chh2.tag+':'+chh3.tag
+   ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
+
  print ansnodes
  #Ищем в значениях тег request_id
  for ch in answer.getchildren():
@@ -86,7 +114,7 @@ def main():
   sys.exit(2)
  cur = con.cursor() 
 #Получить список файлов в папке input
- xmlfile=file(intput_path+'rr1.xml')
+ xmlfile=file(intput_path+'rr2.xml')
  xml=etree.parse(xmlfile)
  xmlroot=xml.getroot()
  print xmlroot.tag
@@ -97,10 +125,19 @@ def main():
  #for a in xmlanswers.getchildren():
  a=xmlanswers.getchildren()[0]
  #Проверить запрос с этим id был или нет загружен
+ request_id=a.find(reqidtag).text
+ request_dt="06.12.2013"
  if len(getanswertype(ansnodes,a))==0:
-  request_id=a.find(reqidtag).text
-  request_dt="06.12.2013"
+  #request_id=a.find(reqidtag).text
+  #request_dt="06.12.2013"
   setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,request_dt) 
+ else:
+  ans=getanswertype(ansnodes,a)
+  #setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,request_dt,ans,a)
+  print ans
+  #print ans[0].values()
+  #for i in range(len( ans)):
+  # ans[i]
  #print len (xmlanswers),cn
  print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
  #print ipid,id

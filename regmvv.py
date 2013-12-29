@@ -274,10 +274,11 @@ def getanswertype(ansfields,ansnodes):
  #Если данных нет возвращаем []
  #Если есть данные возвращаем список полей которые есть
  ans=[]
- for i in ansfields:
-  nd=ansnodes.find(i)
+ for i in range(len(ansfields)):
+  nd=ansnodes.find(ansfields[i][0])
   if str(type(nd)) =="<type 'lxml.etree._Element'>":
-   ans.append(nd.tag)  
+   ans.append([nd.tag,ansfields[i][1],ansfields[i][2]])
+   #print ans 
  return ans
   #in consts.keys() 
 def getipid (cur,systcp,dbcp,req_id):
@@ -351,7 +352,7 @@ def setnegative(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
 #.decode('UTF-8').encode(dbcp))
  con.commit() 
  return
-def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt):
+def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans,a):
  meta="EXT_RESPONSE"
  id=getgenerator(cur,"SEQ_DOCUMENT")
  ipid=getipid (cur,dbsystcp,dbcp,req_id)
@@ -363,7 +364,7 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  #print str(sq)
  cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
  er=cur.fetchall();
- datastr="Нет сведений"
+ datastr="Есть сведения"
  idnum=convtotype(['','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
  ent_name=convtotype(['','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
  #print str(type((ent_name)))
@@ -381,11 +382,24 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  #sqq2=convtotype([' ','C'],sq2,'UTF-8','CP1251')
 # print "SQL1=",(sq2.encode('CP1251'))
 # print "SQL2=",(sq.decode('UTF-8').encode('CP1251'))
- cur.execute(sq)
+ #Заполняем таблицу ext_information
+ print "LEN ANS:",len(ans)
+ for aa in range(len(ans)):
+  sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
+  print sq3,ans[aa][1]
+  if ans[aa][1]=='01':
+   #num_doc=a.find(ans[aa][2]['num_doc'])
+   print "Паспорт номер:",ans[aa][2][1]
+   #for aaa in range(len (ans[aa][2])):
+   # if ser_doc=
+   #sq4="
+#INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC) VALUES ("++")"
+ #Заполняем датумы
+ #cur.execute(sq)
 #.decode('UTF-8').encode(dbcp))
- cur.execute(sq2.decode('UTF-8').encode('CP1251'))
+ #cur.execute(sq2.decode('UTF-8').encode('CP1251'))
 #.decode('UTF-8').encode(dbcp))
- con.commit() 
+ #con.commit() 
  return
 #def main():
 #if __name__ == "__main__":
