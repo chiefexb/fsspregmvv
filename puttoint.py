@@ -86,7 +86,7 @@ def main():
   sys.exit(2)
  cur = con.cursor() 
 #Получить список файлов в папке input
- xmlfile=file(intput_path+'RR_092_06_12_13_1_reply.xml')
+ xmlfile=file(intput_path+'rr1.xml')
  xml=etree.parse(xmlfile)
  xmlroot=xml.getroot()
  print xmlroot.tag
@@ -95,7 +95,7 @@ def main():
  #Начинаем разбор ответов
  cn=0
  #for a in xmlanswers.getchildren():
- a=xmlanswers.getchildren()[1]
+ a=xmlanswers.getchildren()[0]
  #Проверить запрос с этим id был или нет загружен
  if len(getanswertype(ansnodes,a))==0:
   request_id=a.find(reqidtag).text
