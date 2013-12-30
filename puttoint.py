@@ -81,6 +81,8 @@ def main():
       ans2['num_doc']=chh.tag
      if chh.text=='date_doc':
       ans2['date_doc']=chh.tag
+     if chh.text=='issue_organ':
+      ans2['issue_organ']=chh.tag
    if ch.attrib.values()[0]=='11':
     chh=ch.getchildren()[0]
     ans2['right']=chh.tag

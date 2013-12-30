@@ -365,14 +365,14 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
  er=cur.fetchall();
  datastr="Есть сведения"
- idnum=convtotype(['','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
- ent_name=convtotype(['','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
+ idnum=convtotype([' ','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
+ ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
  #print str(type((ent_name)))
- ent_bdt=convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
+ ent_bdt=convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
  ent_by=ent_bdt.split('.')[2]
- ent_inn=convtotype(['','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
- req_num=convtotype(['','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
- ipnum=convtotype(['','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
+ ent_inn=convtotype([' ','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
+ req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
+ ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
  #convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
  #print str(type(ent_name))
  
@@ -386,9 +386,11 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  print "LEN ANS:",len(ans)
  for aa in range(len(ans)):
   #sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
-  print sq3,ans[aa][1]
+  #print sq3,ans[aa][1]
   if ans[aa][1]=='01':
-   #sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
+   id=getgenerator(cur,"SEQ_DOCUMENT")
+   sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
+   print sq3
    #id=getgenerator(cur,"SEQ_DOCUMENT")
    doc=a.find(ans[aa][0])
    num_doc= doc.find(ans[aa][2]['num_doc']).text
@@ -401,16 +403,19 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
    sq4="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC) VALUES ("+str(id)+cln+quoted(num_doc)+cln+quoted(date_doc)+cln+"NULL"+cln+quoted(ser_doc)+cln+quoted(ent_name)+cln+"NULL,NULL)"
    print "SQ4=",sq4
   if ans[aa][1]=='11':
-     #sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
    rights=a.find(ans[aa][0])
    right=rights.findall(ans[aa][2]['right'])
    for rr in right:
+    id=getgenerator(cur,"SEQ_DOCUMENT")
+    sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY,ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES  ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
     kadastr_n=rr.find(ans[aa][2]['kadastr_n']).text
     inv_n_nedv=rr.find(ans[aa][2]['inv_n_nedv']).text
     s_nedv=rr.find(ans[aa][2]['s_nedv']).text
     nfloor=rr.find(ans[aa][2]['nfloor']).text
     print kadastr_n,inv_n_nedv,s_nedv,nfloor
-   print "RIGHT",len(right)
+    adres_nedv=getxmlvalue('adres_nedv',ans[aa],rr)
+    #sq4=
+   #print "RIGHT",len(right)
  #Заполняем датумы
  #cur.execute(sq)
 #.decode('UTF-8').encode(dbcp))
@@ -418,6 +423,20 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
 #.decode('UTF-8').encode(dbcp))
  #con.commit() 
  return
+def getxmlvalue(name,ans,a):
+ #Проверка есть ли длинный путь
+ nd=ans[2][name]
+ #print len(nd.split(':')),
+ ndd=nd.split(":")
+ #print ndd,a.tag
+ nn=a
+ #nn.tag
+ for n in ndd:
+  nn=nn.find(n)
+ #print nn.tag,nn.text
+  
+ return nn.text
+
 #def main():
 #if __name__ == "__main__":
 #    main()
