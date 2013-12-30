@@ -62,7 +62,7 @@ def main():
  else:
   for ch in ans_scheme.getchildren():
    if 'answers' in ch.keys():
-    print ch.tag
+    #print ch.tag
     answer=ch.getchildren()[0]
     answers=ch.tag
     break
@@ -85,11 +85,13 @@ def main():
     chh=ch.getchildren()[0]
     ans2['right']=chh.tag
     for chh2 in chh:
-     print chh2.attrib.keys()
+     #print chh2.attrib.keys()
      if chh2.text=='kadastr_n':
       ans2['kadastr_n']=chh2.tag
      if chh2.text=='inv_n_nedv':
-      ans2['inv_n_nedv']=chh2.tag 
+      ans2['inv_n_nedv']=chh2.tag
+     if chh2.text=='s_nedv':
+      ans2['s_nedv']=chh2.tag 
      if chh2.text=='nfloor':
       ans2['nfloor']=chh2.tag
      if 'childrens' in chh2.attrib.keys():
@@ -99,13 +101,13 @@ def main():
         ans2['adres_nedv']=chh2.tag+':'+chh3.tag
    ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
 
- print ansnodes
+ #print ansnodes
  #Ищем в значениях тег request_id
  for ch in answer.getchildren():
   print ch.tag,ch.text
   if ch.text=='request_id':
    reqidtag=ch.tag
-   print ch.tag
+   #print ch.tag
 #Соединяемся с базой ОСП
  try:
   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
@@ -117,7 +119,7 @@ def main():
  xmlfile=file(intput_path+'rr2.xml')
  xml=etree.parse(xmlfile)
  xmlroot=xml.getroot()
- print xmlroot.tag
+ #print xmlroot.tag
  #Ищем контейнер ответов
  xmlanswers=xmlroot.find(answers)
  #Начинаем разбор ответов
@@ -133,13 +135,13 @@ def main():
   setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,request_dt) 
  else:
   ans=getanswertype(ansnodes,a)
-  #setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,request_dt,ans,a)
-  print ans
+  setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,request_dt,ans,a)
+  #print ans
   #print ans[0].values()
   #for i in range(len( ans)):
   # ans[i]
  #print len (xmlanswers),cn
- print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
+ #print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
  #print ipid,id
  xmlfile.close()
  f.close()

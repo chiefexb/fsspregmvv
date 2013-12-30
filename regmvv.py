@@ -385,15 +385,32 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  #Заполняем таблицу ext_information
  print "LEN ANS:",len(ans)
  for aa in range(len(ans)):
-  sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
+  #sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
   print sq3,ans[aa][1]
   if ans[aa][1]=='01':
-   #num_doc=a.find(ans[aa][2]['num_doc'])
-   print "Паспорт номер:",ans[aa][2][1]
+   #sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
+   #id=getgenerator(cur,"SEQ_DOCUMENT")
+   doc=a.find(ans[aa][0])
+   num_doc= doc.find(ans[aa][2]['num_doc']).text
+   ser_doc= doc.find(ans[aa][2]['ser_doc']).text
+   date_doc= doc.find(ans[aa][2]['date_doc']).text
+   #print "Паспорт номер:",ser_doc," ",num_doc," ",date_doc
    #for aaa in range(len (ans[aa][2])):
    # if ser_doc=
    #sq4="
-#INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC) VALUES ("++")"
+   sq4="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC) VALUES ("+str(id)+cln+quoted(num_doc)+cln+quoted(date_doc)+cln+"NULL"+cln+quoted(ser_doc)+cln+quoted(ent_name)+cln+"NULL,NULL)"
+   print "SQ4=",sq4
+  if ans[aa][1]=='11':
+     #sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
+   rights=a.find(ans[aa][0])
+   right=rights.findall(ans[aa][2]['right'])
+   for rr in right:
+    kadastr_n=rr.find(ans[aa][2]['kadastr_n']).text
+    inv_n_nedv=rr.find(ans[aa][2]['inv_n_nedv']).text
+    s_nedv=rr.find(ans[aa][2]['s_nedv']).text
+    nfloor=rr.find(ans[aa][2]['nfloor']).text
+    print kadastr_n,inv_n_nedv,s_nedv,nfloor
+   print "RIGHT",len(right)
  #Заполняем датумы
  #cur.execute(sq)
 #.decode('UTF-8').encode(dbcp))
