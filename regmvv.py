@@ -357,10 +357,7 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  id=getgenerator(cur,"SEQ_DOCUMENT")
  ipid=getipid (cur,dbsystcp,dbcp,req_id)
  packid=getgenerator(cur,"SEQ_DOCUMENT")
- #cur.execute(sq.encode(dbcp))
- #packid=getgenerator(cur,"SEQ_DOCUMENT") 
  sq="INSERT INTO EXT_INPUT_HEADER (ID, PACK_NUMBER, PROCEED, AGENT_CODE, AGENT_DEPT_CODE, AGENT_AGREEMENT_CODE, EXTERNAL_KEY, METAOBJECTNAME, DATE_IMPORT, SOURCE_BARCODE) VALUES ("+str(id)+cln+str(packid)+cln+"0"+cln+ quoted(mvv_agent_code)+cln+ quoted(mvv_dept_code)+cln+quoted(mvv_agreement_code)+cln+str(ipid)+cln+quoted(meta)+cln+quoted(dt)+cln+" NULL)" 
-# cur.execute(sq.encode(dbcp))
  #print str(sq)
  cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
  er=cur.fetchall();
@@ -375,47 +372,49 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
  #convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
  #print str(type(ent_name))
- 
+ rid=id
  sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+(req_id)+cln+quoted(datastr)+")"
- #sqq=convtotype([' ','C'],sq,'UTF-8','CP1251') 
- #print "SQL1=",sqq
- #sqq2=convtotype([' ','C'],sq2,'UTF-8','CP1251')
 # print "SQL1=",(sq2.encode('CP1251'))
 # print "SQL2=",(sq.decode('UTF-8').encode('CP1251'))
  #Заполняем таблицу ext_information
+ cur.execute(sq)
+ cur.execute(sq2.decode('UTF-8').encode('CP1251'))
+ con.commit()
  print "LEN ANS:",len(ans)
  for aa in range(len(ans)):
-  #sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
-  #print sq3,ans[aa][1]
   if ans[aa][1]=='01':
    id=getgenerator(cur,"SEQ_DOCUMENT")
-   sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
-   print sq3
-   #id=getgenerator(cur,"SEQ_DOCUMENT")
+   sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(rid)+cln+quoted(ent_inn)+")"
+   print sq3,ans[aa][2].keys()
    doc=a.find(ans[aa][0])
-   num_doc= doc.find(ans[aa][2]['num_doc']).text
-   ser_doc= doc.find(ans[aa][2]['ser_doc']).text
-   date_doc= doc.find(ans[aa][2]['date_doc']).text
-   #print "Паспорт номер:",ser_doc," ",num_doc," ",date_doc
-   #for aaa in range(len (ans[aa][2])):
-   # if ser_doc=
-   #sq4="
-   sq4="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC) VALUES ("+str(id)+cln+quoted(num_doc)+cln+quoted(date_doc)+cln+"NULL"+cln+quoted(ser_doc)+cln+quoted(ent_name)+cln+"NULL,NULL)"
-   print "SQ4=",sq4
+   docs={}
+   for dd in ans[aa][2].keys():
+    docs[dd]=getxmlvalue(dd,ans[aa],doc)
+   print "Паспорт номер:",docs['ser_doc']," ",docs['num_doc']," ",docs['date_doc'],docs['issue_organ']
+   sq4="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC) VALUES ("+str(id)+cln+quoted(docs['num_doc'])+cln+quoted(docs['date_doc'])+cln+"NULL"+cln+quoted(docs['ser_doc'])+cln+quoted(ent_name)+cln+"NULL,NULL)"
+   #print "SQ4=",sq4
+   cur.execute(sq3.decode('UTF-8').encode('CP1251'))
+   cur.execute(sq4.decode('UTF-8').encode('CP1251'))
+   con.commit()
+
   if ans[aa][1]=='11':
    rights=a.find(ans[aa][0])
    right=rights.findall(ans[aa][2]['right'])
    for rr in right:
     id=getgenerator(cur,"SEQ_DOCUMENT")
-    sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY,ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES  ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(packid)+cln+quoted(ent_inn)+")"
-    kadastr_n=rr.find(ans[aa][2]['kadastr_n']).text
-    inv_n_nedv=rr.find(ans[aa][2]['inv_n_nedv']).text
-    s_nedv=rr.find(ans[aa][2]['s_nedv']).text
-    nfloor=rr.find(ans[aa][2]['nfloor']).text
-    print kadastr_n,inv_n_nedv,s_nedv,nfloor
-    adres_nedv=getxmlvalue('adres_nedv',ans[aa],rr)
-    #sq4=
-   #print "RIGHT",len(right)
+    sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY,ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES  ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(rid)+cln+quoted(ent_inn)+")"
+    print sq3
+    rightv={}
+    for dd in ans[aa][2].keys():
+     rightv[dd]=getxmlvalue(dd,ans[aa],rr)
+    rightv['floor']=rightv['nfloor'].split('/')[0]
+    #print rightv['kadastr_n'],rightv['inv_n_nedv'],rightv['s_nedv'],rightv['nfloor'],rightv['adres_nedv']
+    sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+quoted(rightv['floor'])+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+quoted(rightv['nfloor'])+")"
+    print sq4
+    cur.execute(sq3.decode('UTF-8').encode('CP1251'))
+    cur.execute(sq4.encode('CP1251'))
+    con.commit()
+
  #Заполняем датумы
  #cur.execute(sq)
 #.decode('UTF-8').encode(dbcp))
@@ -434,8 +433,11 @@ def getxmlvalue(name,ans,a):
  for n in ndd:
   nn=nn.find(n)
  #print nn.tag,nn.text
-  
- return nn.text
+  try:
+   val=nn.text
+  except:
+   val='Null'
+ return val
 
 #def main():
 #if __name__ == "__main__":
