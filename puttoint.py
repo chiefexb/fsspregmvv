@@ -75,14 +75,17 @@ def main():
    ans2={}
    if ch.attrib.values()[0]=='01':
     for chh in ch:
-     if chh.text=='ser_doc':
-      ans2['ser_doc']=chh.tag
-     if chh.text=='num_doc':
-      ans2['num_doc']=chh.tag
-     if chh.text=='date_doc':
-      ans2['date_doc']=chh.tag
-     if chh.text=='issue_organ':
-      ans2['issue_organ']=chh.tag
+     for af in ansfields['01']:
+      if chh.text==af:
+       ans2[af]=chh.tag
+     #if chh.text=='ser_doc':
+     # ans2['ser_doc']=chh.tag
+     #if chh.text=='num_doc':
+     # ans2['num_doc']=chh.tag
+     #if chh.text=='date_doc':
+     # ans2['date_doc']=chh.tag
+     #if chh.text=='issue_organ':
+     # ans2['issue_organ']=chh.tag
    if ch.attrib.values()[0]=='11':
     chh=ch.getchildren()[0]
     ans2['right']=chh.tag

@@ -2,6 +2,7 @@
 #coding: utf8
 const={'er_ext_request_id':0,'er_debtor_inn':1,'er_debtor_kpp':2,'er_req_date':3,'er_pack_date':4,'er_debtor_birthday':5,'er_debtor_ogrn':6,'er_ip_sum':7,'er_processed':8,'er_ip_num':9,'er_req_number':10,'er_mvv_agent_code':11,'er_debtor_document':12,'er_mvv_agreement_code':13,'er_mvv_agent_dept_code':14,'er_pack_number':15,'er_req_id':16,'er_pack_id':17,'er_h_spi':18, 'er_fio_spi':19,'er_osp_number':20,'er_debtor_name':21,'er_debtor_address':22,'er_debtor_birthplace':23,'er_entity_type':24,'er_spi_id':25,'er_ip_id':26,'er_ip_risedate':27,
 'eih_id':0,'eih_pack_number':1,'eih_proceed':2,'eih_agent_code':3,'eih_agent_dept_code':4,'eih_agreement_code':5,'eih_external_key':6,'eih_metaobjectname':7,'eih_date_import':8,'eih_source_barcode':9}
+ansfields ={'01':['ser_doc','num_doc','date_doc','issue_organ'],'11':['kadastr_n','inv_n_nedv','s_nedv','adres_nedv']}
 numstr=('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','X','Y','Z')
 cln=', '
 getdivnamesql="select osp.div_fullname_title from osp"
@@ -377,9 +378,9 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
 # print "SQL1=",(sq2.encode('CP1251'))
 # print "SQL2=",(sq.decode('UTF-8').encode('CP1251'))
  #Заполняем таблицу ext_information
- cur.execute(sq)
- cur.execute(sq2.decode('UTF-8').encode('CP1251'))
- con.commit()
+ #cur.execute(sq)
+ #cur.execute(sq2.decode('UTF-8').encode('CP1251'))
+ #con.commit()
  print "LEN ANS:",len(ans)
  for aa in range(len(ans)):
   if ans[aa][1]=='01':
@@ -393,9 +394,9 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
    print "Паспорт номер:",docs['ser_doc']," ",docs['num_doc']," ",docs['date_doc'],docs['issue_organ']
    sq4="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC) VALUES ("+str(id)+cln+quoted(docs['num_doc'])+cln+quoted(docs['date_doc'])+cln+"NULL"+cln+quoted(docs['ser_doc'])+cln+quoted(ent_name)+cln+"NULL,NULL)"
    #print "SQ4=",sq4
-   cur.execute(sq3.decode('UTF-8').encode('CP1251'))
-   cur.execute(sq4.decode('UTF-8').encode('CP1251'))
-   con.commit()
+   #cur.execute(sq3.decode('UTF-8').encode('CP1251'))
+   #cur.execute(sq4.decode('UTF-8').encode('CP1251'))
+   #con.commit()
 
   if ans[aa][1]=='11':
    rights=a.find(ans[aa][0])
@@ -411,9 +412,9 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     #print rightv['kadastr_n'],rightv['inv_n_nedv'],rightv['s_nedv'],rightv['nfloor'],rightv['adres_nedv']
     sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+quoted(rightv['floor'])+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+quoted(rightv['nfloor'])+")"
     print sq4
-    cur.execute(sq3.decode('UTF-8').encode('CP1251'))
-    cur.execute(sq4.encode('CP1251'))
-    con.commit()
+    #cur.execute(sq3.decode('UTF-8').encode('CP1251'))
+    #cur.execute(sq4.encode('CP1251'))
+    #con.commit()
 
  #Заполняем датумы
  #cur.execute(sq)
