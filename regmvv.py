@@ -8,6 +8,7 @@ cln=', '
 getdivnamesql="select osp.div_fullname_title from osp"
 getsbnumsql="select counter from sbcount where sbcount.req_date="
 import datetime
+import hashlib
 #import xml.etree.ElementTree as etree
 from lxml import etree
 def getdivname (cur):
@@ -354,57 +355,52 @@ def setnegative(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  con.commit() 
  return
 def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans,a):
- meta="EXT_RESPONSE"
- id=getgenerator(cur,"SEQ_DOCUMENT")
- ipid=getipid (cur,dbsystcp,dbcp,req_id)
- packid=getgenerator(cur,"SEQ_DOCUMENT")
- sq="INSERT INTO EXT_INPUT_HEADER (ID, PACK_NUMBER, PROCEED, AGENT_CODE, AGENT_DEPT_CODE, AGENT_AGREEMENT_CODE, EXTERNAL_KEY, METAOBJECTNAME, DATE_IMPORT, SOURCE_BARCODE) VALUES ("+str(id)+cln+str(packid)+cln+"0"+cln+ quoted(mvv_agent_code)+cln+ quoted(mvv_dept_code)+cln+quoted(mvv_agreement_code)+cln+str(ipid)+cln+quoted(meta)+cln+quoted(dt)+cln+" NULL)" 
- #print str(sq)
- cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
- er=cur.fetchall();
- datastr="Есть сведения"
- idnum=convtotype([' ','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
- ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
- #print str(type((ent_name)))
- ent_bdt=convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
- ent_by=ent_bdt.split('.')[2]
- ent_inn=convtotype([' ','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
- req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
- ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
- #convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
- #print str(type(ent_name))
- rid=id
- sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+(req_id)+cln+quoted(datastr)+")"
-# print "SQL1=",(sq2.encode('CP1251'))
-# print "SQL2=",(sq.decode('UTF-8').encode('CP1251'))
- #Заполняем таблицу ext_information
- #cur.execute(sq)
- #cur.execute(sq2.decode('UTF-8').encode('CP1251'))
- #con.commit()
- print "LEN ANS:",len(ans)
+ print "LEN ANS:",len(ans),"I AM IN"
  for aa in range(len(ans)):
+  print ans[aa][1],aa
   if ans[aa][1]=='01':
    id=getgenerator(cur,"SEQ_DOCUMENT")
-   sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(rid)+cln+quoted(ent_inn)+")"
-   print sq3,ans[aa][2].keys()
+   ipid=getipid (cur,dbsystcp,dbcp,req_id)
+   packid=getgenerator(cur,"DX_PACK")
+   hsh=hashlib.md5()
+   hsh.update(str(id))
+   extkey=hsh.hexdigest()
+   print extkey
+   cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
+   er=cur.fetchall();
+   #datastr="Есть сведения"
+   idnum=convtotype([' ','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
+   ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
+   #print str(type((ent_name)))
+   ent_bdt=convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
+   ent_by=ent_bdt.split('.')[2]
+   ent_inn=convtotype([' ','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
+   req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
+   ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
+   setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,"Есть сведения") 
+   id=getgenerator(cur,"EXT_INFORMATION")
+   hsh.update(str(id))
+   svextkey=hsh.hexdigest()
+   sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"
+   print "SQ3=",sq3,ans[aa][2].keys()
    doc=a.find(ans[aa][0])
    docs={}
    for dd in ans[aa][2].keys():
     docs[dd]=getxmlvalue(dd,ans[aa],doc)
    print "Паспорт номер:",docs['ser_doc']," ",docs['num_doc']," ",docs['date_doc'],docs['issue_organ']
    sq4="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC) VALUES ("+str(id)+cln+quoted(docs['num_doc'])+cln+quoted(docs['date_doc'])+cln+"NULL"+cln+quoted(docs['ser_doc'])+cln+quoted(ent_name)+cln+"NULL,NULL)"
-   #print "SQ4=",sq4
+   print "SQ4=",sq4
    #cur.execute(sq3.decode('UTF-8').encode('CP1251'))
    #cur.execute(sq4.decode('UTF-8').encode('CP1251'))
    #con.commit()
 
-  if ans[aa][1]=='11':
+  if ans[aa][1]=='12':
    rights=a.find(ans[aa][0])
    right=rights.findall(ans[aa][2]['right'])
    for rr in right:
     id=getgenerator(cur,"SEQ_DOCUMENT")
-    sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY,ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES  ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(rid)+cln+quoted(ent_inn)+")"
-    print sq3
+    #sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY,ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES  ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(rid)+cln+quoted(ent_inn)+")"
+    #print sq3
     rightv={}
     for dd in ans[aa][2].keys():
      rightv[dd]=getxmlvalue(dd,ans[aa],rr)
@@ -439,7 +435,38 @@ def getxmlvalue(name,ans,a):
   except:
    val='Null'
  return val
+def setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,anst,id,packid,extkey,datastr): 
+ meta="EXT_RESPONSE"
+ #id=getgenerator(cur,"SEQ_DOCUMENT")
+ ipid=getipid (cur,dbsystcp,dbcp,req_id)
+ #packid=getgenerator(cur,"DX_PACK")
+ #hsh=hashlib.md5()
+ #hsh.update(str(id))
+ #extkey=hsh.hexdigest()
+ sq="INSERT INTO EXT_INPUT_HEADER (ID, PACK_NUMBER, PROCEED, AGENT_CODE, AGENT_DEPT_CODE, AGENT_AGREEMENT_CODE, EXTERNAL_KEY, METAOBJECTNAME, DATE_IMPORT, SOURCE_BARCODE) VALUES ("+str(id)+cln+str(packid)+cln+"0"+cln+ quoted(mvv_agent_code)+cln+ quoted(mvv_dept_code)+cln+quoted(mvv_agreement_code)+cln+extkey+cln+quoted(meta)+cln+quoted(dt)+cln+" NULL)" 
+ #print str(sq)
+ cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
+ er=cur.fetchall();
+ #datastr="Есть сведения"
+ idnum=convtotype([' ','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
+ ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
+ #print str(type((ent_name)))
+ ent_bdt=convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
+ ent_by=ent_bdt.split('.')[2]
+ ent_inn=convtotype([' ','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
+ req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
+ ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
+ #convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
+ #print str(type(ent_name))
+ rid=id
+ sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR,ANSWER_TYPE) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+(req_id)+cln+quoted(datastr)+cln+quoted(anst)+")"
+ print "SQL1=",sq
+ print "SQL2=",sq2
+# cur.execute(sq)
+# cur.execute(sq2.decode('UTF-8').encode('CP1251'))
+# con.commit()
 
+ return
 #def main():
 #if __name__ == "__main__":
 #    main()

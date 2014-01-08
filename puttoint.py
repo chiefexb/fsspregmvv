@@ -121,7 +121,7 @@ def main():
   sys.exit(2)
  cur = con.cursor() 
 #Получить список файлов в папке input
- xmlfile=file(intput_path+'rr2.xml')
+ xmlfile=file(intput_path+'rr3.xml')
  xml=etree.parse(xmlfile)
  xmlroot=xml.getroot()
  #print xmlroot.tag
@@ -141,7 +141,7 @@ def main():
  else:
   ans=getanswertype(ansnodes,a)
   setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,request_dt,ans,a)
-  #print ans
+  print ans
   #print ans[0].values()
   #for i in range(len( ans)):
   # ans[i]
