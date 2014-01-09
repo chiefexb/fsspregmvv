@@ -133,6 +133,8 @@ def main():
  a=xmlanswers.getchildren()[0]
  #Проверить запрос с этим id был или нет загружен
  request_id=a.find(reqidtag).text
+ ipid=getipid(cur,'UTF-8','CP1251',request_id)
+ print "RR",request_id,'IP',ipid
  request_dt="06.12.2013"
  if len(getanswertype(ansnodes,a))==0:
   #request_id=a.find(reqidtag).text
