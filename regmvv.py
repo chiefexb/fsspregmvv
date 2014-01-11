@@ -9,6 +9,7 @@ getdivnamesql="select osp.div_fullname_title from osp"
 getsbnumsql="select counter from sbcount where sbcount.req_date="
 import datetime
 import hashlib
+import logging
 #import xml.etree.ElementTree as etree
 from lxml import etree
 def getdivname (cur):
@@ -362,9 +363,9 @@ def setnegative(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  return
 def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans,a):
  print "LEN ANS:",len(ans),"I AM IN",req_id
+ packid=getgenerator(cur,"DX_PACK")
  for aa in range(len(ans)):
   print ans[aa][1],aa
-  packid=getgenerator(cur,"DX_PACK")
   if ans[aa][1]=='01':
    id=getgenerator(cur,"SEQ_DOCUMENT")
    ipid=getipid (cur,dbsystcp,dbcp,req_id)
@@ -399,12 +400,12 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
    docs=gettypedoc(cur,'UTF-8','CP1251',docs)
    print docs
    print "Паспорт номер:",docs['ser_doc']," ",docs['num_doc']," ",docs['date_doc'],docs['issue_organ']
-   sq4="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC,type_doc_code) VALUES ("+str(id)+cln+quoted(docs['num_doc'])+cln+quoted(docs['date_doc'])+cln+"NULL"+cln+quoted(docs['ser_doc'])+cln+quoted(ent_name)+cln+"NULL,NULL,"+quoted(docs['type_doc'])+")"
-   print "SQ4=",sq4
-   cur.execute(sq3.decode('UTF-8').encode('CP1251'))
-   con.commit()
-   cur.execute(sq4.decode('UTF-8').encode('CP1251'))
-   con.commit()
+   sq4="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC,type_doc_code) VALUES ("+str(id)+cln+quoted(docs['num_doc'])+cln+quoted(docs['date_doc'])+cln+"NULL"+cln+quoted(docs['ser_doc'])+cln+quoted(ent_name)+cln+"NULL,"+quoted(docs['issue_organ'])+cln+quoted(docs['type_doc'])+")"
+   print "SQ4 ID=",sq4
+   #cur.execute(sq3.decode('UTF-8').encode('CP1251'))
+   #con.commit()
+   #cur.execute(sq4.decode('UTF-8').encode('CP1251'))
+   #con.commit()
 
   if ans[aa][1]=='11':
    rights=a.find(ans[aa][0])
@@ -446,10 +447,10 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     #print rightv['kadastr_n'],rightv['inv_n_nedv'],rightv['s_nedv'],rightv['nfloor'],rightv['adres_nedv']
     sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+quoted(rightv['floor'])+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+quoted(rightv['nfloor'])+")"
     print sq4
-    cur.execute(sq3.decode('UTF-8').encode('CP1251'))
-    con.commit()
-    cur.execute(sq4.encode('CP1251'))
-    con.commit()
+    #cur.execute(sq3.decode('UTF-8').encode('CP1251'))
+    #con.commit()
+    #cur.execute(sq4.encode('CP1251'))
+    #con.commit()
 
  #Заполняем датумы
 #cur.execute(sq)
@@ -470,7 +471,7 @@ def getxmlvalue(name,ans,a):
   nn=nn.find(n)
  #print nn.tag,nn.text
   try:
-   val=nn.text
+   val=convtotype([' ','C'],nn.text,'UTF-8','UTF-8')
   except:
    val='Null'
  return val
@@ -500,12 +501,15 @@ def setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  #print str(type(ent_name))
  #rid=id
  sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR,ANSWER_TYPE) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+(req_id)+cln+quoted(datastr)+cln+quoted(anst)+")"
+ logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')
  print "SQL1=",sq
  print "SQL2=",sq2
- cur.execute(sq)
- con.commit()
- cur.execute(sq2.decode('UTF-8').encode('CP1251'))
- con.commit()
+ logging.debug(sq)
+ logging.debug(sq2)
+ #cur.execute(sq)
+ #con.commit()
+ #cur.execute(sq2.decode('UTF-8').encode('CP1251'))
+ #con.commit()
  return
 def gettypedoc(cur,dbsystcp,dbcp,docs):
  if 'rr_type_doc' in docs:
@@ -515,6 +519,9 @@ def gettypedoc(cur,dbsystcp,dbcp,docs):
   print r[0][0]
   docs['type_doc']=convtotype([' ','C'],r[0][0],'UTF-8','UTF-8')
  return docs
+#def setlogging()
+# logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')  
+# return
 #def main():
 #if __name__ == "__main__":
 #    main()
