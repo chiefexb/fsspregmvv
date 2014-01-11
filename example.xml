@@ -50,7 +50,7 @@
   <LastName>lastname</LastName>
   <BirthDate>er_debtor_birthday</BirthDate>
   <Document answer='01' >
-   <Type_Document>pass</Type_Document>
+   <Type_Document>rr_type_doc</Type_Document>
    <Name>pass</Name>
    <Series>ser_doc</Series>
    <Number>num_doc</Number>
