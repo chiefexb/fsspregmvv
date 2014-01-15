@@ -1,0 +1,92 @@
+<config>
+<codepage>UTF-8</codepage>
+<database_params>
+ <username>SYSDBA</username>
+ <password>masterkey</password>
+ <hostname></hostname>
+ <database>ncore-fssp</database>
+ <connection_codepage>WIN1251</connection_codepage>
+ <codepage>CP1251</codepage>
+</database_params>
+<mvv>
+ <agent_code>РОСРЕЕСТР</agent_code>
+ <dept_code>ЧЕРК</dept_code>
+ <agreement_code>ЧЕРКИНТ</agreement_code>
+</mvv>
+<file>
+ <codepage>CP1251</codepage>
+ <output_path>/home/chief/work/reg/</output_path>
+ <input_path>/home/chief/rr_in/</input_path>
+ <input_path_arc>/home/chief/rr_in_arc</input_path_arc>
+ <type>xmlatrib</type>
+ <numeric>normal</numeric>
+<scheme>
+<DataBlock records='' Key="er_pack_id" FsspTo="60" FsspOsp="60029" OrgAMD="71" DivAMD="58">
+ <Query Key="1" DocDate="01.12.2010" SPI="12" SPIFio="Алексей Николаевич Казанов" ChSPIFio="Денис Сергеевич Петрешенко" ChSPIPost="1" AnsDate="08.12.2010">
+  <IP Key="60290100000210" IPNum="60/29/42155/6/2010" IPDate="20.11.2010" IPName="Исполнительное производство" IDType="1" IDNum="1768" IDDate="17.11.2010" IDSubjName="Страховые взносы" IDSum="1257.25" IPDebt="1257.25" DebtorType="2" DebtorName="ГЕРАСИМОВ ЮРИЙ ПАВЛОВИЧ" DebtorAdr=",,,,,,,,," DebtorBirthDate="12.07.1956" SPI="12" SPIFio="Алексей Николаевич Казанов"/>
+ </Query>
+</DataBlock>
+</scheme>
+
+ <scheme>
+<RequestRightsPersons>
+ <RequestID>er_pack_id</RequestID>
+ <RequestType>Запрос в Росреестр № ;er_pack_id; от ;er_pack_date</RequestType>
+ <RequestDate>er_pack_date</RequestDate>
+<Persons records=''>
+ <Person>
+  <PersonID>request_id</PersonID>
+  <FirstName>firstname</FirstName>
+  <SecondName>secondname</SecondName>
+  <LastName>lastname</LastName>
+  <BirthDate>er_debtor_birthday</BirthDate>
+ </Person>
+</Persons>
+</RequestRightsPersons>
+ </scheme>
+  <scheme>
+<RequestRightsPersonsReply depth='3'>
+ <RequestID>request_id</RequestID>
+ <ReplyDate>reply_date</ReplyDate>
+ <OrganizationName></OrganizationName>
+ <RegionID></RegionID>
+ <Persons answers="" >
+ <Person answerstart="">
+  <PersonID>request_id</PersonID>
+  <FirstName>firstname</FirstName>
+  <SecondName>secondname</SecondName>
+  <LastName>lastname</LastName>
+  <BirthDate>er_debtor_birthday</BirthDate>
+  <Document answer='01' >
+   <Type_Document>rr_type_doc</Type_Document>
+   <Name>pass</Name>
+   <Series>ser_doc</Series>
+   <Number>num_doc</Number>
+   <Date>date_doc</Date>
+   <IssueOrgan>issue_organ</IssueOrgan>
+  </Document>
+  <Rights answer='11'>
+   <Right>
+    <CadastralNumber>kadastr_n</CadastralNumber>
+    <RegNumber>inv_n_nedv</RegNumber>
+    <StartDate>03.05.2011</StartDate>
+    <Area>s_nedv</Area>
+    <AreaUnits>012002001000</AreaUnits>
+    <Purpose>жилое</Purpose>
+    <Share>nfloor</Share>
+    <Address childrens="">
+     <Region>09</Region>
+     <District>Малокарачаевский</District>
+     <Street>Родниковая</Street>
+     <House>8а</House>
+     <Note>adres_nedv</Note>
+    </Address>
+   </Right>
+  </Rights>
+ </Person>
+ </Persons>
+</RequestRightsPersonsReply>
+</scheme>
+</file>
+</config>	
+
