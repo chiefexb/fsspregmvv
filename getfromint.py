@@ -50,7 +50,8 @@ def main():
  #создание root
  print filiescheme.getchildren()[0].tag
  root2=filiescheme.getchildren()[0]
- if filiescheme=='xml':
+ print "X", filetype
+ if filetype=='xml':
   #Определение заголовка
   ch=root2.getchildren()	
   reqq=[]
@@ -77,11 +78,12 @@ def main():
    req2.append('C')
    reqq2.append(req2)
    int2str2.append(ch[i].text)
- elif filiescheme=='xmlatrib':
+ elif filetype=='xmlatrib':
+  print 'XML',root2.attrib.keys(),root2.attrib.values()
   ch=root2.getchildren()
   reqq=[]
   int2str=[]
-  print ch.tag,ch.atrib.keys(),root2.tag
+  print root2.tag
   
  
 #Соединяемся с базой ОСП
