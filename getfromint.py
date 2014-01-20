@@ -110,7 +110,8 @@ def main():
     root.attrib[kk]=root2.attrib[kk]
   #departmentnum
    print kk,root2.attrib[kk]
-  zapros=root2.getchildren()
+  zapros=root2.getchildren()[0]
+  print zapros.attrib.keys(),zapros.attrib.values()
   zp=etree.SubElement(root,zapros.tag)
   xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
   print xml   
