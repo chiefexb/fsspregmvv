@@ -84,15 +84,48 @@ def main():
   reqq=[]
   int2str=[]
   print root2.tag
+  #print root.tag
+  #Создание заголовка xml
+#Соединяемся с базой ОСП
+  try:
+   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+  except  Exception, e:
+   print("Ошибка при открытии базы данных:\n"+str(e))
+   sys.exit(2)
+  cur = con.cursor()
+  cur.execute('select osp.territory,osp.department  from osp')
+  rr=cur.fetchall()
+  numto=convtotype(['tp','C'],rr[0][0],'UTF-8','UTF-8')
+  print 'NUM',numto
+  numdepartment=numto+'0'+convtotype(['tp','C'],rr[0][1],'UTF-8','UTF-8')
+  root=etree.Element(root2.tag)
+  for kk in root2.attrib.keys():
+   if root2.attrib[kk]=='tonum':
+    root.attrib[kk]=(numto)
+   elif root2.attrib[kk]=='departmentnum':
+    root.attrib[kk]=(numdepartment)
+   elif kk== 'records':
+    pass
+   else:
+    root.attrib[kk]=root2.attrib[kk]
+  #departmentnum
+   print kk,root2.attrib[kk]
+  zapros=root2.getchildren()
+  zp=etree.SubElement(root,zapros.tag)
+  xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
+  print xml   
+
+
+
   
  
 #Соединяемся с базой ОСП
- try:
-  con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
- except  Exception, e:
-  print("Ошибка при открытии базы данных:\n"+str(e))
-  sys.exit(2)
- cur = con.cursor() 
+# try:
+#  con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+# except  Exception, e:
+#  print("Ошибка при открытии базы данных:\n"+str(e))
+#  sys.exit(2)
+# cur = con.cursor() 
 #Предварительная обработка 
 #Определяем список необработанных пакетов
  packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
