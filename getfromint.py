@@ -149,6 +149,8 @@ def main():
     zp.attrib[kk]=convtotype(['tp','C'],rr[const[zapros.attrib[kk]]],'UTF-8','UTF-8')   
    elif zapros.attrib[kk]=='num':
     zp.attrib[kk]=convtotype(['tp','C'],pp+1,'UTF-8','UTF-8')
+   elif zapros.attrib[kk]=='ansdate':
+    zp.attrib[kk]=convtotype(['tp','C'],rr['er_req_date']+7,'UTF-8','UTF-8')
    else:
     zp.attrib[kk]=zapros.attrib[kk]
 #rr[const[zapros.attrib[kk]]]

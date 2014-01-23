@@ -22,7 +22,7 @@
  <numeric>normal</numeric>
 <scheme>
 <DataBlock records='' Key="er_pack_id" FsspTo="tonum" FsspOsp="departmentnum" OrgAMD="71" DivAMD="58">
- <Query Key="num" DocDate="er_req_date" SPI="er_spi_id" SPIFio="'er_fio_spi" ChSPIFio="er_h_spi" ChSPIPost="1" AnsDate="er_ip_risedate">
+ <Query Key="num" DocDate="er_req_date" SPI="er_spi_id" SPIFio="er_fio_spi" ChSPIFio="er_h_spi" ChSPIPost="1" AnsDate="ansdate">
   <IP Key="60290100000210" IPNum="60/29/42155/6/2010" IPDate="20.11.2010" IPName="Исполнительное производство" IDType="1" IDNum="1768" IDDate="17.11.2010" IDSubjName="Страховые взносы" IDSum="1257.25" IPDebt="1257.25" DebtorType="2" DebtorName="ГЕРАСИМОВ ЮРИЙ ПАВЛОВИЧ" DebtorAdr=",,,,,,,,," DebtorBirthDate="12.07.1956" SPI="12" SPIFio="Алексей Николаевич Казанов"/>
  </Query>
 </DataBlock>
