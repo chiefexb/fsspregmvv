@@ -89,6 +89,13 @@ def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
    val=str(dbvalue.strftime("%d.%m.%Y"))
   elif str(type(dbvalue))=="<type 'int'>":
    val=str(dbvalue)
+  elif str(type(dbvalue))=="<type 'NoneType'>":
+   val=''
+  elif str(type(dbvalue))=="<type 'unicode'>":
+   if dbfcp=="UTF-8":
+    val=dbvalue
+   else:
+    val =(dbvalue).decode(dbcp).encode(dbfcp)
   else:
    try:
     val =(dbvalue).encode(dbfcp)
