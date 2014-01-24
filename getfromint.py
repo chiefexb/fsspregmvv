@@ -127,12 +127,12 @@ def main():
 #  root2=etree.SubElement(root,zapros.tag)
 #  
 #  xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
-#  num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
-#  filename='rr_'+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
+  num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
+  filename='rr_'+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
 #  print filename,num
-#  f2=open(output_path+filename,'w')
-#  f2.write(xml)
-#  f2.close()
+  f2=open(output_path+filename,'w')
+  f2.write(xml)
+  f2.close()
 
 #  print "LEN="+str(len(r))
 #  print xml

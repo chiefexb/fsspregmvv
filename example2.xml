@@ -3,7 +3,7 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname></hostname>
+ <hostname>10.9.4.16</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
@@ -23,7 +23,7 @@
 <scheme>
 <DataBlock records='' Key="er_pack_id" FsspTo="tonum" FsspOsp="departmentnum" OrgAMD="71" DivAMD="58">
  <Query Key="num" DocDate="er_req_date" SPI="er_spi_id" SPIFio="er_fio_spi" ChSPIFio="er_h_spi" ChSPIPost="1" AnsDate="ansdate">
-  <IP Key="er_req_id" IPNum="er_ip_num" IPDate="er_ip_risedate" IPName="Исполнительное производство" IDType="1" IDNum="1768" IDDate="17.11.2010" IDSubjName="Страховые взносы" IDSum="1257.25" IPDebt="1257.25" DebtorType="2" DebtorName="'er_debtor_name" DebtorAdr="er_debtor_address" DebtorBirthDate="er_debtor_birthday" SPI="12" SPIFio="er_fio_spi"/>
+  <IP Key="er_req_id" IPNum="er_ip_num" IPDate="er_ip_risedate" IPName="Исполнительное производство" IDType="documentclassid" IDNum="id_number" IDDate="id_date" IDSubjName="id_subject_type" IDSum="er_ip_sum" IPDebt="er_ip_sum" DebtorType="fizur" DebtorName="er_debtor_name" DebtorAdr="er_debtor_address" DebtorBirthDate="er_debtor_birthday" SPI="er_spi_id" SPIFio="er_fio_spi"/>
  </Query>
 </DataBlock>
 </scheme>
