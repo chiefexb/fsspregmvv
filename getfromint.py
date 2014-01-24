@@ -84,7 +84,6 @@ def main():
   reqq=[]
   int2str=[]
   print root2.tag
-  #print root.tag
   #Создание заголовка xml
 #Соединяемся с базой ОСП
   try:
@@ -93,41 +92,11 @@ def main():
    print("Ошибка при открытии базы данных:\n"+str(e))
    sys.exit(2)
   cur = con.cursor()
-  cur.execute('select osp.territory,osp.department  from osp')
-  rr=cur.fetchall()
-  numto=convtotype(['tp','C'],rr[0][0],'UTF-8','UTF-8')
-  print 'NUM',numto
-  numdepartment=numto+'0'+convtotype(['tp','C'],rr[0][1],'UTF-8','UTF-8')
   root=etree.Element(root2.tag)
-  for kk in root2.attrib.keys():
-   if root2.attrib[kk]=='tonum':
-    root.attrib[kk]=(numto)
-   elif root2.attrib[kk]=='departmentnum':
-    root.attrib[kk]=(numdepartment)
-   elif kk== 'records':
-    pass
-   else:
-    root.attrib[kk]=root2.attrib[kk]
-  #departmentnum
-   print kk,root2.attrib[kk]
+  rr=[]
+  delta=datetime.timedelta(days=7)
   zapros=root2.getchildren()[0]
   print zapros.attrib.keys(),zapros.attrib.values()
-#  zp=etree.SubElement(root,zapros.tag)
-#  for kk in zapros.attrib.keys()
-#  xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
-#  print xml   
-
-
-
-  
- 
-#Соединяемся с базой ОСП
- try:
-  con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
- except  Exception, e:
-  print("Ошибка при открытии базы данных:\n"+str(e))
-  sys.exit(2)
- cur = con.cursor() 
 #Предварительная обработка 
 #Определяем список необработанных пакетов
  packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
@@ -137,22 +106,20 @@ def main():
  p=1
  #divname=getdivname(cur)
  #p=3
+ r=getrecords(cur,packets[0][0])
+ rr=r[0]
+ root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1) 
  for pp in range(0,p):
 #  print packets[pp][0]
 #  root=etree.Element(root2.tag)
   r=getrecords(cur,packets[pp][0])
   rr=r[0]
   zp=etree.SubElement(root,zapros.tag)
-  for kk in zapros.attrib.keys():
-   if zapros.attrib[kk] in const:
-    print kk,str(type(rr[const[zapros.attrib[kk]]]))
-    zp.attrib[kk]=convtotype(['tp','C'],rr[const[zapros.attrib[kk]]],'UTF-8','UTF-8')   
-   elif zapros.attrib[kk]=='num':
-    zp.attrib[kk]=convtotype(['tp','C'],pp+1,'UTF-8','UTF-8')
-   elif zapros.attrib[kk]=='ansdate':
-    zp.attrib[kk]=convtotype(['tp','C'],rr['er_req_date']+7,'UTF-8','UTF-8')
-   else:
-    zp.attrib[kk]=zapros.attrib[kk]
+  delta=datetime.timedelta(days=7)
+  zp=setattribs(cur,'UTF-8','UTF-8',zp,zapros,rr,delta,pp+1)
+  for ch in zapros.getchildren():
+   sbch=etree.SubElement(zp,ch.tag)
+   sbch=setattribs(cur,'UTF-8','UTF-8',sbch,ch,rr,delta,pp+1)
 #rr[const[zapros.attrib[kk]]]
   xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
   print xml

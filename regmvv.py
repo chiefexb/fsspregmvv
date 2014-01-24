@@ -526,6 +526,33 @@ def gettypedoc(cur,dbsystcp,dbcp,docs):
   print r[0][0]
   docs['type_doc']=convtotype([' ','C'],r[0][0],'UTF-8','UTF-8')
  return docs
+def setattribs(cur,dbcp,dbfcp,xml,xmlscheme,rr,delta,num):
+ nn=getnumtodepartment (cur,dbcp,dbfcp)
+ numto=nn[0]
+ numdepartment=nn[1]
+ for kk in xmlscheme.attrib.keys():
+  if xmlscheme.attrib[kk] in const:
+   #print kk,str(type(rr[const[zapros.attrib[kk]]]))
+   xml.attrib[kk]=convtotype(['tp','C'],rr[const[xmlscheme.attrib[kk]]],'UTF-8','UTF-8')
+  elif xmlscheme.attrib[kk]=='num':
+   xml.attrib[kk]=convtotype(['tp','C'],num,'UTF-8','UTF-8')
+  elif xmlscheme.attrib[kk]=='ansdate':
+   xml.attrib[kk]=str (rr[const['er_req_date']]+delta)
+  elif xmlscheme.attrib[kk]=='tonum':
+   xml.attrib[kk]=(numto)
+  elif xmlscheme.attrib[kk]=='departmentnum':
+   xml.attrib[kk]=(numdepartment)
+  elif kk== 'records':
+   pass
+  else:
+   xml.attrib[kk]=xmlscheme.attrib[kk]
+ return xml
+def getnumtodepartment (cur,dbcp,dbfcp):
+ cur.execute('select osp.territory,osp.department  from osp')
+ rr=cur.fetchall()
+ numto=convtotype(['tp','C'],rr[0][0],'UTF-8','UTF-8')
+ numdepartment=numto+'0'+convtotype(['tp','C'],rr[0][1],'UTF-8','UTF-8')
+ return numto, numdepartment
 #def setlogging()
 # logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')  
 # return
