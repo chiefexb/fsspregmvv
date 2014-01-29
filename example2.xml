@@ -3,21 +3,21 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname>10.9.4.16</hostname>
+ <hostname></hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
 </database_params>
 <mvv>
- <agent_code>РОСРЕЕСТР</agent_code>
- <dept_code>ЧЕРК</dept_code>
- <agreement_code>ЧЕРКИНТ</agreement_code>
+ <agent_code>ПФР</agent_code>
+ <dept_code>008</dept_code>
+ <agreement_code>ПФРИНТ</agreement_code>
 </mvv>
 <file>
  <codepage>CP1251</codepage>
- <output_path>/home/chief/work/reg/</output_path>
+ <output_path>/home/disk/allsamba/pfr/</output_path>
  <input_path>/home/chief/rr_in/</input_path>
- <input_path_arc>/home/chief/rr_in_arc</input_path_arc>
+ <input_path_arc>/home/disk/allsamba/pfr</input_path_arc>
  <type>xmlatrib</type>
  <numeric>normal</numeric>
 <scheme>

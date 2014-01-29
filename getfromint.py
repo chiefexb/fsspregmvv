@@ -111,7 +111,7 @@ def main():
  root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1) 
  
  for pp in range(0,p):
-#  print packets[pp][0]
+  print packets[pp][0]
 #  root=etree.Element(root2.tag)
   r=getrecords(cur,packets[pp][0])
   for ri in range(len(r)):
