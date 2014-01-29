@@ -112,7 +112,7 @@ def dbfaddrecord(rec,dbfscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
   fizurnum=1
  else:
   fizurnum=2
- ii=range(0,12)
+ ii=range(0,12) #ЧТо за нах
  #range(0,3)
  #range(0,len(dbfscheme))
  j=0
@@ -527,9 +527,22 @@ def gettypedoc(cur,dbsystcp,dbcp,docs):
   docs['type_doc']=convtotype([' ','C'],r[0][0],'UTF-8','UTF-8')
  return docs
 def setattribs(cur,dbcp,dbfcp,xml,xmlscheme,rr,delta,num):
+ fizur=(rr[const['er_entity_type']] in (95,2))
+ if fizur:
+  fizurnum=1
+ else:
+  fizurnum=2
  nn=getnumtodepartment (cur,dbcp,dbfcp)
  numto=nn[0]
  numdepartment=nn[1]
+ id=rr[const['er_ip_id']]
+ #print "RR",rr
+ sq='select * from document where id=(select document.parent_id from document where id='+str(id)+')'
+ print sq
+ cur.execute(sq)
+ docs=cur.fetchall()
+ #print "DOCS",docs
+ documentclassid=convtotype(['tp','C'],docs[0][0],'UTF-8','UTF-8')
  for kk in xmlscheme.attrib.keys():
   if xmlscheme.attrib[kk] in const:
    #print kk,str(type(rr[const[zapros.attrib[kk]]]))
@@ -542,6 +555,10 @@ def setattribs(cur,dbcp,dbfcp,xml,xmlscheme,rr,delta,num):
    xml.attrib[kk]=(numto)
   elif xmlscheme.attrib[kk]=='departmentnum':
    xml.attrib[kk]=(numdepartment)
+  elif xmlscheme.attrib[kk]=='documentclassid':
+   xml.attrib[kk]=(documentclassid)
+  elif xmlscheme.attrib[kk]=='fizur':
+   xml.attrib[kk]=convtotype(['tp','C'],fizurnum,'UTF-8','UTF-8')
   elif kk== 'records':
    pass
   else:

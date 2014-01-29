@@ -103,24 +103,26 @@ def main():
  print len(packets)
  print str(type(agent_code)),str(type('Росреестр'))
  p=len(packets)
- p=1
+ #p=1
  #divname=getdivname(cur)
  #p=3
  r=getrecords(cur,packets[0][0])
  rr=r[0]
  root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1) 
+ 
  for pp in range(0,p):
 #  print packets[pp][0]
 #  root=etree.Element(root2.tag)
   r=getrecords(cur,packets[pp][0])
-  rr=r[0]
-  zp=etree.SubElement(root,zapros.tag)
-  delta=datetime.timedelta(days=7)
-  zp=setattribs(cur,'UTF-8','UTF-8',zp,zapros,rr,delta,pp+1)
-  for ch in zapros.getchildren():
-   sbch=etree.SubElement(zp,ch.tag)
-   sbch=setattribs(cur,'UTF-8','UTF-8',sbch,ch,rr,delta,pp+1)
-#rr[const[zapros.attrib[kk]]]
+  for ri in range(len(r)):
+   rr=r[ri]
+   print "LEN R",len(r)
+   zp=etree.SubElement(root,zapros.tag)
+   delta=datetime.timedelta(days=7)
+   zp=setattribs(cur,'UTF-8','UTF-8',zp,zapros,rr,delta,ri+1)
+   for ch in zapros.getchildren():
+    sbch=etree.SubElement(zp,ch.tag)
+    sbch=setattribs(cur,'UTF-8','UTF-8',sbch,ch,rr,delta,ri+1)
   xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
   print xml
 #  xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
