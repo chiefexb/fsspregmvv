@@ -112,22 +112,23 @@ def main():
  #root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1) 
  for pp in packets:
 #  root=etree.Element(root2.tag)
-  r=getrecords(cur,pp)
-  print "PP",pp,"LEN R",len(r)
-  rr=r[0]
-  root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1)
-  rr=[]
-  for ri in range(len(r)):
-   rr=r[ri]
-   #print "LEN R",len(r)
-   zp=etree.SubElement(root,zapros.tag)
-   delta=datetime.timedelta(days=7)
-   zp=setattribs(cur,'UTF-8','UTF-8',zp,zapros,rr,delta,ri+1)
-   for ch in zapros.getchildren():
-    sbch=etree.SubElement(zp,ch.tag)
-    sbch=setattribs(cur,'UTF-8','UTF-8',sbch,ch,rr,delta,ri+1)
-  xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
-  r=[]
+  #r=getrecords(cur,pp)
+  print "PP",pp
+  #,"LEN R",len(r)
+  #rr=r[0]
+  #root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1)
+  #rr=[]
+  #for ri in range(len(r)):
+  # rr=r[ri]
+  # #print "LEN R",len(r)
+  # zp=etree.SubElement(root,zapros.tag)
+  # delta=datetime.timedelta(days=7)
+  # zp=setattribs(cur,'UTF-8','UTF-8',zp,zapros,rr,delta,ri+1)
+  # for ch in zapros.getchildren():
+  #  sbch=etree.SubElement(zp,ch.tag)
+  #  sbch=setattribs(cur,'UTF-8','UTF-8',sbch,ch,rr,delta,ri+1)
+  #xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
+  #r=[]
   #print xml
 #  xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
 #  root2=etree.SubElement(root,zapros.tag)
@@ -136,9 +137,9 @@ def main():
   num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
   filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
 #  print filename,num
-  f2=open(output_path+filename,'w')
-  f2.write(xml)
-  f2.close()
+  #f2=open(output_path+filename,'w')
+  #f2.write(xml)
+  #f2.close()
 
 #  print "LEN="+str(len(r))
 #  print xml
