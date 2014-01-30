@@ -20,6 +20,7 @@
  <input_path_arc>/home/disk/allsamba/pfr</input_path_arc>
  <type>xmlatrib</type>
  <numeric>normal</numeric>
+ <prefix>pfr</prefix>
 <scheme>
 <DataBlock records='' Key="er_pack_id" FsspTo="tonum" FsspOsp="departmentnum" OrgAMD="71" DivAMD="58">
  <Query Key="num" DocDate="er_req_date" SPI="er_spi_id" SPIFio="er_fio_spi" ChSPIFio="er_h_spi" ChSPIPost="1" AnsDate="ansdate">

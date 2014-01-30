@@ -538,7 +538,7 @@ def setattribs(cur,dbcp,dbfcp,xml,xmlscheme,rr,delta,num):
  id=rr[const['er_ip_id']]
  #print "RR",rr
  sq='select * from document where id=(select document.parent_id from document where id='+str(id)+')'
- print sq
+ #print sq
  cur.execute(sq)
  docs=cur.fetchall()
  #print "DOCS",docs

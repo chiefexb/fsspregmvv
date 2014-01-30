@@ -45,6 +45,7 @@ def main():
  output_path=filepar.find('output_path').text
  filetype=filepar.find('type').text
  filenum=filepar.find('numeric').text
+ fileprefix=filepar.find('prefix').text
  #Определение схемы файла должна быть ветка для типов файлов пока разбираем xml
  filiescheme=filepar.findall('scheme')[0]
  #создание root
@@ -106,17 +107,19 @@ def main():
  #p=1
  #divname=getdivname(cur)
  #p=3
- r=getrecords(cur,packets[0][0])
- rr=r[0]
- root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1) 
- 
- for pp in range(0,p):
-  print packets[pp][0]
+ #r=getrecords(cur,packets[0][0]) #!!!
+ #rr=r[0]
+ #root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1) 
+ for pp in packets:
 #  root=etree.Element(root2.tag)
-  r=getrecords(cur,packets[pp][0])
+  r=getrecords(cur,pp)
+  print "PP",pp,"LEN R",len(r)
+  rr=r[0]
+  root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1)
+  rr=[]
   for ri in range(len(r)):
    rr=r[ri]
-   print "LEN R",len(r)
+   #print "LEN R",len(r)
    zp=etree.SubElement(root,zapros.tag)
    delta=datetime.timedelta(days=7)
    zp=setattribs(cur,'UTF-8','UTF-8',zp,zapros,rr,delta,ri+1)
@@ -124,13 +127,14 @@ def main():
     sbch=etree.SubElement(zp,ch.tag)
     sbch=setattribs(cur,'UTF-8','UTF-8',sbch,ch,rr,delta,ri+1)
   xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
-  print xml
+  r=[]
+  #print xml
 #  xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
 #  root2=etree.SubElement(root,zapros.tag)
 #  
 #  xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
   num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
-  filename='rr_'+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
+  filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
 #  print filename,num
   f2=open(output_path+filename,'w')
   f2.write(xml)
