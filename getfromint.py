@@ -79,6 +79,20 @@ def main():
    req2.append('C')
    reqq2.append(req2)
    int2str2.append(ch[i].text)
+ #Соединяемся с базой ОСП
+   try:
+    con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concod$
+   except  Exception, e:
+    print("Ошибка при открытии базы данных:\n"+str(e))
+    sys.exit(2)
+   cur = con.cursor()
+   root=etree.Element(root2.tag)
+   packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
+   p=len(packets)
+   for pp in range(0,p):
+    root=etree.Element(root2.tag)
+    xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
+    #  root2=etree.SubElement(root,zapros.tag)
  elif filetype=='xmlatrib':
   print 'XML',root2.attrib.keys(),root2.attrib.values()
   ch=root2.getchildren()
@@ -100,46 +114,46 @@ def main():
   print zapros.attrib.keys(),zapros.attrib.values()
 #Предварительная обработка 
 #Определяем список необработанных пакетов
- packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
- print len(packets)
- print str(type(agent_code)),str(type('Росреестр'))
- p=len(packets)
+  packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
+  print len(packets)
+  print str(type(agent_code)),str(type('Росреестр'))
+  p=len(packets)
  #p=1
  #divname=getdivname(cur)
  #p=3
  #r=getrecords(cur,packets[0][0]) #!!!
  #rr=r[0]
  #root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1) 
- for pp in packets:
-#  root=etree.Element(root2.tag)
-  #r=getrecords(cur,pp)
-  print "PP",pp
-  #,"LEN R",len(r)
-  #rr=r[0]
-  #root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1)
-  #rr=[]
-  #for ri in range(len(r)):
-  # rr=r[ri]
-  # #print "LEN R",len(r)
-  # zp=etree.SubElement(root,zapros.tag)
-  # delta=datetime.timedelta(days=7)
-  # zp=setattribs(cur,'UTF-8','UTF-8',zp,zapros,rr,delta,ri+1)
-  # for ch in zapros.getchildren():
-  #  sbch=etree.SubElement(zp,ch.tag)
-  #  sbch=setattribs(cur,'UTF-8','UTF-8',sbch,ch,rr,delta,ri+1)
-  #xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
-  #r=[]
+ 
+  for pp in range(0,p):
+   root=etree.Element(root2.tag)
+   r=getrecords(cur,packets[pp][0])
+   print "PP",pp,packets[pp][0],"LEN R",len(r)
+   rr=r[0]
+   root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1)
+   rr=[]
+   for ri in range(len(r)):
+    rr=r[ri]
+   #print "LEN R",len(r)
+    zp=etree.SubElement(root,zapros.tag)
+    delta=datetime.timedelta(days=7)
+    zp=setattribs(cur,'UTF-8','UTF-8',zp,zapros,rr,delta,ri+1)
+    for ch in zapros.getchildren():
+     sbch=etree.SubElement(zp,ch.tag)
+     sbch=setattribs(cur,'UTF-8','UTF-8',sbch,ch,rr,delta,ri+1)
+   xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
+   r=[]
   #print xml
 #  xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
 #  root2=etree.SubElement(root,zapros.tag)
 #  
 #  xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
-  num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
-  filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
+   num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
+   filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
 #  print filename,num
-  #f2=open(output_path+filename,'w')
-  #f2.write(xml)
-  #f2.close()
+   f2=open(output_path+filename,'w')
+   f2.write(xml)
+   f2.close()
 
 #  print "LEN="+str(len(r))
 #  print xml
