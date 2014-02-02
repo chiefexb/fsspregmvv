@@ -271,7 +271,7 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
     el.text=convtotype(xmlscheme[i],dbvalues[const[dbscheme[i]]],dbcp,dbfcp).decode(dbsystcp)
    else:
     st=dbscheme[i].split(';')
-    print st[1]
+    #print st[1]
     st2=''
     for k in range(len(st)): 
      if st[k] in const.keys():

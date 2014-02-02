@@ -76,23 +76,35 @@ def main():
   for i in range(len(ch)):
    req2=[]
    req2.append(ch[i].tag)
+   print ch[i].tag
    req2.append('C')
    reqq2.append(req2)
    int2str2.append(ch[i].text)
+  print reqq2,int2str2
  #Соединяемся с базой ОСП
-   try:
-    con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concod$
-   except  Exception, e:
-    print("Ошибка при открытии базы данных:\n"+str(e))
-    sys.exit(2)
-   cur = con.cursor()
+  try:
+   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+  except  Exception, e:
+   print("Ошибка при открытии базы данных:\n"+str(e))
+   sys.exit(2)
+  cur = con.cursor()
+  root=etree.Element(root2.tag)
+  packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
+  p=len(packets)
+  for pp in range(0,p):
    root=etree.Element(root2.tag)
-   packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
-   p=len(packets)
-   for pp in range(0,p):
-    root=etree.Element(root2.tag)
-    xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
-    #  root2=etree.SubElement(root,zapros.tag)
+   r=getrecords(cur,packets[pp][0])
+   print "PP",pp,packets[pp][0],"LEN R",len(r)
+   rr=r[0]
+   xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
+   #xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
+   #print xml
+   zp=etree.SubElement(root,zapros.tag)
+   rr=r[0]
+   print "ZP",zp.tag,'INT',int2str2
+   #xmladdrecord(zapros.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage)
+   xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
+   print xml
  elif filetype=='xmlatrib':
   print 'XML',root2.attrib.keys(),root2.attrib.values()
   ch=root2.getchildren()
@@ -116,7 +128,7 @@ def main():
 #Определяем список необработанных пакетов
   packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
   print len(packets)
-  print str(type(agent_code)),str(type('Росреестр'))
+  #print str(type(agent_code)),str(type('Росреестр'))
   p=len(packets)
  #p=1
  #divname=getdivname(cur)
@@ -154,6 +166,8 @@ def main():
    f2=open(output_path+filename,'w')
    f2.write(xml)
    f2.close()
+   setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
+
 
 #  print "LEN="+str(len(r))
 #  print xml

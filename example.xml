@@ -20,6 +20,7 @@
  <input_path_arc>/home/chief/rr_in_arc</input_path_arc>
  <type>xml</type>
  <numeric>normal</numeric>
+ <prefix>rr</prefix>
  <scheme>
 <RequestRightsPersons>
  <RequestID>er_pack_id</RequestID>
