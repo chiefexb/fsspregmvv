@@ -9,6 +9,10 @@
  <codepage>CP1251</codepage>
 </database_params>
 <mvv>
+ <preprocessing>
+  <sql>ext_request.mvv_agent_code='РОСРЕЕСТР' and ext_request.entity_type not in (95,2)</sql>
+  <sql>ext_request.mvv_agent_code='РОСРЕЕСТР' and ext_request.entity_type in (95,2) and ext_request.debtor_birthdate is null</sql>
+ </preprocessing>
  <agent_code>РОСРЕЕСТР</agent_code>
  <dept_code>ЧЕРК</dept_code>
  <agreement_code>ЧЕРКИНТ</agreement_code>
@@ -28,7 +32,7 @@
  <RequestDate>er_pack_date</RequestDate>
 <Persons records=''>
  <Person>
-  <PersonID>request_id</PersonID>
+  <PersonID>er_req_id</PersonID>
   <FirstName>firstname</FirstName>
   <SecondName>secondname</SecondName>
   <LastName>lastname</LastName>

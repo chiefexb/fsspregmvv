@@ -18,7 +18,8 @@ def getdivname (cur):
  #divname=osp[0][0]
  return osp[0][0]
 def preprocessing(cur,con,systcp,dbcp,sql):
- sql2=('update ext_request set ext_request.processed=2  where  '+str(sql)).decode(systcp).encode(dbcp)
+ #sql2=('update ext_request set ext_request.processed=2  where  '+str(sql)).decode(systcp).encode(dbcp)
+ sql2='update ext_request set ext_request.processed=2  where  '+sql
  try:
   cur.execute(sql2)
  except Exception, e:
@@ -255,6 +256,10 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
  else:
   zapros=etree.SubElement(root,elname)
  fizur=(dbvalues[const['er_entity_type']] in (95,2))
+ debt=dbvalues[const['er_debtor_name']].split(' ')
+ lastname= debt[0]
+ firstname= debt[1]
+ secondname= debt[2]
  if fizur:
   fizurnum=1
  else:
@@ -269,6 +274,15 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
    if dbscheme[i] in const.keys():
     el=etree.SubElement(zapros,xmlscheme[i][0])
     el.text=convtotype(xmlscheme[i],dbvalues[const[dbscheme[i]]],dbcp,dbfcp).decode(dbsystcp)
+   elif dbscheme[i]=='lastname':
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    el.text=lastname
+   elif dbscheme[i]=='firstname':
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    el.text=firstname
+   elif dbscheme[i]=='secondname':
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    el.text=secondname
    else:
     st=dbscheme[i].split(';')
     #print st[1]
@@ -276,6 +290,7 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
     for k in range(len(st)): 
      if st[k] in const.keys():
       st2=st2+convtotype(['tp','C'],dbvalues[const[st[i]]],dbcp,dbfcp).decode(dbsystcp)
+     
      else:
       st2=st2+st[k]
     el=etree.SubElement(zapros,xmlscheme[i][0])

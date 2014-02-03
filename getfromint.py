@@ -38,7 +38,23 @@ def main():
  agent_code=mvv.find('agent_code').text
  dept_code=mvv.find('dept_code').text
  agreement_code=mvv.find('agreement_code').text
- #f.close()
+ preprocessing=mvv.find('preprocessing')
+ try:
+  con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+ except  Exception, e:
+  print("Ошибка при открытии базы данных:\n"+str(e))
+  sys.exit(2)
+ cur = con.cursor()
+ if str(type(preprocessing))<>"<type 'NoneType'":
+  ch=preprocessing.findall('sql')
+  #print ch[0].tag,ch[0].text
+  for chh in ch:
+   #print chh.text
+   sq=chh.text
+   print sq,str(type(sq))
+   #preprocessing(cur,con,'UTF-8','CP1251',sq)
+ ##f.close()
+ con.close()
 #Определяем тип и путь файла
  filepar=cfgroot.find('file')
  filecodepage=filepar.find('codepage').text
@@ -52,6 +68,7 @@ def main():
  print filiescheme.getchildren()[0].tag
  root2=filiescheme.getchildren()[0]
  print "X", filetype
+ cfgroot.find('file')
  if filetype=='xml':
   #Определение заголовка
   ch=root2.getchildren()	
@@ -70,7 +87,7 @@ def main():
    int2str.append(ch[i].text)
   print reqq,int2str[0]
   print zapros.tag
-  ch=zapros.getchildren()
+  ch=zapros.getchildren()[0]
   reqq2=[]
   int2str2=[]
   for i in range(len(ch)):
@@ -100,11 +117,21 @@ def main():
    #xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
    #print xml
    zp=etree.SubElement(root,zapros.tag)
-   rr=r[0]
-   print "ZP",zp.tag,'INT',int2str2
-   #xmladdrecord(zapros.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage)
+   zpp=zapros.getchildren()[0]
+   for rr in r:
+   #rr=r[0]
+    print "ZP",zp.tag,'INT',int2str2,zpp.tag
+    xmladdrecord(zpp.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage)
    xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
    print xml
+   num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
+   filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
+#  print filename,num
+   f2=open(output_path+filename,'w')
+   f2.write(xml)
+   f2.close()
+   setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
+
  elif filetype=='xmlatrib':
   print 'XML',root2.attrib.keys(),root2.attrib.values()
   ch=root2.getchildren()
