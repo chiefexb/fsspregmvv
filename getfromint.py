@@ -45,14 +45,15 @@ def main():
   print("Ошибка при открытии базы данных:\n"+str(e))
   sys.exit(2)
  cur = con.cursor()
- if str(type(preprocessing))<>"<type 'NoneType'":
+ print str(type(preprocessing)),str(type(preprocessing))<>"<type 'NoneType'>"
+ if str(type(preprocessing))<>"<type 'NoneType'>":
   ch=preprocessing.findall('sql')
   #print ch[0].tag,ch[0].text
   for chh in ch:
    #print chh.text
    sq=chh.text
    print sq,str(type(sq))
-   #preprocessing(cur,con,'UTF-8','CP1251',sq)
+   preprocessing(cur,con,'UTF-8','CP1251',sq)
  ##f.close()
  con.close()
 #Определяем тип и путь файла
