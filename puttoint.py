@@ -78,32 +78,19 @@ def main():
      for af in ansfields['01']:
       if chh.text==af:
        ans2[af]=chh.tag
-     #if chh.text=='ser_doc':
-     # ans2['ser_doc']=chh.tag
-     #if chh.text=='num_doc':
-     # ans2['num_doc']=chh.tag
-     #if chh.text=='date_doc':
-     # ans2['date_doc']=chh.tag
-     #if chh.text=='issue_organ':
-     # ans2['issue_organ']=chh.tag
    if ch.attrib.values()[0]=='11':
     chh=ch.getchildren()[0]
     ans2['right']=chh.tag
     for chh2 in chh:
-     #print chh2.attrib.keys()
-     if chh2.text=='kadastr_n':
-      ans2['kadastr_n']=chh2.tag
-     if chh2.text=='inv_n_nedv':
-      ans2['inv_n_nedv']=chh2.tag
-     if chh2.text=='s_nedv':
-      ans2['s_nedv']=chh2.tag 
-     if chh2.text=='nfloor':
-      ans2['nfloor']=chh2.tag
+     for af in ansfields['11']:
+      if chh2.text==af:
+       ans2[af]=chh.tag
      if 'childrens' in chh2.attrib.keys():
       print "ADDR"
       for chh3 in chh2:
-       if chh3.text=='adres_nedv':
-        ans2['adres_nedv']=chh2.tag+':'+chh3.tag
+       for af in ansfields['11']:
+        if chh3.text==af:
+         ans2[af]==chh2.tag+':'+chh3.tag
    ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
 
  #print ansnodes
