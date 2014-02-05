@@ -90,7 +90,8 @@ def main():
       for chh3 in chh2:
        for af in ansfields['11']:
         if chh3.text==af:
-         ans2[af]==chh2.tag+':'+chh3.tag
+         print af,ans2	
+         ans2[af]=chh2.tag+':'+chh3.tag
    ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
 
  #print ansnodes
@@ -122,7 +123,7 @@ def main():
  request_id=a.find(reqidtag).text
  ipid=getipid(cur,'UTF-8','CP1251',request_id)
  print "RR",request_id,'IP',ipid
- request_dt="06.12.2013"
+ request_dt="06.12.2013" #???
  if len(getanswertype(ansnodes,a))==0:
   #request_id=a.find(reqidtag).text
   #request_dt="06.12.2013"
