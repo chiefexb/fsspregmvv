@@ -2,7 +2,7 @@
 #coding: utf8
 const={'er_ext_request_id':0,'er_debtor_inn':1,'er_debtor_kpp':2,'er_req_date':3,'er_pack_date':4,'er_debtor_birthday':5,'er_debtor_ogrn':6,'er_ip_sum':7,'er_processed':8,'er_ip_num':9,'er_req_number':10,'er_mvv_agent_code':11,'er_debtor_document':12,'er_mvv_agreement_code':13,'er_mvv_agent_dept_code':14,'er_pack_number':15,'er_req_id':16,'er_pack_id':17,'er_h_spi':18, 'er_fio_spi':19,'er_osp_number':20,'er_debtor_name':21,'er_debtor_address':22,'er_debtor_birthplace':23,'er_entity_type':24,'er_spi_id':25,'er_ip_id':26,'er_ip_risedate':27,'id_type_name':28,'id_number':29,'id_date':30,'req_outgoing_number':31,'id_subject_type':32,'req_metaobjectname':33,'ip_rest_deptsum':34,
 'eih_id':0,'eih_pack_number':1,'eih_proceed':2,'eih_agent_code':3,'eih_agent_dept_code':4,'eih_agreement_code':5,'eih_external_key':6,'eih_metaobjectname':7,'eih_date_import':8,'eih_source_barcode':9}
-ansfields ={'01':['ser_doc','num_doc','date_doc','issue_organ','rr_type_doc'],'11':['kadastr_n','inv_n_nedv','s_nedv','adres_nedv']}
+ansfields ={'01':['ser_doc','num_doc','date_doc','issue_organ','rr_type_doc'],'11':['kadastr_n','inv_n_nedv','s_nedv','adres_nedv','nfloor']}
 numstr=('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','X','Y','Z')
 cln=', '
 getdivnamesql="select osp.div_fullname_title from osp"
@@ -465,6 +465,8 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     rightv={}
     for dd in ans[aa][2].keys():
      rightv[dd]=getxmlvalue(dd,ans[aa],rr)
+    #print "NF",rightv['nfloor'],
+    print rightv.keys()
     rightv['floor']=rightv['nfloor'].split('/')[0]
     #print rightv['kadastr_n'],rightv['inv_n_nedv'],rightv['s_nedv'],rightv['nfloor'],rightv['adres_nedv']
     sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+quoted(rightv['floor'])+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+quoted(rightv['nfloor'])+")"
@@ -522,12 +524,18 @@ def setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  #convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
  #print str(type(ent_name))
  #rid=id
- sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR,ANSWER_TYPE) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+(req_id)+cln+quoted(datastr)+cln+quoted(anst)+")"
- logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')
- print "SQL1=",sq
+ #print str(type(datastr))
+ #sq "DATA",quoted(datastr)
+ #sq2="DATA"+quoted(datastr)
+ #print str(id)
+ #sq2=''
+ dtstr=datastr.decode('UTF-8')
+ sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR,ANSWER_TYPE) VALUES ("+str(id) +cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+ (req_id)+cln+quoted(dtstr)+cln+quoted(anst)+")"
+ #logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')
+ #print "SQL1=",sq
  print "SQL2=",sq2
- logging.debug(sq)
- logging.debug(sq2)
+ #logging.debug(sq)
+ #logging.debug(sq2)
  #cur.execute(sq)
  #con.commit()
  #cur.execute(sq2.decode('UTF-8').encode('CP1251'))
