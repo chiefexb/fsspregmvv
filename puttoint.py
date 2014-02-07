@@ -48,10 +48,10 @@ def main():
  filetype=filepar.find('type').text
  filenum=filepar.find('numeric').text
  #Определение схемы файла должна быть ветка для типов файлов пока разбираем xml
- filiescheme=filepar.findall('scheme')
+ filescheme=filepar.findall('scheme')
  #создание root
  try:
-  ans_scheme=filiescheme[1].getchildren()[0]
+  ans_scheme=filescheme[1].getchildren()[0]
  except:
   sys.exit(2)
  #Ищем поля ответа
@@ -83,6 +83,7 @@ def main():
     ans2['right']=chh.tag
     for chh2 in chh:
      for af in ansfields['11']:
+      print "MM",chh2.text,chh2.tag
       if chh2.text==af:
        ans2[af]=chh.tag
      if 'childrens' in chh2.attrib.keys():
@@ -130,6 +131,7 @@ def main():
   setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,request_dt) 
  else:
   ans=getanswertype(ansnodes,a)
+  print "ANS",ans
   setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,request_dt,ans,a)
   print ans
   #print ans[0].values()

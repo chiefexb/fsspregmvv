@@ -432,6 +432,7 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
   if ans[aa][1]=='11':
    rights=a.find(ans[aa][0])
    right=rights.findall(ans[aa][2]['right'])
+   print len(right)
    for rr in right:
     id=getgenerator(cur,"SEQ_DOCUMENT")
     ipid=getipid (cur,dbsystcp,dbcp,req_id)
@@ -464,13 +465,15 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     #print sq3
     rightv={}
     for dd in ans[aa][2].keys():
+     print "DD",dd,getxmlvalue(dd,ans[aa],rr),ans[aa][2].values()
      rightv[dd]=getxmlvalue(dd,ans[aa],rr)
     #print "NF",rightv['nfloor'],
     print rightv.keys()
     rightv['floor']=rightv['nfloor'].split('/')[0]
+    print "FLOOR",rightv['floor'],rightv['nfloor']
     #print rightv['kadastr_n'],rightv['inv_n_nedv'],rightv['s_nedv'],rightv['nfloor'],rightv['adres_nedv']
     sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+quoted(rightv['floor'])+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+quoted(rightv['nfloor'])+")"
-    print sq4
+    print "SQ4",sq4
     #cur.execute(sq3.decode('UTF-8').encode('CP1251'))
     #con.commit()
     #cur.execute(sq4.encode('CP1251'))
@@ -488,12 +491,12 @@ def getxmlvalue(name,ans,a):
  nd=ans[2][name]
  #print len(nd.split(':')),
  ndd=nd.split(":")
- #print ndd,a.tag
+ #print "NDD",ndd,a.tag
  nn=a
  #nn.tag
  for n in ndd:
   nn=nn.find(n)
- #print nn.tag,nn.text
+  #print nn.tag,nn.text
   try:
    val=convtotype([' ','C'],nn.text,'UTF-8','UTF-8')
   except:
