@@ -432,11 +432,12 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
   if ans[aa][1]=='11':
    rights=a.find(ans[aa][0])
    right=rights.findall(ans[aa][2]['right'])
-   print len(right)
+   print 'LEN RIGTH',len(right)
    for rr in right:
     id=getgenerator(cur,"SEQ_DOCUMENT")
     ipid=getipid (cur,dbsystcp,dbcp,req_id)
     print "IPID",ipid
+    print 'RR TAG',rr.tag,etree.tostring(rr)
     hsh=hashlib.md5()
     hsh.update(str(id))
     extkey=hsh.hexdigest()
@@ -458,7 +459,10 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     hsh.update(str(id))
     svextkey=hsh.hexdigest()
     sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"
-    print "SQ3=",sq3,ans[aa][2].keys()
+    print "SQ3=",sq3
+    print 'ANS3',ans[aa][2].keys()
+    print 'ANS3',ans[aa][2].values()
+    #ans[aa][2].values()
 
     #id=getgenerator(cur,"SEQ_DOCUMENT")
     #sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY,ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES  ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(rid)+cln+quoted(ent_inn)+")"
@@ -467,8 +471,8 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     for dd in ans[aa][2].keys():
      print "DD",dd,getxmlvalue(dd,ans[aa],rr),ans[aa][2].values()
      rightv[dd]=getxmlvalue(dd,ans[aa],rr)
-    #print "NF",rightv['nfloor'],
-    print rightv.keys()
+    print "XFFFF",rightv['nfloor']
+    #print rightv.keys()
     rightv['floor']=rightv['nfloor'].split('/')[0]
     print "FLOOR",rightv['floor'],rightv['nfloor']
     #print rightv['kadastr_n'],rightv['inv_n_nedv'],rightv['s_nedv'],rightv['nfloor'],rightv['adres_nedv']
