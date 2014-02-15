@@ -387,20 +387,20 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  print "LEN ANS:",len(ans),"I AM IN",req_id
  packid=getgenerator(cur,"DX_PACK")
  for aa in range(len(ans)):
-  print ans[aa][1],aa
+  #print ans[aa][1],aa
   if ans[aa][1]=='01':
    id=getgenerator(cur,"SEQ_DOCUMENT")
    ipid=getipid (cur,dbsystcp,dbcp,req_id)
-   print "IPID",ipid
+   #print "IPID",ipid
   #packid=getgenerator(cur,"DX_PACK")
    hsh=hashlib.md5()
    hsh.update(str(id))
    extkey=hsh.hexdigest()
-   print extkey,ipid
+   #print extkey,ipid
    setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,"Есть сведения") 
    cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
    er=cur.fetchall()
-   print len(er)
+   #print len(er)
    #datastr="Есть сведения"
    idnum=convtotype([' ','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
    ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
@@ -420,8 +420,8 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
    for dd in ans[aa][2].keys():
     docs[dd]=getxmlvalue(dd,ans[aa],doc)
    docs=gettypedoc(cur,'UTF-8','CP1251',docs)
-   print docs
-   print "Паспорт номер:",docs['ser_doc']," ",docs['num_doc']," ",docs['date_doc'],docs['issue_organ']
+   #print docs
+   #print "Паспорт номер:",docs['ser_doc']," ",docs['num_doc']," ",docs['date_doc'],docs['issue_organ']
    sq4="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC,type_doc_code) VALUES ("+str(id)+cln+quoted(docs['num_doc'])+cln+quoted(docs['date_doc'])+cln+"NULL"+cln+quoted(docs['ser_doc'])+cln+quoted(ent_name)+cln+"NULL,"+quoted(docs['issue_organ'])+cln+quoted(docs['type_doc'])+")"
    print "SQ4 ID=",sq4
    #cur.execute(sq3.decode('UTF-8').encode('CP1251'))
@@ -432,7 +432,7 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
   if ans[aa][1]=='11':
    rights=a.find(ans[aa][0])
    right=rights.findall(ans[aa][2]['right'])
-   print 'LEN RIGTH',len(right)
+   #print 'LEN RIGTH',len(right)
    for rr in right:
     id=getgenerator(cur,"SEQ_DOCUMENT")
     ipid=getipid (cur,dbsystcp,dbcp,req_id)
@@ -441,11 +441,11 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     hsh=hashlib.md5()
     hsh.update(str(id))
     extkey=hsh.hexdigest()
-    print extkey,ipid
+    #print extkey,ipid
     setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,"Есть сведения") 
     cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
     er=cur.fetchall()
-    print len(er)
+    #print len(er)
     #datastr="Есть сведения"
     idnum=convtotype([' ','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
     ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
@@ -460,21 +460,21 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     svextkey=hsh.hexdigest()
     sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"
     print "SQ3=",sq3
-    print 'ANS3',ans[aa][2].keys()
-    print 'ANS3',ans[aa][2].values()
+    #print 'ANS3',ans[aa][2].keys()
+    #print 'ANS3',ans[aa][2].values()
     #ans[aa][2].values()
 
     #id=getgenerator(cur,"SEQ_DOCUMENT")
     #sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY,ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES  ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+str(ipid)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+str(rid)+cln+quoted(ent_inn)+")"
-    #print sq3
+    print sq3
     rightv={}
     for dd in ans[aa][2].keys():
-     print "DD",dd,getxmlvalue(dd,ans[aa],rr),ans[aa][2].values()
+     #print "DD",dd,getxmlvalue(dd,ans[aa],rr),ans[aa][2].values()
      rightv[dd]=getxmlvalue(dd,ans[aa],rr)
     print "XFFFF",rightv['nfloor']
     #print rightv.keys()
     rightv['floor']=rightv['nfloor'].split('/')[0]
-    print "FLOOR",rightv['floor'],rightv['nfloor']
+    #print "FLOOR",rightv['floor'],rightv['nfloor']
     #print rightv['kadastr_n'],rightv['inv_n_nedv'],rightv['s_nedv'],rightv['nfloor'],rightv['adres_nedv']
     sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+quoted(rightv['floor'])+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+quoted(rightv['nfloor'])+")"
     print "SQ4",sq4

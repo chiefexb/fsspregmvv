@@ -61,6 +61,8 @@ def main():
   ans=anscheme
  else:
   for ch in ans_scheme.getchildren():
+   if ch.text=='reply_date':
+    replydatetag=ch.tag
    if 'answers' in ch.keys():
     #print ch.tag
     answer=ch.getchildren()[0]
@@ -100,8 +102,10 @@ def main():
  #Ищем в значениях тег request_id
  for ch in answer.getchildren():
   print ch.tag,ch.text
-  if ch.text=='request_id':
+  if ch.text=='request_id': 
    reqidtag=ch.tag
+  #if ch.text=='reply_date': 
+  # replydatetag=ch.tag 
    #print ch.tag
 #Соединяемся с базой ОСП
  try:
@@ -123,9 +127,10 @@ def main():
  a=xmlanswers.getchildren()[0]
  #Проверить запрос с этим id был или нет загружен
  request_id=a.find(reqidtag).text
+ print "Req_id",request_id
  ipid=getipid(cur,'UTF-8','CP1251',request_id)
  print "RR",request_id,'IP',ipid
- request_dt="06.12.2013" #???
+ request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
  if len(getanswertype(ansnodes,a))==0:
   #request_id=a.find(reqidtag).text
   #request_dt="06.12.2013"
