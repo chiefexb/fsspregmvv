@@ -80,12 +80,13 @@ def main():
        ans2[af]=chh.tag
    if ch.attrib.values()[0]=='11':
     chh=ch.getchildren()[0]
-    ans2['right']=chh.tag
+    print "!!BUG",chh.tag
+    ans2['right']=chh.tag #!!!
     for chh2 in chh:
      for af in ansfields['11']:
       print "MM",chh2.text,chh2.tag
       if chh2.text==af:
-       ans2[af]=chh.tag
+       ans2[af]=chh2.tag #!bug
      if 'childrens' in chh2.attrib.keys():
       print "ADDR"
       for chh3 in chh2:
