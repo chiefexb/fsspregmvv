@@ -119,6 +119,9 @@ def main():
  xml=etree.parse(xmlfile)
  xmlroot=xml.getroot()
  #print xmlroot.tag
+ for ch in xmlroot.getchildren():
+  if ch.text=='reply_date':
+   replydatetag=ch.tag
  #Ищем контейнер ответов
  xmlanswers=xmlroot.find(answers)
  #Начинаем разбор ответов
@@ -130,15 +133,17 @@ def main():
  print "Req_id",request_id
  ipid=getipid(cur,'UTF-8','CP1251',request_id)
  print "RR",request_id,'IP',ipid
- request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
+ print "RR TAG !!!",replydatetag,a.tag
+ #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
+ replydate=xmlroot.find(replydatetag).text
  if len(getanswertype(ansnodes,a))==0:
   #request_id=a.find(reqidtag).text
   #request_dt="06.12.2013"
-  setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,request_dt) 
+  setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate) 
  else:
   ans=getanswertype(ansnodes,a)
   print "ANS",ans
-  setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,request_dt,ans,a)
+  setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a)
   print ans
   #print ans[0].values()
   #for i in range(len( ans)):
