@@ -7,7 +7,7 @@ import fdb
 import sys
 def main():
 #Обработка параметров
- print len (sys.argv)
+ #print len (sys.argv)
  if len(sys.argv)<=1:
   print ("getfromint: нехватает параметров\nИспользование: getfromint ФАЙЛ_КОНФИГУРАЦИИ")
   sys.exit(2)
@@ -32,7 +32,7 @@ def main():
  concodepage=dbparams.find('connection_codepage').text
  codepage=dbparams.find('codepage').text
  database=dbparams.find('database').text
- print username,password,hostname,concodepage,codepage
+ #print username,password,hostname,concodepage,codepage
 #Ищем параметры МВВ
  mvv=cfgroot.find('mvv')
  agent_code=mvv.find('agent_code').text
@@ -55,7 +55,7 @@ def main():
  except:
   sys.exit(2)
  #Ищем поля ответа
- print ans_scheme.tag,ans_scheme.keys()
+ #print ans_scheme.tag,ans_scheme.keys()
  #Проверяем явлется ли root контейнером ответов
  if 'answers' in ans_scheme.keys():
   ans=anscheme
@@ -82,11 +82,11 @@ def main():
        ans2[af]=chh.tag
    if ch.attrib.values()[0]=='11':
     chh=ch.getchildren()[0]
-    print "!!BUG",chh.tag
+    #print "!!BUG",chh.tag
     ans2['right']=chh.tag #!!!
     for chh2 in chh:
      for af in ansfields['11']:
-      print "MM",chh2.text,chh2.tag
+      #print "MM",chh2.text,chh2.tag
       if chh2.text==af:
        ans2[af]=chh2.tag #!bug
      if 'childrens' in chh2.attrib.keys():
@@ -94,7 +94,7 @@ def main():
       for chh3 in chh2:
        for af in ansfields['11']:
         if chh3.text==af:
-         print af,ans2	
+         #print af,ans2	
          ans2[af]=chh2.tag+':'+chh3.tag
    ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
 
@@ -132,8 +132,8 @@ def main():
  request_id=a.find(reqidtag).text
  print "Req_id",request_id
  ipid=getipid(cur,'UTF-8','CP1251',request_id)
- print "RR",request_id,'IP',ipid
- print "RR TAG !!!",replydatetag,a.tag
+ #print "RR",request_id,'IP',ipid
+ #print "RR TAG !!!",replydatetag,a.tag
  #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
  replydate=xmlroot.find(replydatetag).text
  if len(getanswertype(ansnodes,a))==0:
@@ -142,9 +142,9 @@ def main():
   setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate) 
  else:
   ans=getanswertype(ansnodes,a)
-  print "ANS",ans
+  #print "ANS",ans
   setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a)
-  print ans
+  #print ans
   #print ans[0].values()
   #for i in range(len( ans)):
   # ans[i]
