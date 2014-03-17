@@ -115,7 +115,7 @@ def main():
   sys.exit(2)
  cur = con.cursor() 
 #Получить список файлов в папке input
- xmlfile=file(intput_path+'rr3.xml')
+ xmlfile=file(intput_path+'RR_092_06_12_13_1_reply.xml')
  xml=etree.parse(xmlfile)
  xmlroot=xml.getroot()
  #print xmlroot.tag
