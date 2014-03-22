@@ -135,8 +135,10 @@ def main():
  #Начинаем разбор ответов
  cn=0
  packid=getgenerator(cur,"DX_PACK")
+ sqlbuff=[]
+ sqltemp=''
  with Profiler() as p:
-  for a in xmlanswers.getchildren()[0:100]:
+  for a in xmlanswers.getchildren():#[0:100]:
    #Проверить запрос с этим id был или нет загружен
    request_id=a.find(reqidtag).text
    #print "Req_id",request_id,str(type(request_id))
@@ -148,13 +150,18 @@ def main():
     #request_dt="06.12.2013"
     #print timeit.Timer("""
     #with Profiler() as p:
-    setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid) 
+    sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid) 
+    for sqt in sqltemp:
+     sqlbuff.append(sqt)
     #""").repeat(1)
    else:
     ans=getanswertype(ansnodes,a)
     #print "ANS",ans
     #print timeit.Timer("""
-    setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a,packid)
+    sqltemp=setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a,packid)
+    for sqt in sqltemp:
+     sqlbuff.append(sqt)
+ 
     #""").repeat(1)
     #print ans
     #print ans[0].values()
@@ -163,9 +170,14 @@ def main():
    #print len (xmlanswers),cn
    #print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
    #print ipid,id
+ print len(sqlbuff)
+  #con.commit()
+ with Profiler() as p:
+  for sqt in sqlbuff:
+   cur.execute(sqt)
   con.commit()
-  xmlfile.close()
-  f.close()
+ xmlfile.close()
+ f.close()
  con.close()
 if __name__ == "__main__":
     main()

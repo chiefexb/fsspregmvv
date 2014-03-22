@@ -348,7 +348,8 @@ def getidnum(cur,dbsystcp,dbcp,ipid):
   rr=0
  return rr
 
-def setnegative(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,packid):
+def setnegative(cur,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,packid):
+ sqltemp=[]
  #print type
  meta="EXT_RESPONSE"
  id=getgenerator(cur,"SEQ_DOCUMENT")
@@ -374,13 +375,16 @@ def setnegative(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  
  sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+str(req_id)+cln+quoted(datastr)+")"
  #print 'SQ2',sq2
- cur.execute(sq)
- cur.execute(sq2)
+ #cur.execute(sq)
+ #cur.execute(sq2)
  #print timeit.Timer("""
  #con.commit() 
  #""").repeat(1)
- return
+ sqltemp.append(sq)
+ sqltemp.append(sq2)
+ return sqltemp
 def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans,a,packid):
+ sqltemp=[]
  #print "LEN ANS:",len(ans),"I AM IN",req_id
  #packid=getgenerator(cur,"DX_PACK")
  for aa in range(len(ans)):
@@ -403,9 +407,13 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
    # docs=gettypedoc(cur,'UTF-8','CP1251',docs)
    if not ('Null' in docs):
     #print "Негативная"
-    setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'Null',id,packid,extkey,"Данные с ошибкой")
+    sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'Null',id,packid,extkey,"Данные с ошибкой")
+    for sqt in sqq:
+     sqltemp.append(sqt)
    else:
-    setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,"Есть сведения") 
+    sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,"Есть сведения") 
+    for sqt in sqq:
+     sqltemp.append(sqt)
     cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
     er=cur.fetchall()
     #print len(er)
@@ -434,11 +442,12 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     #print "SQ4 ID=",sq4
     cur.execute(sq3)
     #.decode('UTF-8').encode('CP1251'))
-    con.commit()
+    #con.commit()
     cur.execute(sq4)
     #.decode('UTF-8').encode('CP1251'))
     #con.commit()
-
+    sqltemp.append(sq3)
+    sqltemp.append(sq4)
   if ans[aa][1]=='11':
    rights=a.find(ans[aa][0])
    right=rights.findall(ans[aa][2]['right'])
@@ -452,7 +461,9 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     hsh.update(str(id))
     extkey=hsh.hexdigest()
     #print extkey,ipid
-    setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,"Есть сведения") 
+    sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,"Есть сведения") 
+    for sqt in sqq:
+     sqltemp.append(sqt)
     cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
     er=cur.fetchall()
     #print len(er)
@@ -487,21 +498,25 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     #print "FLOOR",rightv['floor'],rightv['nfloor']
     #print rightv['kadastr_n'],rightv['inv_n_nedv'],rightv['s_nedv'],rightv['nfloor'],rightv['adres_nedv']
     sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+quoted(rightv['floor'])+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+quoted(rightv['nfloor'])+")"
+    sqltemp.append(sq3)
+    sqltemp.append(sq4)
     #print "SQ4",sq4
-    cur.execute(sq3)
+    #cur.execute(sq3)
 #.decode('UTF-8').encode('CP1251'))
-    con.commit()
-    cur.execute(sq4)
+    #con.commit()
+    #cur.execute(sq4)
+    #sqltemp.append(sq3,sq4)
 #.encode('CP1251'))
     #con.commit()
-
+     
  #Заполняем датумы
 #cur.execute(sq)
 #.decode('UTF-8').encode(dbcp))
 #cur.execute(sq2.decode('UTF-8').encode('CP1251'))
 #.decode('UTF-8').encode(dbcp))
-#con.commit() 
- return
+#con.commit()
+   
+ return sqltemp
 def getxmlvalue(name,ans,a):
  #Проверка есть ли длинный путь
  nd=ans[2][name]
@@ -519,6 +534,7 @@ def getxmlvalue(name,ans,a):
    val='Null'
  return val
 def setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,anst,id,packid,extkey,datastr): 
+ sqltemp=[]
  meta="EXT_RESPONSE"
  #id=getgenerator(cur,"SEQ_DOCUMENT")
  ipid=getipid (cur,dbsystcp,dbcp,req_id)
@@ -553,17 +569,20 @@ def setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
   sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR,ANSWER_TYPE) VALUES ("+str(id) +cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+ (req_id)+cln+quoted(dtstr)+cln+quoted(anst)+")"
  else:
   sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR,ANSWER_TYPE) VALUES  ("+str(id) +cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+ (req_id)+cln+quoted(dtstr)+cln+"Null)"
+ sqltemp.append(sq)
+ sqltemp.append(sq2)
  #logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')
  #print "SQL1=",sq
  #print "SQL2=",sq2
  #logging.debug(sq)
  #logging.debug(sq2)
- cur.execute(sq)
- con.commit()
- cur.execute(sq2)
+ #cur.execute(sq)
+ #con.commit()
+ #cur.execute(sq2)
 #.decode('UTF-8').encode('CP1251'))
  #con.commit()
- return
+ 
+ return sqltemp
 def gettypedoc(cur,dbsystcp,dbcp,docs):
  if 'rr_type_doc' in docs:
   rr=docs['rr_type_doc']
