@@ -347,12 +347,12 @@ def getidnum(cur,dbsystcp,dbcp,ipid):
   rr=0
  return rr
 
-def setnegative(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt):
+def setnegative(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,packid):
  #print type
  meta="EXT_RESPONSE"
  id=getgenerator(cur,"SEQ_DOCUMENT")
  ipid=getipid (cur,dbsystcp,dbcp,req_id)
- packid=getgenerator(cur,"DX_PACK")
+ #packid=getgenerator(cur,"DX_PACK")
  hsh=hashlib.md5()
  hsh.update(str(id))
  extkey=hsh.hexdigest()

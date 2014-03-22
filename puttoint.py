@@ -126,33 +126,31 @@ def main():
  xmlanswers=xmlroot.find(answers)
  #Начинаем разбор ответов
  cn=0
- #for a in xmlanswers.getchildren():
- a=xmlanswers.getchildren()[0]
+ packid=getgenerator(cur,"DX_PACK")
+ for a in xmlanswers.getchildren():
  #Проверить запрос с этим id был или нет загружен
- request_id=a.find(reqidtag).text
- print "Req_id",request_id,str(type(request_id))
- ipid=getipid(cur,'UTF-8','CP1251',request_id)
- #print "RR",request_id,'IP',ipid
- #print "RR TAG !!!",replydatetag,a.tag
- #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
- replydate=xmlroot.find(replydatetag).text
- if len(getanswertype(ansnodes,a))==0:
-  #request_id=a.find(reqidtag).text
-  #request_dt="06.12.2013"
-  setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate) 
- else:
-  ans=getanswertype(ansnodes,a)
-  #print "ANS",ans
-  setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a)
-  #print ans
-  #print ans[0].values()
-  #for i in range(len( ans)):
-  # ans[i]
- #print len (xmlanswers),cn
- #print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
- #print ipid,id
- xmlfile.close()
- f.close()
+  request_id=a.find(reqidtag).text
+  print "Req_id",request_id,str(type(request_id))
+  ipid=getipid(cur,'UTF-8','CP1251',request_id)
+  #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
+  replydate=xmlroot.find(replydatetag).text
+  if len(getanswertype(ansnodes,a))==0:
+   #request_id=a.find(reqidtag).text
+   #request_dt="06.12.2013"
+   setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid) 
+  else:
+   ans=getanswertype(ansnodes,a)
+   #print "ANS",ans
+   setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a)
+   #print ans
+   #print ans[0].values()
+   #for i in range(len( ans)):
+   # ans[i]
+  #print len (xmlanswers),cn
+  #print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
+  #print ipid,id
+  xmlfile.close()
+  f.close()
  con.close()
 if __name__ == "__main__":
     main()
