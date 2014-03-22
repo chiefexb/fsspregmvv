@@ -348,21 +348,21 @@ def getidnum(cur,dbsystcp,dbcp,ipid):
  return rr
 
 def setnegative(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt):
+ #print type
  meta="EXT_RESPONSE"
  id=getgenerator(cur,"SEQ_DOCUMENT")
  ipid=getipid (cur,dbsystcp,dbcp,req_id)
- packid=getgenerator(cur,"SEQ_DOCUMENT")
- #cur.execute(sq.encode(dbcp))
- #packid=getgenerator(cur,"SEQ_DOCUMENT") 
- sq="INSERT INTO EXT_INPUT_HEADER (ID, PACK_NUMBER, PROCEED, AGENT_CODE, AGENT_DEPT_CODE, AGENT_AGREEMENT_CODE, EXTERNAL_KEY, METAOBJECTNAME, DATE_IMPORT, SOURCE_BARCODE) VALUES ("+str(id)+cln+str(packid)+cln+"0"+cln+ quoted(mvv_agent_code)+cln+ quoted(mvv_dept_code)+cln+quoted(mvv_agreement_code)+cln+str(ipid)+cln+quoted(meta)+cln+quoted(dt)+cln+" NULL)" 
-# cur.execute(sq.encode(dbcp))
- #print str(sq)
+ packid=getgenerator(cur,"DX_PACK")
+ hsh=hashlib.md5()
+ hsh.update(str(id))
+ extkey=hsh.hexdigest()
+ sq="INSERT INTO EXT_INPUT_HEADER (ID, PACK_NUMBER, PROCEED, AGENT_CODE, AGENT_DEPT_CODE, AGENT_AGREEMENT_CODE, EXTERNAL_KEY, METAOBJECTNAME, DATE_IMPORT, SOURCE_BARCODE) VALUES ("+str(id)+cln+str(packid)+cln+"0"+cln+ quoted(mvv_agent_code)+cln+ quoted(mvv_dept_code)+cln+quoted(mvv_agreement_code)+cln+quoted(extkey)+cln+quoted(meta)+cln+quoted(dt)+cln+" NULL)" 
+ print str(type(sq)),sq
  cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
  er=cur.fetchall();
- datastr="Нет сведений"
+ datastr=str("Нет сведений").decode('UTF8')
  idnum=convtotype(['','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
  ent_name=convtotype(['','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
- #print str(type((ent_name)))
  ent_bdt=convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
  ent_by=ent_bdt.split('.')[2]
  ent_inn=convtotype(['','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
@@ -371,17 +371,10 @@ def setnegative(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  #convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
  #print str(type(ent_name))
  
- sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+(req_id)+cln+quoted(datastr)+")"
- #sqq=convtotype([' ','C'],sq,'UTF-8','CP1251') 
- #print "SQL1=",sqq
- #sqq2=convtotype([' ','C'],sq2,'UTF-8','CP1251')
-# print "SQL1=",(sq2.encode('CP1251'))
-# print "SQL2=",(sq.decode('UTF-8').encode('CP1251'))
+ sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+str(req_id)+cln+quoted(datastr)+")"
+ print 'SQ2',sq2
  cur.execute(sq)
-#.decode('UTF-8').encode(dbcp))
  cur.execute(sq2)
-#.decode('UTF-8').encode('CP1251'))
-#.decode('UTF-8').encode(dbcp))
  con.commit() 
  return
 def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans,a):

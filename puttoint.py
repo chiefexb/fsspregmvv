@@ -115,7 +115,7 @@ def main():
   sys.exit(2)
  cur = con.cursor() 
 #Получить список файлов в папке input
- xmlfile=file(intput_path+'RR_092_06_12_13_1_reply.xml')
+ xmlfile=file(intput_path+'rr4.xml')
  xml=etree.parse(xmlfile)
  xmlroot=xml.getroot()
  #print xmlroot.tag
@@ -130,7 +130,7 @@ def main():
  a=xmlanswers.getchildren()[0]
  #Проверить запрос с этим id был или нет загружен
  request_id=a.find(reqidtag).text
- print "Req_id",request_id
+ print "Req_id",request_id,str(type(request_id))
  ipid=getipid(cur,'UTF-8','CP1251',request_id)
  #print "RR",request_id,'IP',ipid
  #print "RR TAG !!!",replydatetag,a.tag
