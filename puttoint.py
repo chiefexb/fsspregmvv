@@ -3,8 +3,16 @@
 from regmvv import *
 from lxml import etree
 from dbfpy import dbf
+import timeit
+import time
 import fdb
 import sys
+class Profiler(object):
+    def __enter__(self):
+        self._startTime = time.time()
+         
+    def __exit__(self, type, value, traceback):
+        print "Elapsed time:",time.time() - self._startTime # {:.3f} sec".format(time.time() - self._startTime)
 def main():
 #Обработка параметров
  #print len (sys.argv)
@@ -115,7 +123,7 @@ def main():
   sys.exit(2)
  cur = con.cursor() 
 #Получить список файлов в папке input
- xmlfile=file(intput_path+'rr4.xml')
+ xmlfile=file(intput_path+'RR_092_06_12_13_1_reply.xml') #'rr4.xml')
  xml=etree.parse(xmlfile)
  xmlroot=xml.getroot()
  #print xmlroot.tag
@@ -127,28 +135,35 @@ def main():
  #Начинаем разбор ответов
  cn=0
  packid=getgenerator(cur,"DX_PACK")
- for a in xmlanswers.getchildren():
- #Проверить запрос с этим id был или нет загружен
-  request_id=a.find(reqidtag).text
-  print "Req_id",request_id,str(type(request_id))
-  ipid=getipid(cur,'UTF-8','CP1251',request_id)
-  #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
-  replydate=xmlroot.find(replydatetag).text
-  if len(getanswertype(ansnodes,a))==0:
-   #request_id=a.find(reqidtag).text
-   #request_dt="06.12.2013"
-   setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid) 
-  else:
-   ans=getanswertype(ansnodes,a)
-   #print "ANS",ans
-   setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a)
-   #print ans
-   #print ans[0].values()
-   #for i in range(len( ans)):
-   # ans[i]
-  #print len (xmlanswers),cn
-  #print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
-  #print ipid,id
+ with Profiler() as p:
+  for a in xmlanswers.getchildren()[0:100]:
+   #Проверить запрос с этим id был или нет загружен
+   request_id=a.find(reqidtag).text
+   #print "Req_id",request_id,str(type(request_id))
+   ipid=getipid(cur,'UTF-8','CP1251',request_id)
+   #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
+   replydate=xmlroot.find(replydatetag).text
+   if len(getanswertype(ansnodes,a))==0:
+    #request_id=a.find(reqidtag).text
+    #request_dt="06.12.2013"
+    #print timeit.Timer("""
+    #with Profiler() as p:
+    setnegative(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid) 
+    #""").repeat(1)
+   else:
+    ans=getanswertype(ansnodes,a)
+    #print "ANS",ans
+    #print timeit.Timer("""
+    setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a,packid)
+    #""").repeat(1)
+    #print ans
+    #print ans[0].values()
+    #for i in range(len( ans)):
+    # ans[i]
+   #print len (xmlanswers),cn
+   #print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
+   #print ipid,id
+  con.commit()
   xmlfile.close()
   f.close()
  con.close()
