@@ -50,14 +50,15 @@ def main():
   ch=preprocessing.findall('sql')
   #print ch[0].tag,ch[0].text
   for chh in ch:
-   #print chh.text
+   print "CH",chh.text,chh.tag
    sq=chh.text
    print sq,str(type(sq))
-   preprocessing(cur,con,'UTF-8','CP1251',sq)
+   #preprocessing(cur,con,'UTF-8','CP1251',sq)
  ##f.close()
  con.close()
 #Определяем тип и путь файла
  filepar=cfgroot.find('file')
+ print filepar
  filecodepage=filepar.find('codepage').text
  output_path=filepar.find('output_path').text
  filetype=filepar.find('type').text
