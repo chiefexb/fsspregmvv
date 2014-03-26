@@ -78,7 +78,7 @@ def main():
     break
  #Ищем поля сведений
  ansnodes=[]
- for ch in answer.getchildren():
+ for ch in answer.getchildren(): #ограничение на кол-во ответов debug
   #ans2=[]
   if 'answer' in ch.keys():
    #Заполняем ключи для данных
@@ -138,7 +138,7 @@ def main():
  sqlbuff=[]
  sqltemp=''
  with Profiler() as p:
-  for a in xmlanswers.getchildren():#[0:100]:
+  for a in xmlanswers.getchildren():#[11:20]: #!Ограничение
    #Проверить запрос с этим id был или нет загружен
    request_id=a.find(reqidtag).text
    #print "Req_id",request_id,str(type(request_id))

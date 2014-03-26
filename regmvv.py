@@ -414,6 +414,7 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,"Есть сведения") 
     for sqt in sqq:
      sqltemp.append(sqt)
+    
     cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
     er=cur.fetchall()
     #print len(er)
@@ -461,9 +462,10 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     hsh.update(str(id))
     extkey=hsh.hexdigest()
     #print extkey,ipid
-    sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,"Есть сведения") 
-    for sqt in sqq:
-     sqltemp.append(sqt)
+    #datastr='Есть сведения,'+rightv['nfloor'])
+    #sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,"Есть сведения") 
+    #for sqt in sqq:
+    # sqltemp.append(sqt)
     cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
     er=cur.fetchall()
     #print len(er)
@@ -492,12 +494,22 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     for dd in ans[aa][2].keys():
      #print "DD",dd,getxmlvalue(dd,ans[aa],rr),ans[aa][2].values()
      rightv[dd]=getxmlvalue(dd,ans[aa],rr)
+    #Вставка response
+    #print str(type (rightv['purpose']))
+    datastr='Есть сведения. Тип: '+rightv['purpose'].encode('UTF-8')+'; Доля: '+rightv['share'].encode('UTF-8')+'; Дата рег.: '+rightv['startdate'].encode('UTF-8') 
+    #print str(type(datastr)),datastr
+    #for rrr in rightv.keys():
+    # datastr=datastr+rightv[rrr].decode('UTF-8')+cln
+    sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,datastr)
+    for sqt in sqq:
+     sqltemp.append(sqt)
     #print "XFFFF",rightv['nfloor']
     #print rightv.keys()
-    rightv['floor']=rightv['nfloor'].split('/')[0][0:3]
+    #rightv['nfloor']=Null
+    #rightv['floor']=Null #rightv['nfloor'].split('/')[0][0:3]
     #print "FLOOR",rightv['floor'],rightv['nfloor']
     #print rightv['kadastr_n'],rightv['inv_n_nedv'],rightv['s_nedv'],rightv['nfloor'],rightv['adres_nedv']
-    sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+quoted(rightv['floor'])+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+quoted(rightv['nfloor'])+")"
+    sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+"Null"+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+"Null"+")"
     sqltemp.append(sq3)
     sqltemp.append(sq4)
     #print "SQ4",sq4
