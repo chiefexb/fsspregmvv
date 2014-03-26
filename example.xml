@@ -3,7 +3,7 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname></hostname>
+ <hostname>10.9.4.16</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
@@ -66,11 +66,11 @@
    <Right>
     <CadastralNumber>kadastr_n</CadastralNumber>
     <RegNumber>inv_n_nedv</RegNumber>
-    <StartDate>03.05.2011</StartDate>
+    <StartDate>startdate</StartDate>
     <Area>s_nedv</Area>
     <AreaUnits>012002001000</AreaUnits>
-    <Purpose>жилое</Purpose>
-    <Share>nfloor</Share>
+    <Purpose>purpose</Purpose>
+    <Share>share</Share>
     <Address childrens="">
      <Region>09</Region>
      <District>Малокарачаевский</District>
