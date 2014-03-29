@@ -38,22 +38,22 @@ def main():
  agent_code=mvv.find('agent_code').text
  dept_code=mvv.find('dept_code').text
  agreement_code=mvv.find('agreement_code').text
- preprocessing=mvv.find('preprocessing')
+ pre=mvv.find('preprocessing')
  try:
   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
  except  Exception, e:
   print("Ошибка при открытии базы данных:\n"+str(e))
   sys.exit(2)
  cur = con.cursor()
- print str(type(preprocessing)),str(type(preprocessing))<>"<type 'NoneType'>"
- if str(type(preprocessing))<>"<type 'NoneType'>":
-  ch=preprocessing.findall('sql')
+ print str(type(pre)),str(type(pre))<>"<type 'NoneType'>"
+ if str(type(pre))<>"<type 'NoneType'>":
+  ch=pre.findall('sql')
   #print ch[0].tag,ch[0].text
   for chh in ch:
    print "CH",chh.text,chh.tag
-   sq=chh.text
+   sq=chh.text.encode('UTF-8')
    print sq,str(type(sq))
-   #preprocessing(cur,con,'UTF-8','CP1251',sq)
+   preprocessing(cur,con,'UTF-8','CP1251',sq)
  ##f.close()
  con.close()
 #Определяем тип и путь файла
@@ -132,7 +132,7 @@ def main():
    f2=open(output_path+filename,'w')
    f2.write(xml)
    f2.close()
-   setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
+  #setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
 
  elif filetype=='xmlatrib':
   print 'XML',root2.attrib.keys(),root2.attrib.values()
