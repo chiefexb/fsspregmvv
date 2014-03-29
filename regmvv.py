@@ -259,8 +259,14 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
  fizur=(dbvalues[const['er_entity_type']] in (95,2))
  debt=dbvalues[const['er_debtor_name']].split(' ')
  lastname= debt[0]
- firstname= debt[1]
- secondname= debt[2]
+ try:
+  firstname= debt[1] 
+ except:
+  firstname=''
+ try:
+  secondname= debt[2]
+ except:
+  secondname=''
  if fizur:
   fizurnum=1
  else:

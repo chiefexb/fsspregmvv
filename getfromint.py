@@ -7,16 +7,16 @@ import fdb
 import sys
 def main():
 #Обработка параметров
- print len (sys.argv)
+ #print len (sys.argv)
  if len(sys.argv)<=1:
   print ("getfromint: нехватает параметров\nИспользование: getfromint ФАЙЛ_КОНФИГУРАЦИИ")
   sys.exit(2)
- print sys.argv[1]
+ #print sys.argv[1]
 #Открытие файла конфигурации
  try:
   f=file(sys.argv[1])
  except Exception,e:
-  print e
+  #print e
   sys.exit(2)
 #Парсим xml конфигурации
  cfg = etree.parse(f) 
@@ -32,7 +32,7 @@ def main():
  concodepage=dbparams.find('connection_codepage').text
  codepage=dbparams.find('codepage').text
  database=dbparams.find('database').text
- print username,password,hostname,concodepage,codepage
+ #print username,password,hostname,concodepage,codepage
 #Ищем параметры МВВ
  mvv=cfgroot.find('mvv')
  agent_code=mvv.find('agent_code').text
@@ -42,23 +42,23 @@ def main():
  try:
   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
  except  Exception, e:
-  print("Ошибка при открытии базы данных:\n"+str(e))
+  #print("Ошибка при открытии базы данных:\n"+str(e))
   sys.exit(2)
  cur = con.cursor()
- print str(type(pre)),str(type(pre))<>"<type 'NoneType'>"
+ #print str(type(pre)),str(type(pre))<>"<type 'NoneType'>"
  if str(type(pre))<>"<type 'NoneType'>":
   ch=pre.findall('sql')
   #print ch[0].tag,ch[0].text
   for chh in ch:
-   print "CH",chh.text,chh.tag
+   #print "CH",chh.text,chh.tag
    sq=chh.text.encode('UTF-8')
-   print sq,str(type(sq))
+   #print sq,str(type(sq))
    preprocessing(cur,con,'UTF-8','CP1251',sq)
  ##f.close()
  con.close()
 #Определяем тип и путь файла
  filepar=cfgroot.find('file')
- print filepar
+ #print filepar
  filecodepage=filepar.find('codepage').text
  output_path=filepar.find('output_path').text
  filetype=filepar.find('type').text
@@ -67,9 +67,9 @@ def main():
  #Определение схемы файла должна быть ветка для типов файлов пока разбираем xml
  filiescheme=filepar.findall('scheme')[0]
  #создание root
- print filiescheme.getchildren()[0].tag
+ #print filiescheme.getchildren()[0].tag
  root2=filiescheme.getchildren()[0]
- print "X", filetype
+ #print "X", filetype
  cfgroot.find('file')
  if filetype=='xml':
   #Определение заголовка
@@ -80,31 +80,31 @@ def main():
    req=[]
    if ch[i].attrib<>{}:
     if 'records' in ch[i].attrib.keys(): 
-     print ch[i].attrib, ch[i].tag
+     #print ch[i].attrib, ch[i].tag
      zapros=ch[i]
     break
    req.append(ch[i].tag)
    req.append('C')
    reqq.append(req)
    int2str.append(ch[i].text)
-  print reqq,int2str[0]
-  print zapros.tag
+  #print reqq,int2str[0]
+  #print zapros.tag
   ch=zapros.getchildren()[0]
   reqq2=[]
   int2str2=[]
   for i in range(len(ch)):
    req2=[]
    req2.append(ch[i].tag)
-   print ch[i].tag
+   #print ch[i].tag
    req2.append('C')
    reqq2.append(req2)
    int2str2.append(ch[i].text)
-  print reqq2,int2str2
+  #print reqq2,int2str2
  #Соединяемся с базой ОСП
   try:
    con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
   except  Exception, e:
-   print("Ошибка при открытии базы данных:\n"+str(e))
+   #print("Ошибка при открытии базы данных:\n"+str(e))
    sys.exit(2)
   cur = con.cursor()
   root=etree.Element(root2.tag)
@@ -113,7 +113,7 @@ def main():
   for pp in range(0,p):
    root=etree.Element(root2.tag)
    r=getrecords(cur,packets[pp][0])
-   print "PP",pp,packets[pp][0],"LEN R",len(r)
+   #print "PP",pp,packets[pp][0],"LEN R",len(r)
    rr=r[0]
    xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
    #xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
@@ -122,30 +122,30 @@ def main():
    zpp=zapros.getchildren()[0]
    for rr in r:
    #rr=r[0]
-    print "ZP",zp.tag,'INT',int2str2,zpp.tag
+    #print "ZP",zp.tag,'INT',int2str2,zpp.tag
     xmladdrecord(zpp.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage)
    xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
-   print xml
+   #print xml
    num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
    filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
-#  print filename,num
+   #print filename,num
    f2=open(output_path+filename,'w')
    f2.write(xml)
    f2.close()
   #setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
 
  elif filetype=='xmlatrib':
-  print 'XML',root2.attrib.keys(),root2.attrib.values()
+  #print 'XML',root2.attrib.keys(),root2.attrib.values()
   ch=root2.getchildren()
   reqq=[]
   int2str=[]
-  print root2.tag
+  #print root2.tag
   #Создание заголовка xml
 #Соединяемся с базой ОСП
   try:
    con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
   except  Exception, e:
-   print("Ошибка при открытии базы данных:\n"+str(e))
+   #print("Ошибка при открытии базы данных:\n"+str(e))
    sys.exit(2)
   cur = con.cursor()
   root=etree.Element(root2.tag)
@@ -156,7 +156,7 @@ def main():
 #Предварительная обработка 
 #Определяем список необработанных пакетов
   packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
-  print len(packets)
+  #print len(packets)
   #print str(type(agent_code)),str(type('Росреестр'))
   p=len(packets)
  #p=1
