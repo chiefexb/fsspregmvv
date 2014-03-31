@@ -1,0 +1,43 @@
+<config>
+<codepage>UTF-8</codepage>
+<database_params>
+ <username>SYSDBA</username>
+ <password>masterkey</password>
+ <hostname>10.9.4.16</hostname>
+ <database>ncore-fssp</database>
+ <connection_codepage>WIN1251</connection_codepage>
+ <codepage>CP1251</codepage>
+</database_params>
+<mvv>
+ <agent_code>РОСРЕЕСТР</agent_code>
+ <dept_code>ЧЕРК</dept_code>
+ <agreement_code>ЧЕРКИНТ</agreement_code>
+</mvv>
+<file>
+ <codepage>CP1251</codepage>
+ <output_path>/home/chief/work/reg/</output_path>
+ <input_path>/home/chief/rr_in/</input_path>
+ <input_path_arc>/home/chief/rr_in_arc</input_path_arc>
+ <type>dbf</type>
+ <numeric>normal</numeric>
+ <prefix>rshb</prefix>
+ <scheme>
+#</scheme>
+#</file>
+#</config>	
+ <UNICODE  field_type='N'  field_size='10'></UNICODE>
+ <ORGAN    field_type='C'  field_size='100'></ORGAN>   
+ <FIOISP   field_type='C'  field_size='100'></FIOISP>
+ <NUMISP   field_type='C'  field_size='4'0> </NUMISP>  
+ <DT       field_type='D'  field_size='10'> </DT>
+ <NUM      field_type='C'  field_size='40'> </NUM>	
+ <FIZUR    field_type='N'  field_size='1'> </FIZUR> 
+ <FIOORG   field_type='C'  field_size='250'> </FIOORG>
+ <DATE_R   field_type='C'  field_size='10'> </DATE_R>
+ <ADRESS   field_type='C'  field_size='250'></ADRESS>
+ <PASSPORT field_type='C'  field_size='250'></PASSPORT>
+ <SUMM     field_type='N'  field_size='12'  field_dec='2'> </SUMM> 
+</scheme>
+</file>
+</config>
+
