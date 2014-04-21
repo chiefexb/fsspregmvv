@@ -202,7 +202,7 @@ def main():
 #  print xml
 # f.close()
  con.close()
- elif filetype=='dbf':
+ 
    
 if __name__ == "__main__":
     main()
