@@ -25,7 +25,7 @@ def main():
 #Ищем параметры системы
  systemcodepage=cfgroot.find('codepage').text
 #Ищем параметры базы
- dbparams=cfgroot.find('database_params')
+ dbparamscfg=cfgroot.find('database_params')
  username=dbparams.find('username').text
  password=dbparams.find('password').text
  hostname=dbparams.find('hostname').text
@@ -196,8 +196,12 @@ def main():
    f2.write(xml)
    f2.close()
    setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
-
-
+ elif filetype=='dbf':
+  print  filiescheme.tag
+  print root2.tag 
+  ch=root2.getchildren()
+  print len(ch),len(root2)
+#sch
 #  print "LEN="+str(len(r))
 #  print xml
 # f.close()
