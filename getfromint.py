@@ -200,19 +200,44 @@ def main():
   print 'FS', filiescheme.tag
   print 'root', root2.tag 
   ch=filiescheme.getchildren()
-  spp2=[]
+ #Соединяемся с базой ОСП
+  try:
+   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+  except  Exception, e:
+   #print("Ошибка при открытии базы данных:\n"+str(e))
+   sys.exit(2)
+  cur = con.cursor()
+  #divname=getdivname(cur)
+  reqdbfscheme=[]
+  int2dbfscheme=[]
   for chh in ch:
+   #Анализ аттрибутов
    spp=[]
+   spp2=[]
    spp.append(chh.tag)
    spp.append(chh.attrib['field_type'])
    spp.append(int(chh.attrib['field_size']))
    if 'field_dec' in chh.attrib.keys():
     spp.append(int(chh.attrib['field_dec']))
+   #Анализ текта
+   tt=chh.text
+   print tt,  (',' in tt)
+   if ',' in tt:
+    print 'YEAH'
+    spp2.append(tt.split(','))
+    print spp2
+   else:
+    spp2.append(tt)
    #print chh.tag
-   spp2.append(spp) 
-  print spp2
+   reqdbfscheme.append(spp) 
+   int2dbfscheme.append(spp2)
+  print reqdbfscheme
+  print int2dbfscheme
   db = dbf.Dbf("/home/chief/dbfile.dbf", new=True)
-  db.addField(*spp2)
+  db.addField(*reqdbfscheme)
+#reqdbfscheme
+#int2dbfscheme
+#def getdivname (cur):
   db.close()
 
 #sch

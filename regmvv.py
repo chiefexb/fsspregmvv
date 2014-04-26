@@ -114,12 +114,12 @@ def dbfaddrecord(rec,dbfscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
   fizurnum=1
  else:
   fizurnum=2
- ii=range(0,12) #ЧТо за нах
+ #ii=range(0,12) #ЧТо за нах
  #range(0,3)
- #range(0,len(dbfscheme))
+ ii=range(0,len(dbfscheme))
  j=0
  for i in ii:
-  if str(type(dbscheme[i]))=="<type 'tuple'>":
+  if str(type(dbscheme[i]))=="<type 'list'>":
    j=fizurnum
   else:
    j=0 
