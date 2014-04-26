@@ -25,7 +25,7 @@ def main():
 #Ищем параметры системы
  systemcodepage=cfgroot.find('codepage').text
 #Ищем параметры базы
- dbparamscfg=cfgroot.find('database_params')
+ dbparams=cfgroot.find('database_params')
  username=dbparams.find('username').text
  password=dbparams.find('password').text
  hostname=dbparams.find('hostname').text
@@ -197,10 +197,24 @@ def main():
    f2.close()
    setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
  elif filetype=='dbf':
-  print  filiescheme.tag
-  print root2.tag 
-  ch=root2.getchildren()
-  print len(ch),len(root2)
+  print 'FS', filiescheme.tag
+  print 'root', root2.tag 
+  ch=filiescheme.getchildren()
+  spp2=[]
+  for chh in ch:
+   spp=[]
+   spp.append(chh.tag)
+   spp.append(chh.attrib['field_type'])
+   spp.append(int(chh.attrib['field_size']))
+   if 'field_dec' in chh.attrib.keys():
+    spp.append(int(chh.attrib['field_dec']))
+   #print chh.tag
+   spp2.append(spp) 
+  print spp2
+  db = dbf.Dbf("/home/chief/dbfile.dbf", new=True)
+  db.addField(*spp2)
+  db.close()
+
 #sch
 #  print "LEN="+str(len(r))
 #  print xml
