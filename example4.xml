@@ -22,18 +22,18 @@
  <numeric>normal</numeric>
  <prefix>rshb</prefix>
  <scheme>
- <UNICODE  field_type='N'  field_size='10'></UNICODE>
- <ORGAN    field_type='C'  field_size='100'></ORGAN>   
- <FIOISP   field_type='C'  field_size='100'></FIOISP>
- <NUMISP   field_type='C'  field_size='40'> </NUMISP>  
- <DT       field_type='D'  field_size='10'> </DT>
- <NUM      field_type='C'  field_size='40'> </NUM>	
- <FIZUR    field_type='N'  field_size='1'> </FIZUR> 
- <FIOORG   field_type='C'  field_size='250'> </FIOORG>
- <DATE_R   field_type='C'  field_size='10'> </DATE_R>
- <ADRESS   field_type='C'  field_size='250'></ADRESS>
- <PASSPORT field_type='C'  field_size='250'></PASSPORT>
- <SUMM     field_type='N'  field_size='12'  field_dec='2'> </SUMM> 
+ <UNICODE  field_type='N'  field_size='10'>er_req_id</UNICODE>
+ <ORGAN    field_type='C'  field_size='100'>divname</ORGAN>   
+ <FIOISP   field_type='C'  field_size='100'>er_fio_spi</FIOISP>
+ <NUMISP   field_type='C'  field_size='40'>er_ip_num </NUMISP>  
+ <DT       field_type='D'  field_size='10'>er_req_date </DT>
+ <NUM      field_type='C'  field_size='40'>er_req_number</NUM>	
+ <FIZUR    field_type='N'  field_size='1'>fizur</FIZUR> 
+ <FIOORG   field_type='C'  field_size='250'>er_deptor_name</FIOORG>
+ <DATE_R   field_type='C'  field_size='10'>er_debtor_birthday</DATE_R>
+ <ADRESS   field_type='C'  field_size='250'>er_deptor_adress</ADRESS>
+ <PASSPORT field_type='C'  field_size='250'>er_debtor_document,er_debtor_ogrn</PASSPORT>
+ <SUMM     field_type='N'  field_size='12'  field_dec='2'>er_ip_sum</SUMM> 
 </scheme>
 <scheme>
 </scheme>
