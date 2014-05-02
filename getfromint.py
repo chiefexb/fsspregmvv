@@ -232,9 +232,16 @@ def main():
    reqdbfscheme.append(spp) 
    int2dbfscheme.append(spp2)
   print reqdbfscheme
-  print int2dbfscheme
+  print int2dbfscheme[10][0]
+  print str(type(int2dbfscheme[2][0]))
   db = dbf.Dbf("/home/chief/dbfile.dbf", new=True)
   db.addField(*reqdbfscheme)
+  packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
+  p=len(packets)
+  pp=packets[0]
+  r=getrecords(cur,packets[pp][0])
+  rec = db.newRecord()
+  dbfaddrecord(rec,reqdbfscheme,int2dbfscheme,rr,'UTF-8',dbcodepage,dbfcodepage)
 #reqdbfscheme
 #int2dbfscheme
 #def getdivname (cur):
