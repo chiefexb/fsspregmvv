@@ -118,29 +118,45 @@ def dbfaddrecord(rec,dbfscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
  #range(0,3)
  ii=range(0,len(dbfscheme))
  j=0
+ print fizurnum
+ print str(type(dbscheme[0][0]))
  for i in ii:
   if str(type(dbscheme[i][0]))=="<type 'list'>":
-   j=fizurnum
+   v=dbscheme[i][0][fizurnum-1]
   else:
-   j=0 
-  if j==0:
-   print str(type(dbscheme[i][0])),dbfscheme[i][0][0],dbfscheme[i][0][1]
+   v=dbscheme[i][0]
+  if v in const.keys():
+   print v,dbvalues[const[v]]
+   print dbfscheme[i][0]
+  else:
+   print v,'false'
+   #if v='divname':
+   #elif  v='fizur':
+  #print dbscheme[i][0]
+#  if str(type(dbscheme[i][0]))=="<type 'list'>":
+#   j=fizurnum
+#   print i,'YEAH'
+#  else:
+#   j=0 
+#  print dbscheme[i][0]
+#  if j==0:
+#   print str(type(dbscheme[i][0])),dbfscheme[i][0][0],dbfscheme[i][0][1]
 #,str(type(dbvalues[dbscheme[i]]))
-   if str(type(dbscheme[i]))=="<type 'unicode'>":
-    rec[dbfscheme[i][0][0]]=dbscheme[i][0].encode(dbfcp)
-   elif str(type(dbscheme[i][0]))=="<type 'str'>" and dbscheme[i]=='fizur':
-    rec[dbfscheme[i][0][0]]=fizurnum
-   else:
-    rec[dbfscheme[i][0][0]]=convtotype(dbfscheme[i],dbvalues[dbscheme[i]],dbcp,dbfcp)
-  else:
-   print str(type(dbscheme[i][0][j-1])),dbfscheme[i][0][1]
-   if str(type(dbscheme[i][0][j-1]))=="<type 'unicode'>": 
-    rec[dbfscheme[i][0][0]]=dbscheme[i][0][j-1].encode(dbfcp)
-   elif str(type(dbscheme[i][0][j-1]))=="<type 'str'>" and dbscheme[i][0][j-1]=='fizur': 
-    rec[dbfscheme[i][0][0]]=fizurnum
-   else:
-    rec[dbfscheme[i][0][0]]=convtotype(dbfscheme[i][0],dbvalues[dbscheme[i][0][j-1]],dbcp,dbfcp)
- rec.store()
+#   if str(type(dbscheme[i]))=="<type 'unicode'>":
+#    rec[dbfscheme[i][0][0]]=dbscheme[i][0].encode(dbfcp)
+#   elif str(type(dbscheme[i][0]))=="<type 'str'>" and dbscheme[i]=='fizur':
+#    rec[dbfscheme[i][0][0]]=fizurnum
+#   else:
+#    rec[dbfscheme[i][0][0]]=convtotype(dbfscheme[i],dbvalues[dbscheme[i]],dbcp,dbfcp)
+#  else:
+#   print str(type(dbscheme[i][0][j-1])),dbfscheme[i][0][1]
+#   if str(type(dbscheme[i][0][j-1]))=="<type 'unicode'>": 
+#    rec[dbfscheme[i][0][0]]=dbscheme[i][0][j-1].encode(dbfcp)
+#   elif str(type(dbscheme[i][0][j-1]))=="<type 'str'>" and dbscheme[i][0][j-1]=='fizur': 
+#    rec[dbfscheme[i][0][0]]=fizurnum
+#   else:
+#    rec[dbfscheme[i][0][0]]=convtotype(dbfscheme[i][0],dbvalues[dbscheme[i][0][j-1]],dbcp,dbfcp)
+# rec.store()
  return 
 def getsbfilename (packdate,num,filial,client):
 # rDDMFFFF.NXX

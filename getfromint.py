@@ -214,13 +214,14 @@ def main():
    #Анализ аттрибутов
    spp=[]
    spp2=[]
-   spp.append(chh.tag)
+   spp.append(chh.tag.replace(' ',''))
    spp.append(chh.attrib['field_type'])
    spp.append(int(chh.attrib['field_size']))
    if 'field_dec' in chh.attrib.keys():
     spp.append(int(chh.attrib['field_dec']))
    #Анализ текта
    tt=chh.text
+   tt=tt.replace(' ','')
    print tt,  (',' in tt)
    if ',' in tt:
     print 'YEAH'
@@ -238,10 +239,13 @@ def main():
   db.addField(*reqdbfscheme)
   packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
   p=len(packets)
-  pp=packets[0]
-  r=getrecords(cur,packets[pp][0])
+  pp=packets[0][0]
+  print pp
+  r=getrecords(cur,pp)
   rec = db.newRecord()
-  dbfaddrecord(rec,reqdbfscheme,int2dbfscheme,rr,'UTF-8',dbcodepage,dbfcodepage)
+  rr=r[0]
+  print reqdbfscheme,int2dbfscheme  
+  dbfaddrecord(rec,reqdbfscheme,int2dbfscheme,rr,'UTF-8',codepage,filecodepage)
 #reqdbfscheme
 #int2dbfscheme
 #def getdivname (cur):
