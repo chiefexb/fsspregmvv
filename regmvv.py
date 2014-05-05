@@ -29,7 +29,7 @@ def preprocessing(cur,con,systcp,dbcp,sql):
  return
 
 def getnotprocessed(cur,systcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code):
- print str(type(mvv_agent_code))
+ #print str(type(mvv_agent_code))
 # if str(type(mvv_agent_code))=="<type 'unicode'>":
 #  mvv_agent_code=mvv_agent_code.encode(dbcp)
 # else:
@@ -46,7 +46,7 @@ def getnotprocessed(cur,systcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_c
 #  mvv_dept_code=mvv_dept_code.decode(systcp).encode(dbcp)
 
  sql2="select ext_request.pack_id  from ext_request where mvv_agent_code='" + mvv_agent_code +  "' and mvv_agreement_code='"+ mvv_agreement_code +"' and mvv_agent_dept_code='"+mvv_dept_code+"'  and ext_request.processed = 0 group by pack_id"
- print "SQL=",sql2
+ #print "SQL=",sql2
  try:
   cur.execute(sql2)
  except Exception ,e:
@@ -78,9 +78,11 @@ def getrecords(cur,packet):
 def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
  #Проверяем длину типа N 0
  if rowdbf[1]=='N':
-  if rowdbf[3]==0:   #целое проверка длины
+  if len(rowdbf)==3:#if rowdbf[3]==0:   #целое проверка длины
    if len(str(dbvalue))>rowdbf[2]:
     val=int(str(dbvalue)[len(str(dbvalue))-rowdbf[2]:len(str(dbvalue))])
+   else:
+    val=float(dbvalue)
   elif str(type(dbvalue))=="<type 'NoneType'>":
    val=0 
   else:
@@ -97,7 +99,8 @@ def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
    if dbfcp=="UTF-8":
     val=dbvalue
    else:
-    val =(dbvalue).decode(dbcp).encode(dbfcp)
+    #print dbvalue,str(type(dbvalue))
+    val =dbvalue.encode(dbfcp)#BUG FIX
   else:
    try:
     val =(dbvalue).encode(dbfcp)
@@ -108,7 +111,7 @@ def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
   val=(dbvalue).strftime('%Y%m%d')
  return val
 #def getfizur()
-def dbfaddrecord(rec,dbfscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
+def dbfaddrecord(rec,dbfscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur):
  fizur=(dbvalues[const['er_entity_type']] in (95,2))
  if fizur:
   fizurnum=1
@@ -118,46 +121,27 @@ def dbfaddrecord(rec,dbfscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
  #range(0,3)
  ii=range(0,len(dbfscheme))
  j=0
- print fizurnum
- print str(type(dbscheme[0][0]))
+ #print fizurnum
+ #print str(type(dbscheme[0][0]))
  for i in ii:
   if str(type(dbscheme[i][0]))=="<type 'list'>":
    v=dbscheme[i][0][fizurnum-1]
   else:
    v=dbscheme[i][0]
   if v in const.keys():
-   print v,dbvalues[const[v]]
-   print dbfscheme[i][0]
+   #print v,dbvalues[const[v]]
+   #print dbfscheme[i][0]
+   rec[dbfscheme[i][0]]=convtotype(dbfscheme[i], dbvalues[const[v]],dbcp,dbfcp)
+  # dbvalues[const[v]]
   else:
-   print v,'false'
-   #if v='divname':
-   #elif  v='fizur':
-  #print dbscheme[i][0]
-#  if str(type(dbscheme[i][0]))=="<type 'list'>":
-#   j=fizurnum
-#   print i,'YEAH'
-#  else:
-#   j=0 
-#  print dbscheme[i][0]
-#  if j==0:
-#   print str(type(dbscheme[i][0])),dbfscheme[i][0][0],dbfscheme[i][0][1]
-#,str(type(dbvalues[dbscheme[i]]))
-#   if str(type(dbscheme[i]))=="<type 'unicode'>":
-#    rec[dbfscheme[i][0][0]]=dbscheme[i][0].encode(dbfcp)
-#   elif str(type(dbscheme[i][0]))=="<type 'str'>" and dbscheme[i]=='fizur':
-#    rec[dbfscheme[i][0][0]]=fizurnum
-#   else:
-#    rec[dbfscheme[i][0][0]]=convtotype(dbfscheme[i],dbvalues[dbscheme[i]],dbcp,dbfcp)
-#  else:
-#   print str(type(dbscheme[i][0][j-1])),dbfscheme[i][0][1]
-#   if str(type(dbscheme[i][0][j-1]))=="<type 'unicode'>": 
-#    rec[dbfscheme[i][0][0]]=dbscheme[i][0][j-1].encode(dbfcp)
-#   elif str(type(dbscheme[i][0][j-1]))=="<type 'str'>" and dbscheme[i][0][j-1]=='fizur': 
-#    rec[dbfscheme[i][0][0]]=fizurnum
-#   else:
-#    rec[dbfscheme[i][0][0]]=convtotype(dbfscheme[i][0],dbvalues[dbscheme[i][0][j-1]],dbcp,dbfcp)
-# rec.store()
- return 
+   #print v,'false'
+   if v=='divname':
+    divname=getdivname(cur)
+    rec[dbfscheme[i][0]]=convtotype(dbfscheme[i], divname,dbcp,dbfcp)
+   elif  v=='fizur':
+    rec[dbfscheme[i][0]]=convtotype(dbfscheme[i], str(fizurnum),dbcp,dbfcp)
+ rec.store()
+ return rec
 def getsbfilename (packdate,num,filial,client):
 # rDDMFFFF.NXX
 # FFFF=8585 X=61

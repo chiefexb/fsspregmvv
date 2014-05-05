@@ -197,8 +197,8 @@ def main():
    f2.close()
    setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
  elif filetype=='dbf':
-  print 'FS', filiescheme.tag
-  print 'root', root2.tag 
+  #print 'FS', filiescheme.tag
+  #print 'root', root2.tag 
   ch=filiescheme.getchildren()
  #Соединяемся с базой ОСП
   try:
@@ -219,41 +219,42 @@ def main():
    spp.append(int(chh.attrib['field_size']))
    if 'field_dec' in chh.attrib.keys():
     spp.append(int(chh.attrib['field_dec']))
-   #Анализ текта
+   #Анализ текcта
    tt=chh.text
    tt=tt.replace(' ','')
-   print tt,  (',' in tt)
+   #print tt,  (',' in tt)
    if ',' in tt:
-    print 'YEAH'
+    #print 'YEAH'
     spp2.append(tt.split(','))
-    print spp2
+    #print spp2
    else:
     spp2.append(tt)
    #print chh.tag
    reqdbfscheme.append(spp) 
    int2dbfscheme.append(spp2)
-  print reqdbfscheme
-  print int2dbfscheme[10][0]
-  print str(type(int2dbfscheme[2][0]))
-  db = dbf.Dbf("/home/chief/dbfile.dbf", new=True)
-  db.addField(*reqdbfscheme)
+  #print reqdbfscheme
+  #print int2dbfscheme[10][0]
+  #print str(type(int2dbfscheme[2][0]))
   packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
   p=len(packets)
-  pp=packets[0][0]
-  print pp
-  r=getrecords(cur,pp)
-  rec = db.newRecord()
-  rr=r[0]
-  print reqdbfscheme,int2dbfscheme  
-  dbfaddrecord(rec,reqdbfscheme,int2dbfscheme,rr,'UTF-8',codepage,filecodepage)
-#reqdbfscheme
-#int2dbfscheme
-#def getdivname (cur):
-  db.close()
-
-#sch
-#  print "LEN="+str(len(r))
-#  print xml
+  if p>0:
+   for i in range(0,p):
+    pp=packets[i][0]
+    print pp
+    r=getrecords(cur,pp)
+    rr=r[0]
+    num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
+    filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.dbf'
+    db = dbf.Dbf(output_path+filename, new=True)
+    db.addField(*reqdbfscheme)
+    for rr in r:
+     rec = db.newRecord()
+     dbfaddrecord(rec,reqdbfscheme,int2dbfscheme,rr,'UTF-8',codepage,filecodepage,cur)
+    print db
+    db.close()
+    setprocessed(cur,con,'UTF-8',codepage,pp)
+  else:
+   print "Нет пакетов для выгрузки"
 # f.close()
  con.close()
  
