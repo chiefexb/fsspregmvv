@@ -64,6 +64,10 @@ def main():
  filetype=filepar.find('type').text
  filenum=filepar.find('numeric').text
  fileprefix=filepar.find('prefix').text
+ fileorgamd=filepar.find('orgamd').text
+ filedivamd=filepar.find('divamd').text
+ fileedotype=filepar.find('edotype').text
+ fileformat=filepar.find('format').text
  #Определение схемы файла должна быть ветка для типов файлов пока разбираем xml
  filiescheme=filepar.findall('scheme')[0]
  #создание root
@@ -171,17 +175,17 @@ def main():
    r=getrecords(cur,packets[pp][0])
    print "PP",pp,packets[pp][0],"LEN R",len(r)
    rr=r[0]
-   root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1)
+   root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1,{'orgamd':fileorgamd,'divamd':filedivamd})
    rr=[]
    for ri in range(len(r)):
     rr=r[ri]
    #print "LEN R",len(r)
     zp=etree.SubElement(root,zapros.tag)
     delta=datetime.timedelta(days=7)
-    zp=setattribs(cur,'UTF-8','UTF-8',zp,zapros,rr,delta,ri+1)
+    zp=setattribs(cur,'UTF-8','UTF-8',zp,zapros,rr,delta,ri+1,{})
     for ch in zapros.getchildren():
      sbch=etree.SubElement(zp,ch.tag)
-     sbch=setattribs(cur,'UTF-8','UTF-8',sbch,ch,rr,delta,ri+1)
+     sbch=setattribs(cur,'UTF-8','UTF-8',sbch,ch,rr,delta,ri+1,{})
    xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
    r=[]
   #print xml
@@ -190,12 +194,30 @@ def main():
 #  
 #  xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
    num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
-   filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
+   nulstr='0'*100
+   countn=fileformat.count('N')
+   ff=fileformat
+   ff=ff.replace('N'*countn,nulstr[0:countn-len(str(num))]+str(num))
+   ff=ff.replace('Z'*fileformat.count('N'),fileprefix)
+   ff=ff.replace('B'*fileformat.count('B'),nulstr[0:fileformat.count('B')-len((fileorgamd))]+fileorgamd)
+   ff=ff.replace('C'*fileformat.count('C'),nulstr[0:fileformat.count('C')-len((filedivamd))]+filedivamd)
+   ff=ff.replace('Z'*fileformat.count('Z'),fileprefix)
+   county=fileformat.count('Y')
+   if county==2:
+    ff=ff.replace('Y'*county,str(rr[const['er_pack_date']].strftime('%y')))
+   else:
+    ff=ff.replace('Y'*county,str(rr[const['er_pack_date']].strftime('%Y')))
+   ff=ff.replace('D'*fileformat.count('D'),str(rr[const['er_pack_date']].strftime('%d')))
+   
+   ff=ff.replace('M'*(fileformat.count('M')-1),str(rr[const['er_pack_date']].strftime('%m')))
+   ff=ff.replace('A'*fileformat.count('A'),getnumtodepartment(cur,concodepage,'UTF-8')[1])
+   filename=ff
+   #fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'1+str(num)+'.xml'
 #  print filename,num
    f2=open(output_path+filename,'w')
    f2.write(xml)
    f2.close()
-   setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
+   #setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
  elif filetype=='dbf':
   #print 'FS', filiescheme.tag
   #print 'root', root2.tag 

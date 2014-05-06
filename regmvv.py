@@ -93,6 +93,8 @@ def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
    val=str(dbvalue.strftime("%d.%m.%Y"))
   elif str(type(dbvalue))=="<type 'int'>":
    val=str(dbvalue)
+  elif str(type(dbvalue))=="<class 'decimal.Decimal'>":
+   val=str(dbvalue)
   elif str(type(dbvalue))=="<type 'NoneType'>":
    val=''
   elif str(type(dbvalue))=="<type 'unicode'>":
@@ -105,7 +107,7 @@ def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
    try:
     val =(dbvalue).encode(dbfcp)
    except:
-    #print type(dbvalue)
+    print type(dbvalue)
     val='' 
  elif rowdbf[1]=='D':
   val=(dbvalue).strftime('%Y%m%d')
@@ -609,7 +611,7 @@ def gettypedoc(cur,dbsystcp,dbcp,docs):
   #print r[0][0]
   docs['type_doc']=convtotype([' ','C'],r[0][0],'UTF-8','UTF-8')
  return docs
-def setattribs(cur,dbcp,dbfcp,xml,xmlscheme,rr,delta,num):
+def setattribs(cur,dbcp,dbfcp,xml,xmlscheme,rr,delta,num,param):
  fizur=(rr[const['er_entity_type']] in (95,2))
  if fizur:
   fizurnum=1
@@ -642,6 +644,12 @@ def setattribs(cur,dbcp,dbfcp,xml,xmlscheme,rr,delta,num):
    xml.attrib[kk]=(documentclassid)
   elif xmlscheme.attrib[kk]=='fizur':
    xml.attrib[kk]=convtotype(['tp','C'],fizurnum,'UTF-8','UTF-8')
+  elif xmlscheme.attrib[kk]=='orgamd':
+   xml.attrib[kk]=param['orgamd']
+  elif xmlscheme.attrib[kk]=='divamd':
+   xml.attrib[kk]=param['divamd']
+  elif xmlscheme.attrib[kk]=='ip_rest_debtsum':
+   xml.attrib[kk]=getrestdeptsum(cur,dbcp,dbfcp,id)
   elif kk== 'records':
    pass
   else:
@@ -659,6 +667,17 @@ def getid(cur,dbcp,dbfcp,id):
  cur.execute(sql)
  r=cur.fetchall()
  return r
+def getrestdeptsum(cur,dbcp,dbfcp,id):
+ sql='select doc_ip_doc.ip_rest_debtsum from doc_ip_doc where  id='
+ sql=sql+str(id)
+ cur.execute(sql)
+ r=cur.fetchall()
+ if len(r)>0:
+  rr=str(r[0][0])
+ else:
+  rr=''
+ return rr
+
 #def setlogging()
 # logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')  
 # return
