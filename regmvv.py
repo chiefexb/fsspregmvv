@@ -648,6 +648,8 @@ def setattribs(cur,dbcp,dbfcp,xml,xmlscheme,rr,delta,num,param):
    xml.attrib[kk]=param['orgamd']
   elif xmlscheme.attrib[kk]=='divamd':
    xml.attrib[kk]=param['divamd']
+  elif xmlscheme.attrib[kk]=='edotype':
+   xml.attrib[kk]=param['edotype']
   elif xmlscheme.attrib[kk]=='ip_rest_debtsum':
    xml.attrib[kk]=getrestdeptsum(cur,dbcp,dbfcp,id)
   elif kk== 'records':

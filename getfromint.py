@@ -175,7 +175,7 @@ def main():
    r=getrecords(cur,packets[pp][0])
    print "PP",pp,packets[pp][0],"LEN R",len(r)
    rr=r[0]
-   root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1,{'orgamd':fileorgamd,'divamd':filedivamd})
+   root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1,{'orgamd':fileorgamd,'divamd':filedivamd,'edotype':fileedotype})
    rr=[]
    for ri in range(len(r)):
     rr=r[ri]
@@ -202,6 +202,7 @@ def main():
    ff=ff.replace('B'*fileformat.count('B'),nulstr[0:fileformat.count('B')-len((fileorgamd))]+fileorgamd)
    ff=ff.replace('C'*fileformat.count('C'),nulstr[0:fileformat.count('C')-len((filedivamd))]+filedivamd)
    ff=ff.replace('Z'*fileformat.count('Z'),fileprefix)
+   ff=ff.replace('X'*(fileformat.count('X')-1),fileedotype)
    county=fileformat.count('Y')
    if county==2:
     ff=ff.replace('Y'*county,str(rr[const['er_pack_date']].strftime('%y')))
