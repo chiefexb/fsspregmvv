@@ -31,7 +31,7 @@
  <FIZUR    field_type='N'  field_size='1'>fizur</FIZUR> 
  <FIOORG   field_type='C'  field_size='250'>er_debtor_name</FIOORG>
  <DATE_R   field_type='C'  field_size='10'>er_debtor_birthday</DATE_R>
- <ADRESS   field_type='C'  field_size='250'>er_debtor_adress</ADRESS>
+ <ADRESS   field_type='C'  field_size='250'>er_debtor_address</ADRESS>
  <PASSPORT field_type='C'  field_size='250'>er_debtor_document,er_debtor_ogrn</PASSPORT>
  <SUMM     field_type='N'  field_size='12'  field_dec='2'>er_ip_sum</SUMM> 
 </scheme>
