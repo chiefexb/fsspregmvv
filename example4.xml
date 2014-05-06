@@ -2,8 +2,8 @@
 <codepage>UTF-8</codepage>
 <database_params>
  <username>SYSDBA</username>
- <password>masterkey</password>
- <hostname>10.9.4.16</hostname>
+ <password></password>
+ <hostname></hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
@@ -16,11 +16,11 @@
 <file>
  <codepage>CP866</codepage>
  <output_path>/home/chief/rz_out/</output_path>
- <input_path>/home/chief/rr_in/</input_path>
- <input_path_arc>/home/chief/rr_in_arc</input_path_arc>
+ <input_path>/home/chief/rz_in/</input_path>
+ <input_path_arc>/home/chief/rz_in_arc</input_path_arc>
  <type>dbf</type>
  <numeric>normal</numeric>
- <prefix>rshb</prefix>
+ <prefix>rz</prefix>
  <scheme>
  <UNICODE  field_type='N'  field_size='10'>er_req_id</UNICODE>
  <ORGAN    field_type='C'  field_size='100'>divname</ORGAN>   
@@ -29,9 +29,9 @@
  <DT       field_type='D'  field_size='10'>er_req_date </DT>
  <NUM      field_type='C'  field_size='40'>er_req_number</NUM>	
  <FIZUR    field_type='N'  field_size='1'>fizur</FIZUR> 
- <FIOORG   field_type='C'  field_size='250'>er_deptor_name</FIOORG>
+ <FIOORG   field_type='C'  field_size='250'>er_debtor_name</FIOORG>
  <DATE_R   field_type='C'  field_size='10'>er_debtor_birthday</DATE_R>
- <ADRESS   field_type='C'  field_size='250'>er_deptor_adress</ADRESS>
+ <ADRESS   field_type='C'  field_size='250'>er_debtor_adress</ADRESS>
  <PASSPORT field_type='C'  field_size='250'>er_debtor_document,er_debtor_ogrn</PASSPORT>
  <SUMM     field_type='N'  field_size='12'  field_dec='2'>er_ip_sum</SUMM> 
 </scheme>
