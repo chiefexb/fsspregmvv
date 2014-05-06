@@ -24,7 +24,7 @@
  <orgamd>8</orgamd>
  <divamd>0</divamd>
  <edotype>11</edotype>
- <format>ZZZ_YYYYMMDD_AAAAA_BBB_CCC_NNNNN.XML</format>
+ <format>ZZZ_YYYYMMDD_AAAAA_XX_BBB_CCC_NNNNN.XML</format>
 <scheme>
 <DataBlock records='' Key="er_pack_id" FsspTo="tonum" FsspOsp="departmentnum" OrgAMD="orgamd" DivAMD="divamd">
  <Query Key="num" DocDate="er_req_date" SPI="er_spi_id" SPIFio="er_fio_spi" ChSPIFio="er_h_spi" ChSPIPost="1" AnsDate="ansdate">
