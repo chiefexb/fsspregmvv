@@ -9,49 +9,30 @@
  <codepage>CP1251</codepage>
 </database_params>
 <mvv>
- <agent_code>ПФР</agent_code>
- <dept_code>008</dept_code>
- <agreement_code>ПФРИНТ</agreement_code>
+ <preprocessing>
+  <sql>ext_request.mvv_agent_code='РОСРЕЕСТР' and ext_request.entity_type not in (95,2)</sql>
+  <sql>ext_request.mvv_agent_code='РОСРЕЕСТР' and ext_request.entity_type in (95,2) and ext_request.debtor_birthdate is null</sql>
+ </preprocessing>
+ <agent_code>РОСРЕЕСТР</agent_code>
+ <dept_code>ЧЕРК</dept_code>
+ <agreement_code>ЧЕРКИНТ</agreement_code>
 </mvv>
 <file>
  <codepage>CP1251</codepage>
- <output_path>/home/chief/work/pfr2/</output_path>
+ <output_path>/home/chief/work/reg/</output_path>
  <input_path>/home/chief/rr_in/</input_path>
- <input_path_arc>/home/chief/work/pfr/</input_path_arc>
- <type>xmlatrib</type>
+ <input_path_arc>/home/chief/rr_in_arc</input_path_arc>
+ <type>xml</type>
  <numeric>normal</numeric>
- <prefix>SSP</prefix>
- <orgamd>8</orgamd>
- <divamd>0</divamd>
- <edotype>11</edotype>
- <format>ZZZ_YYYYMMDD_XX_AAAAA_BBB_CCC_NNNNN.XML</format>
-<scheme>
-<DataBlock records='' Key="er_pack_id" FsspTo="tonum" FsspOsp="departmentnum" OrgAMD="orgamd" DivAMD="divamd">
- <Query Key="num" DocDate="er_req_date" SPI="er_spi_id" SPIFio="er_fio_spi" ChSPIFio="er_h_spi" ChSPIPost="1" AnsDate="ansdate">
-  <IP Key="er_req_id" IPNum="er_ip_num" IPDate="er_ip_risedate" IPName="Исполнительное производство" IDType="documentclassid" IDNum="id_number" IDDate="id_date" IDSubjName="id_subject_type" IDSum="er_ip_sum" IPDebt="ip_rest_debtsum" DebtorType="fizur" DebtorName="er_debtor_name" DebtorAdr="er_debtor_address" DebtorBirthDate="er_debtor_birthday" SPI="er_spi_id" SPIFio="er_fio_spi"/>
- </Query>
-</DataBlock>
-</scheme>
-<scheme>
-<DataBlock Key="c2db4a93-2044-4980-b201-c4ea7ae8c07c" FsspTo="09" FsspOsp="09002" OrgAMD="8" DivAMD="0">
-  <ExtAnswer Key="-233141986" AnswerType="1" QueryKey="1" IPKey="91021168760301">
-    <Data Key="1473684555" ActDate="30.04.2014" KindData="81" DebtorName="Байтокова Мамурхан Хусейновна,01.03.1940">
-       <DebtorState State="По старости"/>
-    </Data>
-    <Data Key="1473684555" ActDate="30.04.2014" KindData="81" DebtorName$
-       <SvedRab NaimOrg="ДЖОГАН ФАТИМА МАГОМЕТОВНА" AdresJ=",369000,09,,ЧЕРКЕССК Г,,НЕКРАСОВА УЛ,5,,17" AdresF=",369000,09,,ЧЕРКЕССК Г,,НЕКРАСОВА УЛ,5,,17"/> 
-   </Data>
-  </ExtAnswer>
-</DataBlock>
-</scheme>
-<scheme>
+ <prefix>rr</prefix>
+ <scheme>
 <RequestRightsPersons>
  <RequestID>er_pack_id</RequestID>
  <RequestType>Запрос в Росреестр № ;er_pack_id; от ;er_pack_date</RequestType>
  <RequestDate>er_pack_date</RequestDate>
 <Persons records=''>
  <Person>
-  <PersonID>request_id</PersonID>
+  <PersonID>er_req_id</PersonID>
   <FirstName>firstname</FirstName>
   <SecondName>secondname</SecondName>
   <LastName>lastname</LastName>

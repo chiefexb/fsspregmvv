@@ -218,7 +218,7 @@ def main():
    f2=open(output_path+filename,'w')
    f2.write(xml)
    f2.close()
-   #setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
+   setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
  elif filetype=='dbf':
   #print 'FS', filiescheme.tag
   #print 'root', root2.tag 
