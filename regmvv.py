@@ -90,7 +90,10 @@ def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
 #int( str(dbvalue)[len(str(dbvalue)-rowdbf[2]:len(str(dbvalue)))])
  elif rowdbf[1]=='C':
   if  str(type(dbvalue))=="<type 'datetime.date'>":
-   val=str(dbvalue.strftime("%d.%m.%Y"))
+   try:
+    val=str(dbvalue.strftime("%d.%m.%Y"))
+   except:
+    val=''
   elif str(type(dbvalue))=="<type 'int'>":
    val=str(dbvalue)
   elif str(type(dbvalue))=="<class 'decimal.Decimal'>":
