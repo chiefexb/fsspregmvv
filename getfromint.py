@@ -173,7 +173,7 @@ def main():
   for pp in range(0,p):
    root=etree.Element(root2.tag)
    r=getrecords(cur,packets[pp][0])
-   print "PP",pp,packets[pp][0],"LEN R",len(r)
+   #print "PP",pp,packets[pp][0],"LEN R",len(r)
    rr=r[0]
    root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1,{'orgamd':fileorgamd,'divamd':filedivamd,'edotype':fileedotype})
    rr=[]

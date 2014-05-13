@@ -3,7 +3,7 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname></hostname>
+ <hostname>10.9.4.16</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
@@ -33,75 +33,25 @@
 </DataBlock>
 </scheme>
 <scheme>
-<DataBlock Key="c2db4a93-2044-4980-b201-c4ea7ae8c07c" FsspTo="09" FsspOsp="09002" OrgAMD="8" DivAMD="0">
-  <ExtAnswer Key="-233141986" AnswerType="1" QueryKey="1" IPKey="91021168760301">
+  <DataBlock answers="" Key="c2db4a93-2044-4980-b201-c4ea7ae8c07c" FsspTo="09" FsspOsp="09002" OrgAMD="8" DivAMD="0">
+  <ExtAnswer answerstart=""  Key="-233141986" AnswerType="1" QueryKey="1" IPKey="er_req_id">
+  <Data  childrens="" Key="-469718039" ActDate="30.04.2014" KindData="93" DebtorName="Байтокова Мамурхан Хусейновна,01.03.1940">
+     <DebtorState answer='08' State="По старости"/>
+  </Data>
     <Data Key="1473684555" ActDate="30.04.2014" KindData="81" DebtorName="Байтокова Мамурхан Хусейновна,01.03.1940">
-       <DebtorState State="По старости"/>
+      <SvedRab/>
     </Data>
-    <Data Key="1473684555" ActDate="30.04.2014" KindData="81" DebtorName$
-       <SvedRab NaimOrg="ДЖОГАН ФАТИМА МАГОМЕТОВНА" AdresJ=",369000,09,,ЧЕРКЕССК Г,,НЕКРАСОВА УЛ,5,,17" AdresF=",369000,09,,ЧЕРКЕССК Г,,НЕКРАСОВА УЛ,5,,17"/> 
-   </Data>
+  </ExtAnswer>
+  <ExtAnswer Key="1038857293" AnswerType="1" QueryKey="2" IPKey="91021168760303">
+    <Data Key="1750355902" ActDate="07.05.2014" KindData="81" DebtorName="Джоган Фатима Магометовна,10.01.1960,90105123409">
+      <SvedRab NaimOrg="ДЖОГАН ФАТИМА МАГОМЕТОВНА" AdresJ=",369000,09,,ЧЕРКЕССК Г,,НЕКРАСОВА УЛ,5,,17" AdresF=",369000,09,,ЧЕРКЕССК Г,,НЕКРАСОВА УЛ,5,,17"/>
+    </Data>
+  </ExtAnswer>
+  <ExtAnswer Key="287189837" AnswerType="2" QueryKey="3" IPKey="91021168760306">
+  </ExtAnswer>
+  <ExtAnswer Key="-980910942" AnswerType="2" QueryKey="4" IPKey="91021168760307">
   </ExtAnswer>
 </DataBlock>
-</scheme>
-<scheme>
-<RequestRightsPersons>
- <RequestID>er_pack_id</RequestID>
- <RequestType>Запрос в Росреестр № ;er_pack_id; от ;er_pack_date</RequestType>
- <RequestDate>er_pack_date</RequestDate>
-<Persons records=''>
- <Person>
-  <PersonID>request_id</PersonID>
-  <FirstName>firstname</FirstName>
-  <SecondName>secondname</SecondName>
-  <LastName>lastname</LastName>
-  <BirthDate>er_debtor_birthday</BirthDate>
- </Person>
-</Persons>
-</RequestRightsPersons>
- </scheme>
-  <scheme>
-<RequestRightsPersonsReply depth='3'>
- <RequestID>request_id</RequestID>
- <ReplyDate>reply_date</ReplyDate>
- <OrganizationName></OrganizationName>
- <RegionID></RegionID>
- <Persons answers="" >
- <Person answerstart="">
-  <PersonID>request_id</PersonID>
-  <FirstName>firstname</FirstName>
-  <SecondName>secondname</SecondName>
-  <LastName>lastname</LastName>
-  <BirthDate>er_debtor_birthday</BirthDate>
-  <Document answer='01' >
-   <Type_Document>rr_type_doc</Type_Document>
-   <Name>pass</Name>
-   <Series>ser_doc</Series>
-   <Number>num_doc</Number>
-   <Date>date_doc</Date>
-   <IssueOrgan>issue_organ</IssueOrgan>
-  </Document>
-  <Rights answer='11'>
-   <Right>
-    <CadastralNumber>kadastr_n</CadastralNumber>
-    <RegNumber>inv_n_nedv</RegNumber>
-    <StartDate>03.05.2011</StartDate>
-    <Area>s_nedv</Area>
-    <AreaUnits>012002001000</AreaUnits>
-    <Purpose>жилое</Purpose>
-    <Share>nfloor</Share>
-    <Address childrens="">
-     <Region>09</Region>
-     <District>Малокарачаевский</District>
-     <Street>Родниковая</Street>
-     <House>8а</House>
-     <Note>adres_nedv</Note>
-    </Address>
-   </Right>
-  </Rights>
- </Person>
- </Persons>
-</RequestRightsPersonsReply>
 </scheme>
 </file>
 </config>	

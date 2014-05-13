@@ -63,102 +63,103 @@ def main():
  except:
   sys.exit(2)
  #Ищем поля ответа
- #print ans_scheme.tag,ans_scheme.keys()
- #Проверяем явлется ли root контейнером ответов
- if 'answers' in ans_scheme.keys():
-  ans=anscheme
- else:
-  for ch in ans_scheme.getchildren():
+ if filetype=='xml':
+  #print ans_scheme.tag,ans_scheme.keys()
+  #Проверяем явлется ли root контейнером ответов
+  if 'answers' in ans_scheme.keys():
+   ans=ans_scheme
+  else:
+   for ch in ans_scheme.getchildren():
+    if ch.text=='reply_date':
+     replydatetag=ch.tag
+    if 'answers' in ch.keys():
+     #print ch.tag
+     answer=ch.getchildren()[0]
+     answers=ch.tag
+     break
+  #Ищем поля сведений
+  ansnodes=[]
+  for ch in answer.getchildren(): #ограничение на кол-во ответов debug
+   #ans2=[]
+   if 'answer' in ch.keys():
+    #Заполняем ключи для данных
+    ans2={}
+    if ch.attrib.values()[0]=='01':
+     for chh in ch:
+      for af in ansfields['01']:
+       if chh.text==af:
+        ans2[af]=chh.tag
+    if ch.attrib.values()[0]=='11':
+     chh=ch.getchildren()[0]
+     #print "!!BUG",chh.tag
+     ans2['right']=chh.tag #!!!
+     for chh2 in chh:
+      for af in ansfields['11']:
+       #print "MM",chh2.text,chh2.tag
+       if chh2.text==af:
+        ans2[af]=chh2.tag #!bug
+      if 'childrens' in chh2.attrib.keys():
+       print "ADDR"
+       for chh3 in chh2:
+        for af in ansfields['11']:
+         if chh3.text==af:
+          #print af,ans2	
+          ans2[af]=chh2.tag+':'+chh3.tag
+    ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
+
+  #print ansnodes
+  #Ищем в значениях тег request_id
+  for ch in answer.getchildren():
+   print ch.tag,ch.text
+   if ch.text=='request_id': 
+    reqidtag=ch.tag
+   #if ch.text=='reply_date': 
+   # replydatetag=ch.tag 
+    #print ch.tag
+ #Соединяемся с базой ОСП
+  try:
+   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+  except  Exception, e:
+   print("Ошибка при открытии базы данных:\n"+str(e))
+   sys.exit(2)
+  cur = con.cursor() 
+ #Получить список файлов в папке input
+  xmlfile=file(intput_path+'RR_092_06_12_13_1_reply.xml') #'rr4.xml')
+  xml=etree.parse(xmlfile)
+  xmlroot=xml.getroot()
+  #print xmlroot.tag
+  for ch in xmlroot.getchildren():
    if ch.text=='reply_date':
     replydatetag=ch.tag
-   if 'answers' in ch.keys():
-    #print ch.tag
-    answer=ch.getchildren()[0]
-    answers=ch.tag
-    break
- #Ищем поля сведений
- ansnodes=[]
- for ch in answer.getchildren(): #ограничение на кол-во ответов debug
-  #ans2=[]
-  if 'answer' in ch.keys():
-   #Заполняем ключи для данных
-   ans2={}
-   if ch.attrib.values()[0]=='01':
-    for chh in ch:
-     for af in ansfields['01']:
-      if chh.text==af:
-       ans2[af]=chh.tag
-   if ch.attrib.values()[0]=='11':
-    chh=ch.getchildren()[0]
-    #print "!!BUG",chh.tag
-    ans2['right']=chh.tag #!!!
-    for chh2 in chh:
-     for af in ansfields['11']:
-      #print "MM",chh2.text,chh2.tag
-      if chh2.text==af:
-       ans2[af]=chh2.tag #!bug
-     if 'childrens' in chh2.attrib.keys():
-      print "ADDR"
-      for chh3 in chh2:
-       for af in ansfields['11']:
-        if chh3.text==af:
-         #print af,ans2	
-         ans2[af]=chh2.tag+':'+chh3.tag
-   ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
-
- #print ansnodes
- #Ищем в значениях тег request_id
- for ch in answer.getchildren():
-  print ch.tag,ch.text
-  if ch.text=='request_id': 
-   reqidtag=ch.tag
-  #if ch.text=='reply_date': 
-  # replydatetag=ch.tag 
-   #print ch.tag
-#Соединяемся с базой ОСП
- try:
-  con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
- except  Exception, e:
-  print("Ошибка при открытии базы данных:\n"+str(e))
-  sys.exit(2)
- cur = con.cursor() 
-#Получить список файлов в папке input
- xmlfile=file(intput_path+'RR_092_06_12_13_1_reply.xml') #'rr4.xml')
- xml=etree.parse(xmlfile)
- xmlroot=xml.getroot()
- #print xmlroot.tag
- for ch in xmlroot.getchildren():
-  if ch.text=='reply_date':
-   replydatetag=ch.tag
- #Ищем контейнер ответов
- xmlanswers=xmlroot.find(answers)
+  #Ищем контейнер ответов
+  xmlanswers=xmlroot.find(answers)
  #Начинаем разбор ответов
- cn=0
- packid=getgenerator(cur,"DX_PACK")
- sqlbuff=[]
- sqltemp=''
- with Profiler() as p:
-  for a in xmlanswers.getchildren():#[11:20]: #!Ограничение
-   #Проверить запрос с этим id был или нет загружен
-   request_id=a.find(reqidtag).text
-   #print "Req_id",request_id,str(type(request_id))
-   ipid=getipid(cur,'UTF-8','CP1251',request_id)
-   #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
-   replydate=xmlroot.find(replydatetag).text
-   if len(getanswertype(ansnodes,a))==0:
-    #request_id=a.find(reqidtag).text
-    #request_dt="06.12.2013"
-    #print timeit.Timer("""
-    #with Profiler() as p:
-    sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid) 
-    for sqt in sqltemp:
-     sqlbuff.append(sqt)
-    #""").repeat(1)
-   else:
-    ans=getanswertype(ansnodes,a)
-    #print "ANS",ans
-    #print timeit.Timer("""
-    sqltemp=setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a,packid)
+  cn=0
+  packid=getgenerator(cur,"DX_PACK")
+  sqlbuff=[]
+  sqltemp=''
+  with Profiler() as p:
+   for a in xmlanswers.getchildren():#[11:20]: #!Ограничение
+    #Проверить запрос с этим id был или нет загружен
+    request_id=a.find(reqidtag).text
+    #print "Req_id",request_id,str(type(request_id))
+    ipid=getipid(cur,'UTF-8','CP1251',request_id)
+    #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
+    replydate=xmlroot.find(replydatetag).text
+    if len(getanswertype(ansnodes,a))==0:
+     #request_id=a.find(reqidtag).text
+     #request_dt="06.12.2013"
+     #print timeit.Timer("""
+     #with Profiler() as p:
+     sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid) 
+     for sqt in sqltemp:
+      sqlbuff.append(sqt)
+     #""").repeat(1)
+    else:
+     ans=getanswertype(ansnodes,a)
+     #print "ANS",ans
+     #print timeit.Timer("""
+     sqltemp=setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a,packid)
     for sqt in sqltemp:
      sqlbuff.append(sqt)
  
@@ -170,14 +171,44 @@ def main():
    #print len (xmlanswers),cn
    #print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
    #print ipid,id
- print len(sqlbuff)
+  print len(sqlbuff)
   #con.commit()
- with Profiler() as p:
-  for sqt in sqlbuff:
-   cur.execute(sqt)
-  con.commit()
- xmlfile.close()
- f.close()
- con.close()
+  with Profiler() as p:
+   for sqt in sqlbuff:
+    cur.execute(sqt)
+   con.commit()
+  xmlfile.close()
+  f.close()
+  con.close()
+ if filetype=='xmlatrib':
+  print ans_scheme.keys()
+  answer=ans_scheme.getchildren()[0]  
+  print answer.keys()
+  #Ищем поля сведений
+  ansnodes=[]
+  for ch in answer.getchildren():
+   ans2={}
+   print ch.tag
+   for cht in ch.attrib.keys():
+    print ch.tag,':',cht 
+   #for chh in ch:
+   # for chht in chh:
+   #  print "at",chh,chht
+    
+   #if ch.attrib.values()[0]=='08':
+   # for chh in ch:
+   #  for af in ansfields['08']:
+   #   if chh.text==af:
+   #    ans2[af]=chh.tag
+   #  for chh2 in chh:
+   #   if 'childrens' in chh2.attrib.keys():
+   #    print "ADDR"
+   #    for chh3 in chh2:
+   #     for af in ansfields['08']:
+   #      if chh3.text==af:
+   #       #print af,ans2
+   #       ans2[af]=chh2.tag+':'+chh3.tag
+   #ansnodes.append([ch.tag,ch.attrib.values()[0],ans2]) 
+  #print ansnodes
 if __name__ == "__main__":
     main()
