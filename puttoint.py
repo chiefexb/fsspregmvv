@@ -84,7 +84,7 @@ def main():
    if 'answer' in ch.keys():
     #Заполняем ключи для данных
     ans2={}
-    if ch.attrib.values()[0]=='01':
+    if ch.attrib.values()[0]=='01': #Там где есть параметры это не приемлимо
      for chh in ch:
       for af in ansfields['01']:
        if chh.text==af:
@@ -184,26 +184,36 @@ def main():
   print ans_scheme.keys()
   answer=ans_scheme.getchildren()[0]  
   print answer.keys()
+  
   #Ищем поля сведений
   ansnodes=[]
   for ch in answer.getchildren():
    if 'answers' in ans_scheme.keys():
-   answer=ans_scheme.getchildren()
-   answers=ans_scheme
-  else:
-   for ch in ans_scheme.getchildren():
+    answer=ans_scheme.getchildren()[0]
+    answers=ans_scheme.tag
+   else:
+    for ch in ans_scheme.getchildren():
     #if ch.text=='reply_date':
     # replydatetag=ch.tag
-    if 'answers' in ch.keys():
-     #print ch.tag
-     answer=ch.getchildren()[0]
-     answers=ch.tag
-     break
+     if 'answers' in ch.keys():
+      #print ch.tag
+      answer=ch.getchildren()[0].attrib.keys()
+      answers=ch.tag
+      break
+  print answers,answer.getchildren()[1].tag
+  #Поиск параметров
+  #разбор контейнеров
+  for chh in answer.getchildren():
+   if 'childrens' in answer.getchildren()[0].attrib.keys():
+    print 'GOT'
+    print chh.tag
+    print chh.getchildren()[0].tag 
+   #print answer.find('')
+   ans={'08':['deb_state']}
+   print getxmlvalue('Data:DebtorState',ans,answer)
+  ans2={}
 
-   ans2={}
-   print ch.tag
-   for cht in ch.attrib.keys():
-    print ch.tag,':',cht 
+  #Разбор ответа
    #for chh in ch:
    # for chht in chh:
    #  print "at",chh,chht
