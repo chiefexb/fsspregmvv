@@ -187,6 +187,19 @@ def main():
   #Ищем поля сведений
   ansnodes=[]
   for ch in answer.getchildren():
+   if 'answers' in ans_scheme.keys():
+   answer=ans_scheme.getchildren()
+   answers=ans_scheme
+  else:
+   for ch in ans_scheme.getchildren():
+    #if ch.text=='reply_date':
+    # replydatetag=ch.tag
+    if 'answers' in ch.keys():
+     #print ch.tag
+     answer=ch.getchildren()[0]
+     answers=ch.tag
+     break
+
    ans2={}
    print ch.tag
    for cht in ch.attrib.keys():
