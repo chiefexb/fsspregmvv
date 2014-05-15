@@ -58,6 +58,14 @@ def main():
  #Определение схемы файла должна быть ветка для типов файлов пока разбираем xml
  filescheme=filepar.findall('scheme')
  #создание root
+ if filepar.find('result')<>'':
+  print 'RES'
+  fileresult=filepar.find('result')
+  positiveresult=fileresult.find('negativeresult').text
+  negativeresult=fileresult.find('positiveresult').text
+  resultattrib='AnswerType'
+ else:
+  fileresult=''
  try:
   ans_scheme=filescheme[1].getchildren()[0]
  except:
@@ -201,18 +209,34 @@ def main():
       answers=ch.tag
       break
   print answers,answer.getchildren()[1].tag
-  #Поиск параметров
-  #разбор контейнеров
-  for chh in answer.getchildren():
-   if 'childrens' in answer.getchildren()[0].attrib.keys():
-    print 'GOT'
-    print chh.tag
-    print chh.getchildren()[0].tag 
-   #print answer.find('')
-   ans={'08':['deb_state']}
-   print getxmlvalue('Data:DebtorState',ans,answer)
   ans2={}
-
+  answermatrix={}
+  for ch in answer:
+   print ch.tag
+   if  'answermatrix' in ch.keys():
+    print ch.attrib['answermatrix'] 
+    am=ch.attrib[ch.attrib['answermatrix']]
+    at=ch.attrib['answer'] 
+    answermatrix[at]=am
+   print answermatrix 
+   print resultattrib ,str(answer.attrib[resultattrib]==positiveresult)
+  #к параметров
+  #разбор контейнеров
+  xmlfile=file(intput_path+'PFR_20140507_12_09002_008_000_00010.xml') #'rr4.xml')
+  xml=etree.parse(xmlfile)
+  xmlroot=xml.getroot()
+  print xmlroot.tag
+  #Ищем контейнер ответов
+  if(xmlroot.tag==answers):
+   xmlanswers=xmlroot
+  else:
+   xmlanswers=xmlroot.find(answers)
+  print answers
+  print len(  xmlanswers.getchildren())
+  # print,  xmlanswers.tag
+  #/home/chief/pfr_in/PFR_20140507_12_09002_008_000_00010.xml
+  #ans2={}
+  #answermatrix={}
   #Разбор ответа
    #for chh in ch:
    # for chht in chh:
