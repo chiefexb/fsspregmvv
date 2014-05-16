@@ -16,7 +16,7 @@
 <file>
  <codepage>CP1251</codepage>
  <output_path>/home/chief/work/pfr2/</output_path>
- <input_path>/home/chief/rr_in/</input_path>
+ <input_path>/home/chief/pfr_in/</input_path>
  <input_path_arc>/home/chief/work/pfr/</input_path_arc>
  <type>xmlatrib</type>
  <numeric>normal</numeric>
@@ -25,6 +25,10 @@
  <divamd>0</divamd>
  <edotype>11</edotype>
  <format>ZZZ_YYYYMMDD_XX_AAAAA_BBB_CCC_NNNNN.XML</format>
+ <result>
+  <positiveresult>2</positiveresult> 
+  <negativeresult>1</negativeresult>
+ </result>
 <scheme>
 <DataBlock records='' Key="er_pack_id" FsspTo="tonum" FsspOsp="departmentnum" OrgAMD="orgamd" DivAMD="divamd">
  <Query Key="num" DocDate="er_req_date" SPI="er_spi_id" SPIFio="er_fio_spi" ChSPIFio="er_h_spi" ChSPIPost="1" AnsDate="ansdate">
@@ -35,10 +39,10 @@
 <scheme>
   <DataBlock answers="" Key="c2db4a93-2044-4980-b201-c4ea7ae8c07c" FsspTo="09" FsspOsp="09002" OrgAMD="8" DivAMD="0">
   <ExtAnswer answerstart=""  Key="-233141986" AnswerType="1" QueryKey="1" IPKey="er_req_id">
-  <Data  childrens="" Key="-469718039" ActDate="30.04.2014" KindData="93" DebtorName="Байтокова Мамурхан Хусейновна,01.03.1940">
-     <DebtorState answer='08' State="По старости"/>
+  <Data  answermatrix='KindData' answer='08' Key="-469718039" ActDate="30.04.2014" KindData="93" DebtorName="Байтокова Мамурхан Хусейновна,01.03.1940">
+     <DebtorState  State="По старости"/>
   </Data>
-    <Data Key="1473684555" ActDate="30.04.2014" KindData="81" DebtorName="Байтокова Мамурхан Хусейновна,01.03.1940">
+    <Data answermatrix='KindData' answer='09' Key="1473684555" ActDate="30.04.2014" KindData="81" DebtorName="Байтокова Мамурхан Хусейновна,01.03.1940">
       <SvedRab/>
     </Data>
   </ExtAnswer>

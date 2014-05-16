@@ -211,13 +211,15 @@ def main():
   print answers,answer.getchildren()[1].tag
   ans2={}
   answermatrix={}
+  ch=answer.getchildren()[0]
+  answermatrixatr=ch.attrib['answermatrix']
   for ch in answer:
    print ch.tag
    if  'answermatrix' in ch.keys():
     print ch.attrib['answermatrix'] 
     am=ch.attrib[ch.attrib['answermatrix']]
     at=ch.attrib['answer'] 
-    answermatrix[at]=am
+    answermatrix[am]=at
    print answermatrix 
    print resultattrib ,str(answer.attrib[resultattrib]==positiveresult)
   #к параметров
@@ -233,6 +235,14 @@ def main():
    xmlanswers=xmlroot.find(answers)
   print answers
   print len(  xmlanswers.getchildren())
+  for a in  xmlanswers.getchildren():
+   print a.attrib[resultattrib]
+   print answermatrix,a.attrib.keys()
+   if (a.attrib[resultattrib]==positiveresult):
+    aa=a.getchildren()[0]
+    print answermatrix[ aa.attrib[answermatrixatr]]
+    aaa=aa.getchildren()[0]
+    print aaa.tag
   # print,  xmlanswers.tag
   #/home/chief/pfr_in/PFR_20140507_12_09002_008_000_00010.xml
   #ans2={}
