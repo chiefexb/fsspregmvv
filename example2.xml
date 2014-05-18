@@ -3,7 +3,7 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname>10.9.4.16</hostname>
+ <hostname>localhost</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
@@ -39,21 +39,12 @@
 <scheme>
   <DataBlock answers="" Key="c2db4a93-2044-4980-b201-c4ea7ae8c07c" FsspTo="09" FsspOsp="09002" OrgAMD="8" DivAMD="0">
   <ExtAnswer answerstart=""  Key="-233141986" AnswerType="1" QueryKey="1" IPKey="er_req_id">
-  <Data  answermatrix='KindData' answer='08' Key="-469718039" ActDate="30.04.2014" KindData="93" DebtorName="Байтокова Мамурхан Хусейновна,01.03.1940">
-     <DebtorState  State="По старости"/>
+  <Data  answermatrix='KindData' answer='08' Key="-469718039" ActDate="act_date" KindData="93" DebtorName="debtor_name,debtor_birthday">
+     <DebtorState  State="deb_state"/>
   </Data>
-    <Data answermatrix='KindData' answer='09' Key="1473684555" ActDate="30.04.2014" KindData="81" DebtorName="Байтокова Мамурхан Хусейновна,01.03.1940">
-      <SvedRab/>
-    </Data>
-  </ExtAnswer>
-  <ExtAnswer Key="1038857293" AnswerType="1" QueryKey="2" IPKey="91021168760303">
-    <Data Key="1750355902" ActDate="07.05.2014" KindData="81" DebtorName="Джоган Фатима Магометовна,10.01.1960,90105123409">
-      <SvedRab NaimOrg="ДЖОГАН ФАТИМА МАГОМЕТОВНА" AdresJ=",369000,09,,ЧЕРКЕССК Г,,НЕКРАСОВА УЛ,5,,17" AdresF=",369000,09,,ЧЕРКЕССК Г,,НЕКРАСОВА УЛ,5,,17"/>
-    </Data>
-  </ExtAnswer>
-  <ExtAnswer Key="287189837" AnswerType="2" QueryKey="3" IPKey="91021168760306">
-  </ExtAnswer>
-  <ExtAnswer Key="-980910942" AnswerType="2" QueryKey="4" IPKey="91021168760307">
+   <Data answermatrix='KindData' answer='56' Key="1473684555" ActDate="act_date" KindData="81" DebtorName="debtor_name,debtor_birthday">
+      <SvedRab NaimOrg="naimorg" AdresJ="adresj" AdresF="adresf"/>
+   </Data>
   </ExtAnswer>
 </DataBlock>
 </scheme>

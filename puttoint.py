@@ -214,13 +214,15 @@ def main():
   ch=answer.getchildren()[0]
   answermatrixatr=ch.attrib['answermatrix']
   for ch in answer:
-   print ch.tag
-   if  'answermatrix' in ch.keys():
-    print ch.attrib['answermatrix'] 
-    am=ch.attrib[ch.attrib['answermatrix']]
-    at=ch.attrib['answer'] 
-    answermatrix[am]=at
-   print answermatrix 
+   print 'X',ch.tag
+   for chh in ch.attrib.keys():
+    if  'answermatrix' ==chh:
+     print ch.attrib['answermatrix'] 
+     am=ch.attrib[ch.attrib['answermatrix']]
+     at=ch.attrib['answer'] 
+     answermatrix[am]=at
+    print answermatrix
+    
    print resultattrib ,str(answer.attrib[resultattrib]==positiveresult)
   #к параметров
   #разбор контейнеров
@@ -242,30 +244,56 @@ def main():
     aa=a.getchildren()[0]
     print answermatrix[ aa.attrib[answermatrixatr]]
     aaa=aa.getchildren()[0]
-    print aaa.tag
-  # print,  xmlanswers.tag
-  #/home/chief/pfr_in/PFR_20140507_12_09002_008_000_00010.xml
-  #ans2={}
-  #answermatrix={}
-  #Разбор ответа
-   #for chh in ch:
-   # for chht in chh:
-   #  print "at",chh,chht
-    
-   #if ch.attrib.values()[0]=='08':
-   # for chh in ch:
-   #  for af in ansfields['08']:
-   #   if chh.text==af:
-   #    ans2[af]=chh.tag
-   #  for chh2 in chh:
-   #   if 'childrens' in chh2.attrib.keys():
-   #    print "ADDR"
-   #    for chh3 in chh2:
-   #     for af in ansfields['08']:
-   #      if chh3.text==af:
-   #       #print af,ans2
-   #       ans2[af]=chh2.tag+':'+chh3.tag
-   #ansnodes.append([ch.tag,ch.attrib.values()[0],ans2]) 
-  #print ansnodes
+    print aaa.tag,aaa.attrib.keys()
+ if filetype=='pfr':
+  xmlfile=file(intput_path+'PFR_20140507_12_09002_008_000_00010.xml') #'rr4.xml')
+  xml=etree.parse(xmlfile)
+  xmlroot=xml.getroot()
+  print xmlroot.tag
+  #Ищем контейнер ответов
+  answers='ExtAnswer'
+  if(xmlroot.tag==answers):
+   xmlanswers=xmlroot
+  else:
+   xmlanswers=xmlroot.findall(answers)
+  print answers
+  #print len(  xmlanswers.getchildren())
+  cn=0
+  #packid=getgenerator(cur,"DX_PACK")
+  sqlbuff=[]
+  sqltemp=''
+  try:
+   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+  except  Exception, e:
+   print("Ошибка при открытии базы данных:\n"+str(e))
+   sys.exit(2)
+  cur = con.cursor()
+  for a in  xmlanswers:
+   print a.attrib.keys()
+   #Проверить запрос с этим id был или нет загружен
+   request_id=a.attrib['IPKey']
+   #print "Req_id",request_id,str(type(request_id))
+   ipid=getipid(cur,'UTF-8','CP1251',request_id)
+   #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
+   #actdate=a.attrib['ActDate']
+   #replydate=a.attrib['ActDate']
+   if a.attrib['AnswerType']=='1':
+    print 'POS'
+    #Разбор сведений
+    for aa in a:
+     print aa.keys()
+     if aa.attrib['KindData']==93:
+      
+     if aa.attrib['KindData']==81:
+      
+   else:
+    print 'NEG'
+   
+   #if a.attrib['AnswerType']=='2':
+   # print 'Negative'
+   #else:
+   # print 'Positive'
+   
+
 if __name__ == "__main__":
     main()
