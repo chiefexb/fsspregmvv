@@ -3,7 +3,7 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname>localhost</hostname>
+ <hostname>10.9.4.16</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
@@ -17,8 +17,8 @@
  <codepage>CP1251</codepage>
  <output_path>/home/chief/work/pfr2/</output_path>
  <input_path>/home/chief/pfr_in/</input_path>
- <input_path_arc>/home/chief/work/pfr/</input_path_arc>
- <type>xmlatrib</type>
+ <input_path_arc>/home/chief/pfr_in_arc/</input_path_arc>
+ <type>pfr</type>
  <numeric>normal</numeric>
  <prefix>SSP</prefix>
  <orgamd>8</orgamd>
