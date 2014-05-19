@@ -3,10 +3,12 @@
 from regmvv import *
 from lxml import etree
 from dbfpy import dbf
+from datetime import *
 import timeit
 import time
 import fdb
 import sys
+from os import *
 class Profiler(object):
     def __enter__(self):
         self._startTime = time.time()
@@ -51,8 +53,8 @@ def main():
  filepar=cfgroot.find('file')
  filecodepage=filepar.find('codepage').text
  output_path=filepar.find('output_path').text
- intput_path=filepar.find('input_path').text
- intput_arc_path=filepar.find('input_path_arc').text
+ input_path=filepar.find('input_path').text
+ input_arc_path=filepar.find('input_path_arc').text
  filetype=filepar.find('type').text
  filenum=filepar.find('numeric').text
  #Определение схемы файла должна быть ветка для типов файлов пока разбираем xml
@@ -132,6 +134,7 @@ def main():
    sys.exit(2)
   cur = con.cursor() 
  #Получить список файлов в папке input
+  print intput_path
   xmlfile=file(intput_path+'RR_092_06_12_13_1_reply.xml') #'rr4.xml')
   xml=etree.parse(xmlfile)
   xmlroot=xml.getroot()
@@ -226,7 +229,7 @@ def main():
    print resultattrib ,str(answer.attrib[resultattrib]==positiveresult)
   #к параметров
   #разбор контейнеров
-  xmlfile=file(intput_path+'PFR_20140507_12_09002_008_000_00010.xml') #'rr4.xml')
+  xmlfile=file(intput_path+ ff)# 'PFR_20140507_12_09002_008_000_00010.xml') #'rr4.xml')
   xml=etree.parse(xmlfile)
   xmlroot=xml.getroot()
   print xmlroot.tag
@@ -246,83 +249,59 @@ def main():
     aaa=aa.getchildren()[0]
     print aaa.tag,aaa.attrib.keys()
  if filetype=='pfr':
-  xmlfile=file(intput_path+'PFR_20140507_12_09002_008_000_00010.xml') #'rr4.xml')
-  xml=etree.parse(xmlfile)
-  xmlroot=xml.getroot()
-  print xmlroot.tag
-  #Ищем контейнер ответов
-  answers='ExtAnswer'
-  if(xmlroot.tag==answers):
-   xmlanswers=xmlroot
-  else:
-   xmlanswers=xmlroot.findall(answers)
-  print answers
-  #print len(  xmlanswers.getchildren())
-  cn=0
- # packid=getgenerator(cur,"DX_PACK")
-  sqlbuff=[]
-  sqltemp=''
-  try:
-   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
-  except  Exception, e:
-   print("Ошибка при открытии базы данных:\n"+str(e))
-   sys.exit(2)
-  cur = con.cursor()
-  packid=getgenerator(cur,"DX_PACK")
-  for a in  xmlanswers:
-   print a.attrib.keys()
-   #Проверить запрос с этим id был или нет загружен
-   request_id=a.attrib['IPKey']
-   #print "Req_id",request_id,str(type(request_id))
-   #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
-   #actdate=a.attrib['ActDate']
-   replydate='07.05.2014' #Пока задается вручную, надо издвлекать из файла
-   #request_dt можно найти из запроса
-   if a.attrib['AnswerType']=='1':
-    print 'POS'
+  if  len(listdir(input_path))==0:
+   print 'Нет файлов для загрузки'
+  for ff in listdir(input_path):
+   print "File",ff
+   fff=ff.split('_')
+   try:
+    d=date(int (fff[1][0:4]),int (fff[1][4:6]), fff[1][6:8] ) 
+   except:
+    d=date.today()
+   print str(d)
+   print input_path
+   #Если формат файла верный тогда верно и ниже
+   replydate=d.strftime('%d.%m.%Y')
+   xmlfile=file(input_path+ff )#'PFR_20140507_12_09002_008_000_00010.xml') #'rr4.xml')
+   #xmlfile.close()
+   #rename(input_path+ff, input_arc_path+ff)
+   xml=etree.parse(xmlfile)
+   xmlroot=xml.getroot()
+   print xmlroot.tag
+   #Ищем контейнер ответов
+   answers='ExtAnswer'
+   if(xmlroot.tag==answers):
+    xmlanswers=xmlroot
+   else:
+    xmlanswers=xmlroot.findall(answers)
+   print answers
+   ##print len(  xmlanswers.getchildren())
+   cn=0
+   #packid=getgenerator(cur,"DX_PACK")
+   sqlbuff=[]
+   sqltemp=''
+   try:
+    con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+   except  Exception, e:
+    print("Ошибка при открытии базы данных:\n"+str(e))
+    sys.exit(2)
+   cur = con.cursor()
+   packid=getgenerator(cur,"DX_PACK")
+   for a in  xmlanswers:
+    print a.attrib.keys()
+    # #Проверить запрос с этим id был или нет загружен
+    request_id=a.attrib['IPKey']
+    # #print "Req_id",request_id,str(type(request_id))
+    #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
+    # #actdate=a.attrib['ActDate']
+    # replydate='07.05.2014' #Пока задается вручную, надо издвлекать из файла
+    # #request_dt можно найти из запроса
+    if a.attrib['AnswerType']=='1':
+    #  print 'POS'
     #Разбор сведений
-    for aa in a:
-     print 'P', aa.keys(), aa.attrib['KindData']
-     if aa.attrib['KindData']=='93':
-      id=getgenerator(cur,"SEQ_DOCUMENT")
-      ipid=getipid(cur,'UTF-8','CP1251',request_id)
-      hsh=hashlib.md5()
-      hsh.update(str(id))
-      extkey=hsh.hexdigest()
-      sqltemp=setresponse(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Есть сведения")
-      print sqltemp
-      for sqt in sqltemp:
-       sqlbuff.append(sqt)
-       print sqt
-      #Вставка сведений о статусе
-      aaa=aa.getchildren()[0]
-      print aaa.tag, aaa.attrib['State']
-      debstate= aaa.attrib['State']
-      cur.execute(("select * from ext_request where req_id="+request_id).decode('CP1251'))
-      er=cur.fetchall()
-      #print len(er)
-      #datastr="Есть сведения"
-      idnum=convtotype([' ','C'], getidnum(cur,'UTF-8','CP1251',ipid),'UTF-8','UTF-8')
-      ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
-      #print str(type((ent_name)))
-      ent_bdt=convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
-      ent_by=ent_bdt.split('.')[2]
-      ent_inn=convtotype([' ','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
-      req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
-      ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
-      id=getgenerator(cur,"EXT_INFORMATION")
-      hsh.update(str(id))
-      svextkey=hsh.hexdigest()
-      sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(replydate)+cln+quoted('08')+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"       #print sqltemp
-      print sq3
-      sq4="INSERT INTO EXT_DEBTOR_STATE_DATA (ID, STATE) VALUES ("+str(id)+cln+quoted(debstate)+");"
-      print sq4
-      sqlbuff.append(sq3)
-      sqlbuff.append(sq4) 
-     if aa.attrib['KindData']=='81':
-      aaa=aa.getchildren()[0]
-      if len (aaa.attrib.keys())<>0:
-       print 'Работа'
+     for aa in a:
+      print 'P', aa.keys(), aa.attrib['KindData']
+      if aa.attrib['KindData']=='93':
        id=getgenerator(cur,"SEQ_DOCUMENT")
        ipid=getipid(cur,'UTF-8','CP1251',request_id)
        hsh=hashlib.md5()
@@ -333,14 +312,10 @@ def main():
        for sqt in sqltemp:
         sqlbuff.append(sqt)
         print sqt
-       #Вставка сведений о статусе
-       #aaa=aa.getchildren()[0]
-       print aaa.tag, aaa.attrib.keys()
-       #debstate= aaa.attrib['State']
-       # <SvedRab NaimOrg="naimorg" AdresJ="adresj" AdresF="adresf"/> SvedRab NaimOrg
-       naimorg=aaa.attrib['NaimOrg']
-       adresj=aaa.attrib['AdresJ']
-       adresf=aaa.attrib['AdresF']
+  #    #Вставка сведений о статусе
+       aaa=aa.getchildren()[0]
+       print aaa.tag, aaa.attrib['State']
+       debstate= aaa.attrib['State']
        cur.execute(("select * from ext_request where req_id="+request_id).decode('CP1251'))
        er=cur.fetchall()
        #print len(er)
@@ -356,36 +331,82 @@ def main():
        id=getgenerator(cur,"EXT_INFORMATION")
        hsh.update(str(id))
        svextkey=hsh.hexdigest()
-       sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(replydate)+cln+quoted('56')+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"       #print sqltemp
-       print sq3
-       #Сведения о работодтеле
-       #sq4="INSERT INTO EXT_DEBTOR_STATE_DATA (ID, STATE) VALUES ("+str(id)+cln+quoted(debstate)+");"
-       sq4="INSERT INTO EXT_SVED_RAB_DATA (ID, ADRES_F, ADRES_J, NAIMORG, INN, KPP) VALUES ("+str(id)+cln+quoted(adresf)+cln+quoted(adresj)+cln+quoted(naimorg)+", NULL, NULL);"
-       print sq4
+       sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(replydate)+cln+quoted('08')+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"       #print sqltemp
+       #print sq3
+       sq4="INSERT INTO EXT_DEBTOR_STATE_DATA (ID, STATE) VALUES ("+str(id)+cln+quoted(debstate)+");"
+       #print sq4
        sqlbuff.append(sq3)
        sqlbuff.append(sq4) 
-      else:
-       sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
-       #print sqltemp
-       for sqt in sqltemp:
-        sqlbuff.append(sqt)
-        print sqt
+      if aa.attrib['KindData']=='81':
+       aaa=aa.getchildren()[0]
+       if len (aaa.attrib.keys())<>0:
+        print 'Работа'
+        id=getgenerator(cur,"SEQ_DOCUMENT")
+        ipid=getipid(cur,'UTF-8','CP1251',request_id)
+        hsh=hashlib.md5()
+        hsh.update(str(id))
+        extkey=hsh.hexdigest()
+        sqltemp=setresponse(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Есть сведения")
+        print sqltemp
+        for sqt in sqltemp:
+         sqlbuff.append(sqt)
+         print sqt
+       #Вставка сведений о статусе
+        #aaa=aa.getchildren()[0]
+  #     print aaa.tag, aaa.attrib.keys()
+  #     #debstate= aaa.attrib['State']
+  #     # <SvedRab NaimOrg="naimorg" AdresJ="adresj" AdresF="adresf"/> SvedRab NaimOrg
+        naimorg=aaa.attrib['NaimOrg']
+        adresj=aaa.attrib['AdresJ']
+        adresf=aaa.attrib['AdresF']
+        cur.execute(("select * from ext_request where req_id="+request_id).decode('CP1251'))
+        er=cur.fetchall()
+  #     #print len(er)
+  #     #datastr="Есть сведения"
+        idnum=convtotype([' ','C'], getidnum(cur,'UTF-8','CP1251',ipid),'UTF-8','UTF-8')
+        ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
+        #print str(type((ent_name)))
+        ent_bdt=convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
+        ent_by=ent_bdt.split('.')[2]
+        ent_inn=convtotype([' ','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
+        req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
+        ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
+        id=getgenerator(cur,"EXT_INFORMATION")
+        hsh.update(str(id))
+        svextkey=hsh.hexdigest()
+        sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(replydate)+cln+quoted('56')+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"       #print sqltemp
+  #     print sq3
+  #     #Сведения о работодтеле
+        #sq4="INSERT INTO EXT_DEBTOR_STATE_DATA (ID, STATE) VALUES ("+str(id)+cln+quoted(debstate)+");"
+        sq4="INSERT INTO EXT_SVED_RAB_DATA (ID, ADRES_F, ADRES_J, NAIMORG, INN, KPP) VALUES ("+str(id)+cln+quoted(adresf)+cln+quoted(adresj)+cln+quoted(naimorg)+", NULL, NULL);"
+  #     print sq4
+        sqlbuff.append(sq3)
+        sqlbuff.append(sq4) 
+       else:
+        sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
+  #     #print sqltemp
+        for sqt in sqltemp:
+         sqlbuff.append(sqt)
+         print sqt
 
 
-   else:
-    sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
-    #print sqltemp
-    for sqt in sqltemp:
-     sqlbuff.append(sqt)
-     print sqt
-  #
-  for sqt in sqlbuff:
-   print sqt
-   cur.execute(sqt)
-  con.commit()
-  xmlfile.close()
-  f.close()
-  con.close() 
+    else:
+     sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
+     #print sqltemp
+     for sqt in sqltemp:
+      sqlbuff.append(sqt)
+      print sqt
+   
+   for sqt in sqlbuff:
+    print sqt
+    cur.execute(sqt)
+   con.commit()
+   xmlfile.close()
+   
+   rename(input_path+ff, input_arc_path+ff)
+   #Ренейм
+   f.close()
+   con.close() 
    #if a.attrib['AnswerType']=='2':
    # print 'Negative'
    #else:
