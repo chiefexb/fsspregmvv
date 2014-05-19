@@ -384,7 +384,7 @@ def setnegative(cur,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_cod
  #convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
  #print str(type(ent_name))
  
- sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+str(req_id)+cln+quoted(datastr)+")"
+ sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR, ANSWER_TYPE) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+str(req_id)+cln+quoted(datastr)+cln+quoted('02')+")"
  #print 'SQ2',sq2
  #cur.execute(sq)
  #cur.execute(sq2)
@@ -589,9 +589,9 @@ def setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  #sq2=''
  dtstr=datastr.decode('UTF-8')
  if anst<>'Null':
-  sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR,ANSWER_TYPE) VALUES ("+str(id) +cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+ (req_id)+cln+quoted(dtstr)+cln+quoted(anst)+")"
+  sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR, ANSWER_TYPE) VALUES ("+str(id) +cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+ (req_id)+cln+quoted(dtstr)+cln+quoted(anst)+")"
  else:
-  sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR,ANSWER_TYPE) VALUES  ("+str(id) +cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+ (req_id)+cln+quoted(dtstr)+cln+"Null)"
+  sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR, ANSWER_TYPE) VALUES  ("+str(id) +cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+ (req_id)+cln+quoted(dtstr)+cln+"Null)"
  sqltemp.append(sq)
  sqltemp.append(sq2)
  #logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')
