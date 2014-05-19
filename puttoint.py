@@ -320,7 +320,58 @@ def main():
       sqlbuff.append(sq3)
       sqlbuff.append(sq4) 
      if aa.attrib['KindData']=='81':
-      print 'Работа'
+      aaa=aa.getchildren()[0]
+      if len (aaa.attrib.keys())<>0:
+       print 'Работа'
+       id=getgenerator(cur,"SEQ_DOCUMENT")
+       ipid=getipid(cur,'UTF-8','CP1251',request_id)
+       hsh=hashlib.md5()
+       hsh.update(str(id))
+       extkey=hsh.hexdigest()
+       sqltemp=setresponse(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Есть сведения")
+       print sqltemp
+       for sqt in sqltemp:
+        sqlbuff.append(sqt)
+        print sqt
+       #Вставка сведений о статусе
+       #aaa=aa.getchildren()[0]
+       print aaa.tag, aaa.attrib.keys()
+       #debstate= aaa.attrib['State']
+       # <SvedRab NaimOrg="naimorg" AdresJ="adresj" AdresF="adresf"/> SvedRab NaimOrg
+       naimorg=aaa.attrib['NaimOrg']
+       adresj=aaa.attrib['AdresJ']
+       adresf=aaa.attrib['AdresF']
+       cur.execute(("select * from ext_request where req_id="+request_id).decode('CP1251'))
+       er=cur.fetchall()
+       #print len(er)
+       #datastr="Есть сведения"
+       idnum=convtotype([' ','C'], getidnum(cur,'UTF-8','CP1251',ipid),'UTF-8','UTF-8')
+       ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
+       #print str(type((ent_name)))
+       ent_bdt=convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
+       ent_by=ent_bdt.split('.')[2]
+       ent_inn=convtotype([' ','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
+       req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
+       ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
+       id=getgenerator(cur,"EXT_INFORMATION")
+       hsh.update(str(id))
+       svextkey=hsh.hexdigest()
+       sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(replydate)+cln+quoted('56')+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"       #print sqltemp
+       print sq3
+       #Сведения о работодтеле
+       #sq4="INSERT INTO EXT_DEBTOR_STATE_DATA (ID, STATE) VALUES ("+str(id)+cln+quoted(debstate)+");"
+       sq4="INSERT INTO EXT_SVED_RAB_DATA (ID, ADRES_F, ADRES_J, NAIMORG, INN, KPP) VALUES ("+str(id)+cln+quoted(adresf)+cln+quoted(adresj)+cln+quoted(naimorg)+", NULL, NULL);"
+       print sq4
+       sqlbuff.append(sq3)
+       sqlbuff.append(sq4) 
+      else:
+       sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
+       #print sqltemp
+       for sqt in sqltemp:
+        sqlbuff.append(sqt)
+        print sqt
+
+
    else:
     sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
     #print sqltemp
