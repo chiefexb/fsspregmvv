@@ -2,16 +2,16 @@
 <codepage>UTF-8</codepage>
 <database_params>
  <username>SYSDBA</username>
- <password>masterkey</password>
- <hostname>10.9.4.16</hostname>
+ <password></password>
+ <hostname>localhost</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
 </database_params>
 <mvv>
  <agent_code>ПФР</agent_code>
- <dept_code>008</dept_code>
- <agreement_code>ПФРИНТ</agreement_code>
+ <dept_code>ЧЕРК</dept_code>
+ <agreement_code>ЧЕРКINT</agreement_code>
 </mvv>
 <file>
  <codepage>CP1251</codepage>

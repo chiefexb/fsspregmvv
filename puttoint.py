@@ -251,15 +251,22 @@ def main():
  if filetype=='pfr':
   if  len(listdir(input_path))==0:
    print 'Нет файлов для загрузки'
+  try:
+   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+  except  Exception, e:
+   print("Ошибка при открытии базы данных:\n"+str(e))
+   sys.exit(2)
+  cur = con.cursor()
+  sqlbuff=[]
   for ff in listdir(input_path):
-   print "File",ff
+   #print "File",ff
    fff=ff.split('_')
    try:
     d=date(int (fff[1][0:4]),int (fff[1][4:6]), fff[1][6:8] ) 
    except:
     d=date.today()
-   print str(d)
-   print input_path
+   #print str(d)
+   #print input_path
    #Если формат файла верный тогда верно и ниже
    replydate=d.strftime('%d.%m.%Y')
    xmlfile=file(input_path+ff )#'PFR_20140507_12_09002_008_000_00010.xml') #'rr4.xml')
@@ -267,28 +274,28 @@ def main():
    #rename(input_path+ff, input_arc_path+ff)
    xml=etree.parse(xmlfile)
    xmlroot=xml.getroot()
-   print xmlroot.tag
+   #print xmlroot.tag
    #Ищем контейнер ответов
    answers='ExtAnswer'
    if(xmlroot.tag==answers):
     xmlanswers=xmlroot
    else:
     xmlanswers=xmlroot.findall(answers)
-   print answers
+   #print answers
    ##print len(  xmlanswers.getchildren())
    cn=0
    #packid=getgenerator(cur,"DX_PACK")
-   sqlbuff=[]
+   #sqlbuff=[]
    sqltemp=''
-   try:
-    con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
-   except  Exception, e:
-    print("Ошибка при открытии базы данных:\n"+str(e))
-    sys.exit(2)
-   cur = con.cursor()
+   #try:
+   # con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+   #except  Exception, e:
+   # print("Ошибка при открытии базы данных:\n"+str(e))
+   # sys.exit(2)
+   #cur = con.cursor()
    packid=getgenerator(cur,"DX_PACK")
    for a in  xmlanswers:
-    print a.attrib.keys()
+    #print a.attrib.keys()
     # #Проверить запрос с этим id был или нет загружен
     request_id=a.attrib['IPKey']
     # #print "Req_id",request_id,str(type(request_id))
@@ -300,7 +307,7 @@ def main():
     #  print 'POS'
     #Разбор сведений
      for aa in a:
-      print 'P', aa.keys(), aa.attrib['KindData']
+      #print 'P', aa.keys(), aa.attrib['KindData']
       if aa.attrib['KindData']=='93':
        id=getgenerator(cur,"SEQ_DOCUMENT")
        ipid=getipid(cur,'UTF-8','CP1251',request_id)
@@ -308,13 +315,13 @@ def main():
        hsh.update(str(id))
        extkey=hsh.hexdigest()
        sqltemp=setresponse(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Есть сведения")
-       print sqltemp
+       #print sqltemp
        for sqt in sqltemp:
         sqlbuff.append(sqt)
-        print sqt
+        #print sqt
   #    #Вставка сведений о статусе
        aaa=aa.getchildren()[0]
-       print aaa.tag, aaa.attrib['State']
+       #print aaa.tag, aaa.attrib['State']
        debstate= aaa.attrib['State']
        cur.execute(("select * from ext_request where req_id="+request_id).decode('CP1251'))
        er=cur.fetchall()
@@ -340,17 +347,17 @@ def main():
       if aa.attrib['KindData']=='81':
        aaa=aa.getchildren()[0]
        if len (aaa.attrib.keys())<>0:
-        print 'Работа'
+        #print 'Работа'
         id=getgenerator(cur,"SEQ_DOCUMENT")
         ipid=getipid(cur,'UTF-8','CP1251',request_id)
         hsh=hashlib.md5()
         hsh.update(str(id))
         extkey=hsh.hexdigest()
         sqltemp=setresponse(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Есть сведения")
-        print sqltemp
+        #print sqltemp
         for sqt in sqltemp:
          sqlbuff.append(sqt)
-         print sqt
+         #print sqt
        #Вставка сведений о статусе
         #aaa=aa.getchildren()[0]
   #     print aaa.tag, aaa.attrib.keys()
@@ -387,30 +394,29 @@ def main():
   #     #print sqltemp
         for sqt in sqltemp:
          sqlbuff.append(sqt)
-         print sqt
+         #print sqt
 
 
     else:
+     #print request_id
      sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
      #print sqltemp
      for sqt in sqltemp:
       sqlbuff.append(sqt)
-      print sqt
+      #print sqt
    
-   for sqt in sqlbuff:
-    print sqt
-    cur.execute(sqt)
-   con.commit()
+   #for sqt in sqlbuff:
+   # #print sqt
+   # cur.execute(sqt)
+   #con.commit()
    xmlfile.close()
-   
    rename(input_path+ff, input_arc_path+ff)
    #Ренейм
-   f.close()
-   con.close() 
-   #if a.attrib['AnswerType']=='2':
-   # print 'Negative'
-   #else:
-   # print 'Positive'
+  for sqt in sqlbuff:
+   cur.execute(sqt)
+  con.commit()
+  f.close()
+  con.close() 
    
 
 if __name__ == "__main__":
