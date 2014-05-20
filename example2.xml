@@ -8,6 +8,10 @@
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
 </database_params>
+<logging>
+  <log_path>/home/chief/mvv/</log_path>
+  <log_file>pfr.log</log_file>
+</logging>
 <mvv>
  <agent_code>ПФР</agent_code>
  <dept_code>ЧЕРК</dept_code>
@@ -18,6 +22,7 @@
  <output_path>/home/chief/work/pfr2/</output_path>
  <input_path>/home/chief/pfr_in/</input_path>
  <input_path_arc>/home/chief/pfr_in_arc/</input_path_arc>
+ <input_path_err>/home/chief/pfr_in_err/</input_path_err>
  <type>pfr</type>
  <numeric>normal</numeric>
  <prefix>SSP</prefix>
