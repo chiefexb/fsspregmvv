@@ -303,14 +303,22 @@ def main():
     # #actdate=a.attrib['ActDate']
     # replydate='07.05.2014' #Пока задается вручную, надо издвлекать из файла
     # #request_dt можно найти из запроса
-    if a.attrib['AnswerType']=='1':
+    ipid=getipid(cur,'UTF-8','CP1251',request_id)
+    if ipid==-1:
+     print ipid, request_id
+    if a.attrib['AnswerType']=='1' and ipid<>-1:
     #  print 'POS'
     #Разбор сведений
      for aa in a:
       #print 'P', aa.keys(), aa.attrib['KindData']
+      ipid=getipid(cur,'UTF-8','CP1251',request_id)
+      if ipid==-1:
+        print ipid, request_id
       if aa.attrib['KindData']=='93':
        id=getgenerator(cur,"SEQ_DOCUMENT")
-       ipid=getipid(cur,'UTF-8','CP1251',request_id)
+       #ipid=getipid(cur,'UTF-8','CP1251',request_id)
+       #if ipid==-1:
+       # print ipid, request_id
        hsh=hashlib.md5()
        hsh.update(str(id))
        extkey=hsh.hexdigest()
@@ -349,7 +357,7 @@ def main():
        if len (aaa.attrib.keys())<>0:
         #print 'Работа'
         id=getgenerator(cur,"SEQ_DOCUMENT")
-        ipid=getipid(cur,'UTF-8','CP1251',request_id)
+        #ipid=getipid(cur,'UTF-8','CP1251',request_id)
         hsh=hashlib.md5()
         hsh.update(str(id))
         extkey=hsh.hexdigest()
@@ -397,7 +405,7 @@ def main():
          #print sqt
 
 
-    else:
+    elif ipid<>-1:
      #print request_id
      sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
      #print sqltemp
@@ -410,7 +418,8 @@ def main():
    # cur.execute(sqt)
    #con.commit()
    xmlfile.close()
-   rename(input_path+ff, input_arc_path+ff)
+   if ipid <>-1:
+    rename(input_path+ff, input_arc_path+ff)
    #Ренейм
   for sqt in sqlbuff:
    cur.execute(sqt)
