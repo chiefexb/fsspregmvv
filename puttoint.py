@@ -67,7 +67,7 @@ def main():
  #Определение схемы файла должна быть ветка для типов файлов пока разбираем xml
  filescheme=filepar.findall('scheme')
  #создание root
- if filepar.find('result')<>'':
+ if str( type (filepar.find('result') ) )<>"<type 'NoneType'>":
   print 'RES'
   fileresult=filepar.find('result')
   positiveresult=fileresult.find('negativeresult').text
@@ -143,61 +143,72 @@ def main():
    sys.exit(2)
   cur = con.cursor() 
  #Получить список файлов в папке input
-  print intput_path
-  xmlfile=file(intput_path+'RR_092_06_12_13_1_reply.xml') #'rr4.xml')
-  xml=etree.parse(xmlfile)
-  xmlroot=xml.getroot()
-  #print xmlroot.tag
-  for ch in xmlroot.getchildren():
-   if ch.text=='reply_date':
-    replydatetag=ch.tag
-  #Ищем контейнер ответов
-  xmlanswers=xmlroot.find(answers)
- #Начинаем разбор ответов
-  cn=0
-  packid=getgenerator(cur,"DX_PACK")
-  sqlbuff=[]
-  sqltemp=''
-  with Profiler() as p:
-   for a in xmlanswers.getchildren():#[11:20]: #!Ограничение
-    #Проверить запрос с этим id был или нет загружен
-    request_id=a.find(reqidtag).text
-    #print "Req_id",request_id,str(type(request_id))
-    ipid=getipid(cur,'UTF-8','CP1251',request_id)
-    #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
-    replydate=xmlroot.find(replydatetag).text
-    if len(getanswertype(ansnodes,a))==0:
-     #request_id=a.find(reqidtag).text
-     #request_dt="06.12.2013"
-     #print timeit.Timer("""
-     #with Profiler() as p:
-     sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid) 
-     for sqt in sqltemp:
-      sqlbuff.append(sqt)
-     #""").repeat(1)
-    else:
-     ans=getanswertype(ansnodes,a)
-     #print "ANS",ans
-     #print timeit.Timer("""
-     sqltemp=setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a,packid)
-    for sqt in sqltemp:
-     sqlbuff.append(sqt)
+  print input_path
+  st=u'Начало процесса загрузки, файлов для обработки:'+str( len( listdir(input_path) ))
+  logging.info( st )
+  for ff in listdir(input_path):
+   xmlfile=file(input_path+ff) #'rr4.xml')
+   xml=etree.parse(xmlfile)
+   xmlroot=xml.getroot()
+   #print xmlroot.tag
+   for ch in xmlroot.getchildren()[0:100]:
+    if ch.text=='reply_date':
+     replydatetag=ch.tag
+   #Ищем контейнер ответов
+   xmlanswers=xmlroot.find(answers)
+  #Начинаем разбор ответов
+   cn=0
+   packid=getgenerator(cur,"DX_PACK")
+   sqlbuff=[]
+   sqltemp=''
+   with Profiler() as p:
+    for a in xmlanswers.getchildren():#[11:20]: #!Ограничение
+     #Проверить запрос с этим id был или нет загружен
+     request_id=a.find(reqidtag).text
+     #print "Req_id",request_id,str(type(request_id))
+     ipid=getipid(cur,'UTF-8','CP1251',request_id)
+     #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
+     replydate=xmlroot.find(replydatetag).text
+     if len(getanswertype(ansnodes,a))==0 and ipid<>-1:
+      #request_id=a.find(reqidtag).text
+      #request_dt="06.12.2013"
+      #print timeit.Timer("""
+      #with Profiler() as p:
+      sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid) 
+      for sqt in sqltemp:
+       sqlbuff.append(sqt)
+      #""").repeat(1)
+     elif ipid<>0:
+      ans=getanswertype(ansnodes,a)
+      #print "ANS",ans
+      #print timeit.Timer("""
+      sqltemp=setpositive(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,ans,a,packid)
+      for sqt in sqltemp:
+       sqlbuff.append(sqt)
  
-    #""").repeat(1)
-    #print ans
-    #print ans[0].values()
-    #for i in range(len( ans)):
-    # ans[i]
-   #print len (xmlanswers),cn
-   #print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
-   #print ipid,id
-  print len(sqlbuff)
-  #con.commit()
-  with Profiler() as p:
-   for sqt in sqlbuff:
-    cur.execute(sqt)
-   con.commit()
-  xmlfile.close()
+     #""").repeat(1)
+     #print ans
+     #print ans[0].values()
+     #for i in range(len( ans)):
+     # ans[i]
+    #print len (xmlanswers),cn
+    #print "first:"+xmlanswers.getchildren()[0].find(reqidtag).text,xmlanswers.getchildren()[0][3].text
+    #print ipid,id
+   #print len(sqlbuff)
+   #con.commit()
+   st=u'Выгружаем буфер sql запросов:'+str(len(sqlbuff))
+   logging.info( st )
+   with Profiler() as p:
+    for sqt in sqlbuff:
+     cur.execute(sqt)
+    con.commit()
+   xmlfile.close()
+   if ipid <>-1:
+    rename(input_path+ff, input_arc_path+ff)
+   else:
+    st=u'Загрузка файла '+ff+u' невозможна, запрос с id='+str(request_id)+u'отстутствует в базе'
+    logging.error( st ) #logging.error
+    rename(input_path+ff, input_err_path+ff)
   f.close()
   con.close()
  if filetype=='xmlatrib':

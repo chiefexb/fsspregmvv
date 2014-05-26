@@ -520,7 +520,7 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     #rightv['floor']=Null #rightv['nfloor'].split('/')[0][0:3]
     #print "FLOOR",rightv['floor'],rightv['nfloor']
     #print rightv['kadastr_n'],rightv['inv_n_nedv'],rightv['s_nedv'],rightv['nfloor'],rightv['adres_nedv']
-    sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+"Null"+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+"Null"+")"
+    sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR, NAIM_NEDV) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+"Null"+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+"Null"+cln+quoted(rightv['purpose'])+")"
     sqltemp.append(sq3)
     sqltemp.append(sq4)
     #print "SQ4",sq4
@@ -550,11 +550,12 @@ def getxmlvalue(name,ans,a):
  #nn.tag
  for n in ndd:
   nn=nn.find(n)
+  #print 'NN', nn.text
   #print nn.tag,nn.text
   try:
    val=convtotype([' ','C'],nn.text,'UTF-8','UTF-8')
   except:
-   val='Null'
+   val=''
  return val
 def setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,anst,id,packid,extkey,datastr): 
  sqltemp=[]

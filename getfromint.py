@@ -62,6 +62,7 @@ def main():
  filecodepage=filepar.find('codepage').text
  output_path=filepar.find('output_path').text
  filetype=filepar.find('type').text
+ print filetype
  filenum=filepar.find('numeric').text
  fileprefix=filepar.find('prefix').text
  fileorgamd=filepar.find('orgamd').text
@@ -112,6 +113,7 @@ def main():
    sys.exit(2)
   cur = con.cursor()
   root=etree.Element(root2.tag)
+  print agreement_code, dept_code
   packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
   p=len(packets)
   for pp in range(0,p):
@@ -138,7 +140,7 @@ def main():
    f2.close()
   #setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
 
- elif filetype=='xmlatrib':
+ elif filetype=='xmlatrib' or filetype=='pfr':
   #print 'XML',root2.attrib.keys(),root2.attrib.values()
   ch=root2.getchildren()
   reqq=[]
@@ -169,7 +171,7 @@ def main():
  #r=getrecords(cur,packets[0][0]) #!!!
  #rr=r[0]
  #root=setattribs(cur,'UTF-8','UTF-8',root,root2,rr,delta,1) 
- 
+  print p
   for pp in range(0,p):
    root=etree.Element(root2.tag)
    r=getrecords(cur,packets[pp][0])
