@@ -204,7 +204,8 @@ def main():
     con.commit()
    xmlfile.close()
    if ipid <>-1:
-    rename(input_path+ff, input_arc_path+ff)
+    #rename(input_path+ff, input_arc_path+ff)
+    pass
    else:
     st=u'Загрузка файла '+ff+u' невозможна, запрос с id='+str(request_id)+u'отстутствует в базе'
     logging.error( st ) #logging.error

@@ -8,6 +8,10 @@
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
 </database_params>
+<logging>
+  <log_path>/root/git/fsspregmvv/</log_path>
+  <log_file>rosr.log</log_file>
+</logging>
 <mvv>
  <preprocessing>
   <sql>ext_request.mvv_agent_code='РОСРЕЕСТР' and ext_request.entity_type not in (95,2)</sql>
@@ -20,8 +24,9 @@
 <file>
  <codepage>CP1251</codepage>
  <output_path>/home/chief/work/reg/</output_path>
- <input_path>/home/chief/rr_in/</input_path>
- <input_path_arc>/home/chief/rr_in_arc</input_path_arc>
+ <input_path>/home/chief/work/regin/</input_path>
+ <input_path_err>/home/chief/work/regerr/</input_path_err> 
+ <input_path_arc>/home/chief/work/regarc/</input_path_arc>
  <type>xml</type>
  <numeric>normal</numeric>
  <prefix>rr</prefix>
@@ -67,6 +72,7 @@
     <CadastralNumber>kadastr_n</CadastralNumber>
     <RegNumber>inv_n_nedv</RegNumber>
     <StartDate>startdate</StartDate>
+    <EndDate>enddate</EndDate>
     <Area>s_nedv</Area>
     <AreaUnits>012002001000</AreaUnits>
     <Purpose>purpose</Purpose>
