@@ -13,14 +13,24 @@
  <dept_code>ЧЕРК</dept_code>
  <agreement_code>РСБАНКИНТ</agreement_code>
 </mvv>
+<logging>
+  <log_path>/root/</log_path>
+  <log_file>rshb.log</log_file>
+</logging>
 <file>
  <codepage>CP866</codepage>
  <output_path>/home/chief/rshb_out/</output_path>
- <input_path>/home/chief/rshb_in/</input_path>
- <input_path_arc>/home/chief/rshb_in_arc</input_path_arc>
+ <input_path>/home/chief/work/rshbin/</input_path>
+ <input_path_err>/home/chief/work/rshbinerr/</input_path_err>
+ <input_path_arc>/home/chief/work/rshbinarc</input_path_arc>
  <type>dbf</type>
  <numeric>normal</numeric>
  <prefix>rshb</prefix>
+ <result>
+  <positiveresult>131</positiveresult>
+  <negativeresult>1</negativeresult>
+ </result>
+
  <scheme>
  <UNICODE  field_type='N'  field_size='10'>er_req_id</UNICODE>
  <ORGAN    field_type='C'  field_size='100'>divname</ORGAN>   
@@ -41,8 +51,8 @@
  <ORGAN    field_type='C'  field_size='100'>divname</ORGAN>
  <NUMISP   field_type='C'  field_size='40'>er_ip_num </NUMISP>
  <DT	   field_type='D'  field_size='10'>er_req_date </DT>
- <NUMRES   field_type='C'  field_size='40'>er_req_number</NUMREZ>
- <DTREZ    field_type='D'  field_size='10'>er_req_date </DTREZ>
+ <NUMRES   field_type='C'  field_size='40'>er_req_number</NUMRES>
+ <DTRES    field_type='D'  field_size='10'>er_req_date </DTRES>
  <RESULT   field_type='N'  field_size='4'>er_debtor_name</RESULT>
  <TEXT     field_type='C'  field_size='253'>result_text</TEXT>
  <FILENAME field_type='C'  field_size='30'>blob_filename</FILENAME>

@@ -474,7 +474,7 @@ def main():
    con.commit()
   f.close()
   con.close() 
-   
-
+ if filetype=='dbf':    
+  print ans_scheme.tag
 if __name__ == "__main__":
     main()
