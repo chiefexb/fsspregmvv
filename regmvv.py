@@ -418,11 +418,11 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
    # docs=gettypedoc(cur,'UTF-8','CP1251',docs)
    if not ('Null' in docs):
     #print "Негативная"
-    sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'Null',id,packid,extkey,"Данные с ошибкой")
+    sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'02',id,packid,extkey,"Данные с ошибкой")
     for sqt in sqq:
      sqltemp.append(sqt)
    else:
-    sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,"Есть сведения") 
+    sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'01',id,packid,extkey,"Есть сведения") 
     for sqt in sqq:
      sqltemp.append(sqt)
     
@@ -516,8 +516,8 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     # datastr=datastr+rightv[rrr].decode('UTF-8')+cln
     #print "END", len (rightv['enddate'])
     if len (rightv['enddate'])>=10:
-     print extkey
-     sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,ans[aa][1],id,packid,extkey,datastr)
+     #print extkey ans[aa][1]
+     sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'01',id,packid,extkey,datastr)
      for sqt in sqq:
       sqltemp.append(sqt)
      #print "XFFFF",rightv['nfloor']
@@ -529,6 +529,10 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
      sq4="INSERT INTO EXT_SVED_NEDV_DATA (ID, KADASTR_N, ADRES_NEDV, S_NEDV, FLOOR, LITER_N, INV_N_NEDV, NFLOOR, NAIM_NEDV) VALUES ("+str(id)+cln+quoted(rightv['kadastr_n'])+cln+quoted(rightv['adres_nedv'])+cln+rightv['s_nedv']+cln+"Null"+cln+"NULL"+cln+quoted(rightv['inv_n_nedv'])+cln+"Null"+cln+quoted(rightv['purpose'])+")"
      sqltemp.append(sq3)
      sqltemp.append(sq4)
+    else:
+     sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'02',id,packid,extkey,"Данные с ошибкой, сведения о ранее принадлежавшей недвижимости")
+     for sqt in sqq:
+      sqltemp.append(sqt)
      #print "SQ4",sq4
     #cur.execute(sq3)
 #.decode('UTF-8').encode('CP1251'))
