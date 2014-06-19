@@ -201,7 +201,7 @@ def main():
    with Profiler() as p:
     for sqt in sqlbuff:
      cur.execute(sqt)
-    con.commit()
+     con.commit()
    xmlfile.close()
    if ipid <>-1:
     #rename(input_path+ff, input_arc_path+ff)
