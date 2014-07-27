@@ -476,5 +476,16 @@ def main():
   con.close() 
  if filetype=='dbf':    
   print ans_scheme.tag
+  ff='orshb0912_01_02_14_1.dbf'
+  db=dbf.Dbf(input_path+ff)
+  print db
+  #for j in range (14,15):
+  j=14
+  #print str(db[j]).decode('CP866')
+  text=db[j]["TEXT"].decode('CP866')
+  print text
+  sp=text.split(' ')
+  for k in range (0,len(sp)):
+   print sp[k]
 if __name__ == "__main__":
     main()
