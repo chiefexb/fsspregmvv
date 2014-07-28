@@ -2,8 +2,8 @@
 <codepage>UTF-8</codepage>
 <database_params>
  <username>SYSDBA</username>
- <password>f1a3e</password>
- <hostname>10.9.54.34</hostname>
+ <password>masterkey</password>
+ <hostname>localhost</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
@@ -14,36 +14,36 @@
  <agreement_code>РСБАНКИНТ</agreement_code>
 </mvv>
 <logging>
-  <log_path>/root/</log_path>
-  <log_file>rshb.log</log_file>
+  <log_path>./</log_path>
+  <log_file>rs.log</log_file>
 </logging>
 <file>
  <codepage>CP866</codepage>
- <output_path>/home/chief/rshb_out/</output_path>
- <input_path>/home/chief/work/rshbin/</input_path>
- <input_path_err>/home/chief/work/rshbinerr/</input_path_err>
- <input_path_arc>/home/chief/work/rshbinarc</input_path_arc>
+ <output_path>/home/chief/work/rs_out/</output_path>
+ <input_path>/home/chief/work/rs_in/</input_path>
+ <input_path_arc>/home/chief/work/rs_in_arc/</input_path_arc>
+ <input_path_err>/home/chief/work/rs_in_err/</input_path_err>
+
  <type>dbf</type>
  <numeric>normal</numeric>
  <prefix>rshb</prefix>
- <result>
+<result>
   <positiveresult>131</positiveresult>
   <negativeresult>1</negativeresult>
  </result>
-
  <scheme>
  <UNICODE  field_type='N'  field_size='10'>er_req_id</UNICODE>
- <ORGAN    field_type='C'  field_size='100'>divname</ORGAN>   
+ <ORGAN    field_type='C'  field_size='100'>divname</ORGAN>
  <FIOISP   field_type='C'  field_size='100'>er_fio_spi</FIOISP>
- <NUMISP   field_type='C'  field_size='40'>er_ip_num </NUMISP>  
- <DT       field_type='D'  field_size='10'>er_req_date </DT>
- <NUM      field_type='C'  field_size='40'>er_req_number</NUM>	
- <FIZUR    field_type='N'  field_size='1'>fizur</FIZUR> 
+ <NUMISP   field_type='C'  field_size='40'>er_ip_num </NUMISP>
+ <DT	   field_type='D'  field_size='10'>er_req_date </DT>
+ <NUM	   field_type='C'  field_size='40'>er_req_number</NUM>
+ <FIZUR    field_type='N'  field_size='1'>fizur</FIZUR>
  <FIOORG   field_type='C'  field_size='250'>er_debtor_name</FIOORG>
  <DATE_R   field_type='C'  field_size='10'>er_debtor_birthday</DATE_R>
  <ADRESS   field_type='C'  field_size='250'>er_debtor_address</ADRESS>
  <PASSPORT field_type='C'  field_size='250'>er_debtor_document,er_debtor_ogrn</PASSPORT>
- <SUMM     field_type='N'  field_size='12'  field_dec='2'>er_ip_sum</SUMM> 
+ <SUMM     field_type='N'  field_size='12'  field_dec='2'>er_ip_sum</SUMM>
 </scheme>
 <scheme>
  <UNICODE  field_type='N'  field_size='10'></UNICODE>
@@ -54,7 +54,7 @@
  <NUMRES   field_type='C'  field_size='40'>er_req_number</NUMRES>
  <DTRES    field_type='D'  field_size='10'>er_req_date </DTRES>
  <RESULT   field_type='N'  field_size='4'>er_debtor_name</RESULT>
- <TEXT     field_type='C'  field_size='253'>result_text</TEXT>
+ <TEXT     field_type='C'  field_size='253' separator=' ' blob_field="FILENAME">ignore acc_number ignore acc_rest acc_curr</TEXT>
  <FILENAME field_type='C'  field_size='30'>blob_filename</FILENAME>
 </scheme>
 </file>

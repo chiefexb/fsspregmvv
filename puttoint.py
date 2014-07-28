@@ -78,6 +78,7 @@ def main():
  try:
   ans_scheme=filescheme[1].getchildren()[0]
  except:
+  print "Не найдена схема ответа."
   sys.exit(2)
  #Ищем поля ответа
  logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = log_path+log_file)
@@ -475,17 +476,20 @@ def main():
   f.close()
   con.close() 
  if filetype=='dbf':    
-  print ans_scheme.tag
+  ans_scheme=filescheme[1]
+  for ch in ans_scheme.getchildren():
+   print ch.tag
   ff='orshb0912_01_02_14_1.dbf'
   db=dbf.Dbf(input_path+ff)
-  print db
+  #print db
   #for j in range (14,15):
   j=14
+  print db[j][1]
   #print str(db[j]).decode('CP866')
   text=db[j]["TEXT"].decode('CP866')
   print text
   sp=text.split(' ')
   for k in range (0,len(sp)):
-   print sp[k]
+   print k,sp[k]
 if __name__ == "__main__":
     main()
