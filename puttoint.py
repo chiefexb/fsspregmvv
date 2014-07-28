@@ -302,7 +302,7 @@ def main():
    replydate=d.strftime('%d.%m.%Y')
    xmlfile=file(input_path+ff )#'PFR_20140507_12_09002_008_000_00010.xml') #'rr4.xml')
    #Логирование и учет
-   inform(u'Загружаем: '+ff)
+   inform(u'Загружаем: '+ff.decode('UTF-8'))
    with Profiler() as p:
     xml=etree.parse(xmlfile)
     xmlroot=xml.getroot()
@@ -315,7 +315,7 @@ def main():
      xmlanswers=xmlroot.findall(answers)
     cn=0
     sqltemp=''
-    inform(u"Проверка файл соответствует структуре.")
+    inform(u"Проверка файл соответствует ли  структуре")
     if len(xmlanswers)<>0:
      #Если присутвует контейнеров ответов, проверяем ipid
      try:
@@ -377,7 +377,8 @@ def main():
           if tt:
     	   tt='AdresF' in  aaa.attrib.keys()
           else:
-           print ff,request_id,aaa.attrib.keys()
+           #print ff,request_id,aaa.attrib.keys()
+           informwarn(u'Неполные сведения о работе, данные проигнорированы:'+ff.decode('UTF-8')+' '+request_id)
           if tt:
            id=getgenerator(cur,"SEQ_DOCUMENT")
            hsh=hashlib.md5()
@@ -407,25 +408,30 @@ def main():
            sq4="INSERT INTO EXT_SVED_RAB_DATA (ID, ADRES_F, ADRES_J, NAIMORG, INN, KPP) VALUES ("+str(id)+cln+quoted(adresf)+cln+quoted(adresj)+cln+quoted(naimorg)+", NULL, NULL);"
            sqlbuff.append(sq3)
            sqlbuff.append(sq4) 
-          else:
-           st=u'В файле '+ff+u' в запросе с id='+str(request_id)+u'неверные сведения.'
-           logging.warning( st ) #logging.error
-           sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
-           for sqt in sqltemp:
-            sqlbuff.append(sqt)
+          #else:
+          # st=u'В файле '+ff+u' в запросе с id='+str(request_id)+u'неверные сведения.'
+          # logging.warning( st ) #logging.error
+          # sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
+          # for sqt in sqltemp:
+          #  sqlbuff.append(sqt)
        elif ipid<>-1:
         sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
         for sqt in sqltemp:
          sqlbuff.append(sqt)
+      xmlfile.close()
+      rename(input_path+ff, input_arc_path+ff)
       #Конец основного блока, чтобы не путаться
-      else: #Если отстутствуе блок ответа:
-        informerr (u"В файле "+ff+u"Отстутсвет блок ответа, файл будет помещен в папку для ошибочных.")
-        rename(input_path+ff, input_err_path+ff)
+    else: #Если отстутствуе блок ответа:
+     xmlfile.close()
+     informerr (u"В файле "+ff+u"Отстутсвует блок ответа, файл будет помещен в папку для ошибочных.")
+     rename(input_path+ff, input_err_path+ff)
+   
    st=u'Выгружаем буфер sql запросов:'+str(len(sqlbuff))
    logging.info( st )
    with Profiler() as p:
     for sqt in sqlbuff:
      cur.execute(sqt)
+    con.commit()
   f.close()
   con.close() 
  if filetype=='dbf':
