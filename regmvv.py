@@ -321,13 +321,20 @@ def getanswertype(ansfields,ansnodes):
   #in consts.keys() 
 def getipid (cur,systcp,dbcp,req_id):
  #print "getip:",req_id
- sq="select ext_request.ip_id from ext_request where ext_request.req_id='"+req_id+"'"
+ try:
+  rid=int(req_id)
+ except:
+  ipid=-1
+ else:
+  sq="select ext_request.ip_id from ext_request where ext_request.req_id='"+req_id+"'"
+ #print sq
  try:
   cur.execute(sq)
- except:
+ except Exception,e:
   print "err"
- #cur.execute(sq) 
- r=cur.fetchall()
+ #cur.execute(sq)
+ else: 
+  r=cur.fetchall()
  #print "getip len r",len(r)
  try:
   ipid=r[0][0]
@@ -378,14 +385,21 @@ def setnegative(cur,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_cod
  idnum=convtotype(['','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
  ent_name=convtotype(['','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
  ent_bdt=convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
- ent_by=ent_bdt.split('.')[2]
+ #print "END",ent_bdt
+ print "ENT",str(type(ent_bdt)), len(ent_bdt)
+ if len(ent_bdt)<>0:
+  ent_by=quoted(ent_bdt.split('.')[2])
+  ent_bdt=quoted(ent_bdt)
+ else:
+  ent_bdt='Null'
+  ent_by ='Null'
  ent_inn=convtotype(['','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
  req_num=convtotype(['','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
  ipnum=convtotype(['','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
  #convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
  #print str(type(ent_name))
- 
- sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR, ANSWER_TYPE) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+str(req_id)+cln+quoted(datastr)+cln+quoted('02')+")"
+ #print ent_bdt,ent_by
+ sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR, ANSWER_TYPE) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ent_name)+cln+(ent_by)+cln+(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+str(req_id)+cln+quoted(datastr)+cln+quoted('02')+")"
  #print 'SQ2',sq2
  #cur.execute(sq)
  #cur.execute(sq2)
@@ -416,12 +430,16 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
    for dd in ans[aa][2].keys():
     docs[dd]=getxmlvalue(dd,ans[aa],doc)
    #print "DOCS",docs
-   # docs=gettypedoc(cur,'UTF-8','CP1251',docs)
-   if not ('Null' in docs):
+   docs=gettypedoc(cur,'UTF-8','CP1251',docs)
+   #print docs, not ('Null' in docs.values()), not ('' in docs.values())
+   if ('Null' in docs.values()):
+    informwarn(u"Данные о паспорте не полные, пропускаются. "+str(req_id))
+   elif ('' in docs.values()):
+    informwarn(u"Данные о паспорте не полные, пропускаются. "+str(req_id))
     #print "Негативная"
-    sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'02',id,packid,extkey,"Данные с ошибкой")
-    for sqt in sqq:
-     sqltemp.append(sqt)
+    #sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'02',id,packid,extkey,"Данные с ошибкой")
+    #for sqt in sqq:
+    # sqltemp.append(sqt)
    else:
     sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'01',id,packid,extkey,"Есть сведения") 
     for sqt in sqq:
@@ -434,21 +452,27 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     idnum=convtotype([' ','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
     ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
     #print str(type((ent_name)))
-    ent_bdt=convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
-    ent_by=ent_bdt.split('.')[2]
+    ent_bdt=(convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8'))
+    if len(ent_bdt)<>0:
+     ent_by=quoted(ent_bdt.split('.')[2])
+     ent_bdt=quoted(ent_bdt)
+    else:
+     ent_bdt='Null'
+     ent_by='Null'
+    
     ent_inn=convtotype([' ','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
     req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
     ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
     id=getgenerator(cur,"EXT_INFORMATION")
     hsh.update(str(id))
     svextkey=hsh.hexdigest()
-    sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"
+    sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+(ent_bdt)+cln+(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"
     #print "SQ3=",sq3,ans[aa][2].keys()
     doc=a.find(ans[aa][0])
-    docs={}
-    for dd in ans[aa][2].keys():
-     docs[dd]=getxmlvalue(dd,ans[aa],doc)
-    docs=gettypedoc(cur,'UTF-8','CP1251',docs)
+    #docs={}
+    #for dd in ans[aa][2].keys():
+    # docs[dd]=getxmlvalue(dd,ans[aa],doc)
+    #docs=gettypedoc(cur,'UTF-8','CP1251',docs)
     #print docs
     #print "Паспорт номер:",docs['ser_doc']," ",docs['num_doc']," ",docs['date_doc'],docs['issue_organ']
     sq4="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC,type_doc_code) VALUES ("+str(id)+cln+quoted(docs['num_doc'])+cln+quoted(docs['date_doc'])+cln+"NULL"+cln+quoted(docs['ser_doc'])+cln+quoted(ent_name)+cln+"NULL,"+quoted(docs['issue_organ'])+cln+quoted(docs['type_doc'])+")"
@@ -482,20 +506,27 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     # sqltemp.append(sqt)
     cur.execute(("select * from ext_request where req_id="+req_id).decode('CP1251'))
     er=cur.fetchall()
+    print "Поиск", len(er)
     #print len(er)
     #datastr="Есть сведения"
     idnum=convtotype([' ','C'], getidnum(cur,dbsystcp,dbcp,ipid),'UTF-8','UTF-8')
     ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
     #print str(type((ent_name)))
-    ent_bdt=convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
-    ent_by=ent_bdt.split('.')[2]
+    ent_bdt=(convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8'))
+    print "ERR", len(ent_bdt),ent_bdt
+    if len(ent_bdt)<>0:
+     ent_by=quoted(ent_bdt.split('.')[2])
+     ent_bdt=quoted(ent_bdt)
+    else:
+     ent_by='Null'
+     ent_bdt='Null'
     ent_inn=convtotype([' ','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
     req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
     ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
     id=getgenerator(cur,"EXT_INFORMATION")
     hsh.update(str(id))
     svextkey=hsh.hexdigest()
-    sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"
+    sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(dt)+cln+quoted(ans[aa][1])+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+(ent_bdt)+cln+(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"
     #print "SQ3=",sq3
     #print 'ANS3',ans[aa][2].keys()
     #print 'ANS3',ans[aa][2].values()
@@ -516,7 +547,8 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     #for rrr in rightv.keys():
     # datastr=datastr+rightv[rrr].decode('UTF-8')+cln
     #print "END", len (rightv['enddate'])
-    if len (rightv['enddate'])>=10:
+    #print "END", rightv['enddate']
+    if not ('enddate' in rightv.keys()):
      #print extkey ans[aa][1]
      sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'01',id,packid,extkey,datastr)
      for sqt in sqq:
@@ -531,9 +563,10 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
      sqltemp.append(sq3)
      sqltemp.append(sq4)
     else:
-     sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'02',id,packid,extkey,"Данные с ошибкой, сведения о ранее принадлежавшей недвижимости")
-     for sqt in sqq:
-      sqltemp.append(sqt)
+     informwarn (u'Данные с ошибкой, сведения о ранее принадлежавшей недвижимости '+str(req_id))
+     #sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'02',id,packid,extkey,"Данные с ошибкой, сведения о ранее принадлежавшей недвижимости")
+     #for sqt in sqq:
+     # sqltemp.append(sqt)
      #print "SQ4",sq4
     #cur.execute(sq3)
 #.decode('UTF-8').encode('CP1251'))
@@ -587,7 +620,12 @@ def setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
  #print str(type((ent_name)))
  ent_bdt=convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
- ent_by=ent_bdt.split('.')[2]
+ if len(ent_bdt)<>0:
+  ent_by=ent_bdt.split('.')[2]
+  ent_bdt=quoted(ent_bdt)
+ else:
+  ent_by ='Null'
+  ent_bdt='Null'
  ent_inn=convtotype([' ','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
  req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
  ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
@@ -601,9 +639,9 @@ def setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
  #sq2=''
  dtstr=datastr.decode('UTF-8')
  if anst<>'Null':
-  sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR, ANSWER_TYPE) VALUES ("+str(id) +cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+ (req_id)+cln+quoted(dtstr)+cln+quoted(anst)+")"
+  sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR, ANSWER_TYPE) VALUES ("+str(id) +cln+quoted(dt)+cln+quoted(ent_name)+cln+(ent_by)+cln+(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+ (req_id)+cln+quoted(dtstr)+cln+quoted(anst)+")"
  else:
-  sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR, ANSWER_TYPE) VALUES  ("+str(id) +cln+quoted(dt)+cln+quoted(ent_name)+cln+quoted(ent_by)+cln+quoted(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+ (req_id)+cln+quoted(dtstr)+cln+"Null)"
+  sq2="INSERT INTO EXT_RESPONSE (ID, RESPONSE_DATE, ENTITY_NAME, ENTITY_BIRTHYEAR, ENTITY_BIRTHDATE, ENTITY_INN, ID_NUM, IP_NUM, REQUEST_NUM, REQUEST_ID, DATA_STR, ANSWER_TYPE) VALUES  ("+str(id) +cln+quoted(dt)+cln+quoted(ent_name)+cln+(ent_by)+cln+(ent_bdt)+cln+quoted(ent_inn)+cln+quoted(idnum)+cln+ quoted(ipnum)+cln+quoted(req_num)+cln+ (req_id)+cln+quoted(dtstr)+cln+"Null)"
  sqltemp.append(sq)
  sqltemp.append(sq2)
  #logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')
@@ -694,7 +732,18 @@ def getrestdeptsum(cur,dbcp,dbfcp,id):
  else:
   rr=''
  return rr
-
+def inform(st):
+ logging.info(st)
+ print st
+ return
+def informwarn(st):
+ logging.warning(st)
+ print st
+ return
+def informerr(st):
+ logging.error(st)
+ print st
+ return
 #def setlogging()
 # logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')  
 # return
