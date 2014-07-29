@@ -10,18 +10,6 @@ import fdb
 import sys
 from os import *
 import logging
-def inform(st):
- logging.info(st)
- print st
- return
-def informwarn(st):
- logging.warning(st)
- print st
- return
-def informerr(st):
- logging.error(st)
- print st
- return
 class Profiler(object):
     def __enter__(self):
         self._startTime = time.time()
@@ -101,6 +89,7 @@ def main():
    ans=ans_scheme
   else:
    for ch in ans_scheme.getchildren():
+    print ch.tag
     if ch.text=='reply_date':
      replydatetag=ch.tag
     if 'answers' in ch.keys():
@@ -142,7 +131,7 @@ def main():
   #Ищем в значениях тег request_id
   for ch in answer.getchildren():
    print ch.tag,ch.text
-   if ch.text=='request_id': 
+   if ch.text=='er_req_id': 
     reqidtag=ch.tag
    #if ch.text=='reply_date': 
    # replydatetag=ch.tag 
@@ -176,6 +165,7 @@ def main():
    with Profiler() as p:
     for a in xmlanswers.getchildren():#[11:20]: #!Ограничение
      #Проверить запрос с этим id был или нет загружен
+     print "REQ",reqidtag
      request_id=a.find(reqidtag).text
      #print "Req_id",request_id,str(type(request_id))
      ipid=getipid(cur,'UTF-8','CP1251',request_id)
@@ -212,8 +202,11 @@ def main():
    logging.info( st )
    with Profiler() as p:
     for sqt in sqlbuff:
-     cur.execute(sqt)
-     con.commit()
+     try:
+      cur.execute(sqt)
+     except:
+      print sqt
+    con.commit()
    xmlfile.close()
    if ipid <>-1:
     #rename(input_path+ff, input_arc_path+ff)
