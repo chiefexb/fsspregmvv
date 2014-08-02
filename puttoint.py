@@ -152,7 +152,7 @@ def main():
    xml=etree.parse(xmlfile)
    xmlroot=xml.getroot()
    #print xmlroot.tag
-   for ch in xmlroot.getchildren()[0:100]:
+   for ch in xmlroot.getchildren(): 
     if ch.text=='reply_date':
      replydatetag=ch.tag
    #Ищем контейнер ответов
@@ -428,20 +428,53 @@ def main():
   f.close()
   con.close() 
  if filetype=='dbf':
+#Первое мы должны сохранить схему файла
    ans_scheme=filescheme[1]
+   flds={}
+   answer={}
+   reqstart=''
    for ch in ans_scheme.getchildren():
-    print ch.tag
+    print ch.tag,  len(str (ch.text))
+    if ch.text=='request_id':
+     if 'start' in ch.attrib.keys():
+      reqstart=ch.attrib['start']
+      print reqstart
+     flds[ch.text]=ch.tag
+    if ch.text=='result':
+     flds[ch.text]=ch.tag
+    if 'result' in ch.attrib.keys():
+     #Проверяем есть ли разделитель
+     if 'separator' in ch.attrib.keys():
+      ans=ch.text.split(ch.attrib['separator'])
+     answer[ch.attrib['result']]=ans
+     answer['separator']=ch.attrib['separator']
+     flds['resulttext']=ch.tag
+     if 'blob_field' in ch.attrib.keys():
+      flds['blob_field']=ch.attrib['blob_field']
+ #request_id
+   print flds
+   print answer
+   print positiveresult
    ff='orshb0912_01_02_14_1.dbf'
    db=dbf.Dbf(input_path+ff)
    #print db
    #for j in range (14,15):
    j=14
-   print db[j][1]
+   aa={}
+   for kk in flds.keys():
+    if str(type (db[j][flds[kk]])) =="<type 'str'>":
+     aa[kk]=db[j][flds[kk]].decode('CP866')
+    elif kk=='request_id':
+     aa[kk]=int(reqstart+str (db[j][flds[kk]]))
+    else:
+     aa[kk]= (db[j][flds[kk]])
+   print aa
+   #print db[j][1]
    #print str(db[j]).decode('CP866')
-   text=db[j]["TEXT"].decode('CP866')
-   print text
-   sp=text.split(' ')
-   for k in range (0,len(sp)):
-    print k,sp[k]
+   #text=db[j]["TEXT"].decode('CP866')
+   #print text
+   #sp=text.split(' ')
+   #for k in range (0,len(sp)):
+   # print k,sp[k]
 if __name__ == "__main__":
     main()

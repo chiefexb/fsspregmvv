@@ -32,7 +32,7 @@
   <negativeresult>1</negativeresult>
  </result>
  <scheme>
- <UNICODE  field_type='N'  field_size='10'>er_req_id</UNICODE>
+ <UNICODE  field_type='N'  field_size='10' start='9112'>er_req_id</UNICODE>
  <ORGAN    field_type='C'  field_size='100'>divname</ORGAN>
  <FIOISP   field_type='C'  field_size='100'>er_fio_spi</FIOISP>
  <NUMISP   field_type='C'  field_size='40'>er_ip_num </NUMISP>
@@ -47,14 +47,14 @@
 </scheme>
 <scheme>
  <UNICODE  field_type='N'  field_size='10'></UNICODE>
- <ID_ZAPR  field_type='N'  field_size='10'>er_req_id</ID_ZAPR>
- <ORGAN    field_type='C'  field_size='100'>divname</ORGAN>
- <NUMISP   field_type='C'  field_size='40'>er_ip_num </NUMISP>
- <DT	   field_type='D'  field_size='10'>er_req_date </DT>
- <NUMRES   field_type='C'  field_size='40'>er_req_number</NUMRES>
- <DTRES    field_type='D'  field_size='10'>er_req_date </DTRES>
- <RESULT   field_type='N'  field_size='4'>er_debtor_name</RESULT>
- <TEXT     field_type='C'  field_size='253' separator=' ' blob_field="FILENAME">ignore acc_number ignore acc_rest acc_curr</TEXT>
+ <ID_ZAPR  field_type='N'  field_size='10' start='9102' >request_id</ID_ZAPR>
+ <ORGAN    field_type='C'  field_size='100'></ORGAN>
+ <NUMISP   field_type='C'  field_size='40'></NUMISP>
+ <DT	   field_type='D'  field_size='10'></DT>
+ <NUMRES   field_type='C'  field_size='40'></NUMRES>
+ <DTRES    field_type='D'  field_size='10'></DTRES>
+ <RESULT   field_type='N'  field_size='4'>result</RESULT>
+ <TEXT     field_type='C'  field_size='253' result='09' separator=' ' blob_field="FILENAME">ignore acc ignore summa curr</TEXT>
  <FILENAME field_type='C'  field_size='30'>blob_filename</FILENAME>
 </scheme>
 </file>
