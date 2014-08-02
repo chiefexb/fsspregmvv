@@ -473,14 +473,20 @@ def main():
    #for a in aa.keys():
    #нужна функция вход aa и answer
    #print aa['resulttext']
+   print 'result is:',aa['result']
    rs=aa['resulttext'].split(answer['separator'])
    sc=answer['09']
    accdata=[]
    ac={}
-   for i in range (0,len(sc)):
-    if sc[i]<>'ignore':
-     ac[sc[i]]=rs[i]
-   print ac
+   print len(rs),rs[14]
+   for k in range(0,len(rs)/len(sc)):
+    ac={}
+    for i in range (0,len(sc)):
+     if sc[i]<>'ignore':
+      ac[sc[i]]=rs[len(sc)*(k-1)+i]
+    print ac
+    accdata.append(ac)
+   print len(accdata),accdata
    #print db[j][1]1
    #print str(db[j]).decode('CP866')
    #text=db[j]["TEXT"].decode('CP866')
