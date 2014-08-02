@@ -460,7 +460,9 @@ def main():
    #print db
    #for j in range (14,15):
    j=14
+   
    aa={}
+   #На этом этапе нужно добавить загрузку блоб поля
    for kk in flds.keys():
     if str(type (db[j][flds[kk]])) =="<type 'str'>":
      aa[kk]=db[j][flds[kk]].decode('CP866')
@@ -468,8 +470,18 @@ def main():
      aa[kk]=int(reqstart+str (db[j][flds[kk]]))
     else:
      aa[kk]= (db[j][flds[kk]])
-   print aa
-   #print db[j][1]
+   #for a in aa.keys():
+   #нужна функция вход aa и answer
+   #print aa['resulttext']
+   rs=aa['resulttext'].split(answer['separator'])
+   sc=answer['09']
+   accdata=[]
+   ac={}
+   for i in range (0,len(sc)):
+    if sc[i]<>'ignore':
+     ac[sc[i]]=rs[i]
+   print ac
+   #print db[j][1]1
    #print str(db[j]).decode('CP866')
    #text=db[j]["TEXT"].decode('CP866')
    #print text
