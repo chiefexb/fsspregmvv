@@ -386,7 +386,7 @@ def setnegative(cur,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_cod
  ent_name=convtotype(['','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
  ent_bdt=convtotype(['','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8')
  #print "END",ent_bdt
- print "ENT",str(type(ent_bdt)), len(ent_bdt)
+ #print "ENT",str(type(ent_bdt)), len(ent_bdt)
  if len(ent_bdt)<>0:
   ent_by=quoted(ent_bdt.split('.')[2])
   ent_bdt=quoted(ent_bdt)
