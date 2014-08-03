@@ -478,6 +478,9 @@ def main():
    #for j in range (14,15):
    j=14#14
    
+   sqlbuff=[]
+   sqltemp=''
+    
    aa={} #Ответ без расшифровки
    #На этом этапе нужно добавить загрузку блоб поля
    for kk in flds.keys():
@@ -508,9 +511,10 @@ def main():
     hsh.update(str(id))
     extkey=hsh.hexdigest()
     #print extkey,ipid
-    sqq=setresponse(cur,con,systemcodepage,codepage,agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Есть сведения")
-    for sqt in sqq:
+    sqltemp=setresponse(cur,con,systemcodepage,codepage,agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Есть сведения")
+    for sqt in sqltemp:
      print sqt
+     sqlbuff.append(sqt)
      #sqltemp.append(sqt)
     rs=aa['resulttext'].split(answer['separator'])
     sc=answer['09'] #Работает только банки
@@ -551,18 +555,26 @@ def main():
      hsh.update(str(id))
      svextkey=hsh.hexdigest()
      sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(replydate)+cln+quoted('09')+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+(ent_bdt)+cln+(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"
-     datastr='Есть сведения'
+     datastr='Счета есть'#'Есть сведения'
      currcode=currency_type[str(acd['curr'])]
      sq4="INSERT INTO EXT_AVAILABILITY_ACC_DATA (ID, BIC_BANK, CURRENCY_CODE, ACC, BANK_NAME, SUMMA, DEPT_CODE, SUMMA_INFO) VALUES ("+str(id)+cln+quoted(bankbik)+cln+ quoted(currcode)+cln+ quoted(acd['acc'])+cln+quoted(bankname)+cln+(acd['summa'])+", NULL, NULL)"
      print sq3
      print sq4
+     sqlbuff.append(sq3)
+     sqlbuff.append(sq4)
     #Обработка счетов
    elif aa['result']==negativeresult:
     print ipid,request_id
     sqltemp= setnegative(cur,systemcodepage,codepage,agent_code,agreement_code,dept_code,request_id,replydate,packid)
     for sq in sqltemp:
      print sq
+     sqlbuff.append(sq)
    else:
     print 'Исключение'
+   for sq in sqlbuff:
+    cur.execute(sq)
+   #con.commit()
+   con.close()
+    
 if __name__ == "__main__":
     main()
