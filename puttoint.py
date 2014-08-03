@@ -67,11 +67,18 @@ def main():
  #Определение схемы файла должна быть ветка для типов файлов пока разбираем xml
  filescheme=filepar.findall('scheme')
  #создание root
+ if str( type (filepar.find('bank') ) )<>"<type 'NoneType'>":
+  filebank=filepar.find('bank')
+  bankname=filebank.find('name').text
+  bankbik=filebank.find('bik').text
+ else:
+  bankname=''
+  bankbik=''
  if str( type (filepar.find('result') ) )<>"<type 'NoneType'>":
   print 'RES'
   fileresult=filepar.find('result')
-  positiveresult=fileresult.find('negativeresult').text
-  negativeresult=fileresult.find('positiveresult').text
+  positiveresult=fileresult.find('positiveresult').text ##Проверить ПФР
+  negativeresult=fileresult.find('negativeresult').text
   resultattrib='AnswerType'
  else:
   fileresult=''
@@ -427,72 +434,135 @@ def main():
     con.commit()
   f.close()
   con.close() 
- if filetype=='dbf':
+ if filetype=='dbf': #Тип dbf определяет только банки для других целей будут dbf2 и т д
 #Первое мы должны сохранить схему файла
    ans_scheme=filescheme[1]
-   flds={}
-   answer={}
+   flds={}   #Поля участвующие
+   answer={} #Формат ответа
    reqstart=''
    for ch in ans_scheme.getchildren():
     print ch.tag,  len(str (ch.text))
+    if ch.text=='reply_date':
+     flds[ch.text]=ch.tag
     if ch.text=='request_id':
      if 'start' in ch.attrib.keys():
-      reqstart=ch.attrib['start']
+      reqstart=ch.attrib['start'] #Начало от id
       print reqstart
      flds[ch.text]=ch.tag
     if ch.text=='result':
      flds[ch.text]=ch.tag
-    if 'result' in ch.attrib.keys():
+    if 'result' in ch.attrib.keys():#Атрибут result определяет тип ответа 
      #Проверяем есть ли разделитель
-     if 'separator' in ch.attrib.keys():
+     if 'separator' in ch.attrib.keys(): #Должна быть ветки если нет
       ans=ch.text.split(ch.attrib['separator'])
      answer[ch.attrib['result']]=ans
      answer['separator']=ch.attrib['separator']
      flds['resulttext']=ch.tag
-     if 'blob_field' in ch.attrib.keys():
+     if 'blob_field' in ch.attrib.keys():#Проверка есть ли блоб поле
       flds['blob_field']=ch.attrib['blob_field']
  #request_id
    print flds
    print answer
    print positiveresult
+   #Соединяемся с базой ОСП
+   try:
+    con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+   except  Exception, e:
+    print("Ошибка при открытии базы данных:\n"+str(e))
+    sys.exit(2)
+   cur = con.cursor()
    ff='orshb0912_01_02_14_1.dbf'
+   packid=getgenerator(cur,"DX_PACK")
    db=dbf.Dbf(input_path+ff)
    #print db
    #for j in range (14,15):
-   j=14
+   j=14#14
    
-   aa={}
+   aa={} #Ответ без расшифровки
    #На этом этапе нужно добавить загрузку блоб поля
    for kk in flds.keys():
     if str(type (db[j][flds[kk]])) =="<type 'str'>":
-     aa[kk]=db[j][flds[kk]].decode('CP866')
+     aa[kk]=db[j][flds[kk]].decode(filecodepage) #Тут должна быть кодирока файла из настроек
     elif kk=='request_id':
-     aa[kk]=int(reqstart+str (db[j][flds[kk]]))
+     aa[kk]=(reqstart+str (db[j][flds[kk]])) #восстанавливаем укороченный request_id
+    elif  str(type (db[j][flds[kk]])) == "<type 'datetime.date'>":
+     aa[kk]=datetime.strftime(db[j][flds[kk]],'%d.%m.%Y')
     else:
-     aa[kk]= (db[j][flds[kk]])
+     aa[kk]= str(db[j][flds[kk]])
    #for a in aa.keys():
    #нужна функция вход aa и answer
    #print aa['resulttext']
-   print 'result is:',aa['result']
-   rs=aa['resulttext'].split(answer['separator'])
-   sc=answer['09']
-   accdata=[]
-   ac={}
-   print len(rs),rs[14]
-   for k in range(0,len(rs)/len(sc)):
+   print 'result is:',aa['result'],aa['result']==positiveresult,str(type(positiveresult)),positiveresult,str(type(aa['result']))
+   print aa['reply_date']
+   #Если поле надо парсить
+   #print 'Result',aa['result']
+   replydate=aa['reply_date']
+   request_id=aa['request_id']
+   ipid=getipid(cur,'UTF-8','CP1251',request_id)
+   if aa['result']==positiveresult:
+    id=getgenerator(cur,"SEQ_DOCUMENT")
+    ipid=getipid (cur,systemcodepage,codepage,request_id)
+    #print "IPID",ipid
+    #packid=getgenerator(cur,"DX_PACK")
+    hsh=hashlib.md5()
+    hsh.update(str(id))
+    extkey=hsh.hexdigest()
+    #print extkey,ipid
+    sqq=setresponse(cur,con,systemcodepage,codepage,agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Есть сведения")
+    for sqt in sqq:
+     print sqt
+     #sqltemp.append(sqt)
+    rs=aa['resulttext'].split(answer['separator'])
+    sc=answer['09'] #Работает только банки
+    accdata=[]
     ac={}
-    for i in range (0,len(sc)):
-     if sc[i]<>'ignore':
-      ac[sc[i]]=rs[len(sc)*(k-1)+i]
-    print ac
-    accdata.append(ac)
-   print len(accdata),accdata
-   #print db[j][1]1
-   #print str(db[j]).decode('CP866')
-   #text=db[j]["TEXT"].decode('CP866')
-   #print text
-   #sp=text.split(' ')
-   #for k in range (0,len(sp)):
-   # print k,sp[k]
+    print 'sc=',len(sc),'rs=',len(rs),len(rs)/len(sc)
+    for k in range(0,len(rs)/len(sc)):
+     ac={}
+     for i in range (0,len(sc)):
+      print 'i=',i,'k=',k,len(sc)*(k)+i
+      if sc[i]<>'ignore':
+       ac[sc[i]]=rs[len(sc)*(k)+i]
+     print ac
+     accdata.append(ac)
+   #end if 
+    for acd in accdata:
+     print acd
+     cur.execute(("select * from ext_request where req_id="+request_id).decode('CP1251'))
+     er=cur.fetchall()
+     print "Поиск", len(er)
+     #print len(er)
+     #datastr="Есть сведения"
+     idnum=convtotype([' ','C'], getidnum(cur,systemcodepage,codepage,ipid),'UTF-8','UTF-8')
+     ent_name=convtotype([' ','C'],er[0][const["er_debtor_name"]],'UTF-8','UTF-8')
+     #print str(type((ent_name)))
+     ent_bdt=(convtotype([' ','C'],er[0][const["er_debtor_birthday"]],'UTF-8','UTF-8'))
+     print "ERR", len(ent_bdt),ent_bdt
+     if len(ent_bdt)<>0:
+      ent_by=quoted(ent_bdt.split('.')[2])
+      ent_bdt=quoted(ent_bdt)
+     else:
+      ent_by='Null'
+      ent_bdt='Null'
+     ent_inn=convtotype([' ','C'],er[0][const["er_debtor_inn"]],'UTF-8','UTF-8')
+     req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
+     ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
+     id=getgenerator(cur,"EXT_INFORMATION")
+     hsh.update(str(id))
+     svextkey=hsh.hexdigest()
+     sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(replydate)+cln+quoted('09')+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+(ent_bdt)+cln+(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"
+     datastr='Есть сведения'
+     currcode=currency_type[str(acd['curr'])]
+     sq4="INSERT INTO EXT_AVAILABILITY_ACC_DATA (ID, BIC_BANK, CURRENCY_CODE, ACC, BANK_NAME, SUMMA, DEPT_CODE, SUMMA_INFO) VALUES ("+str(id)+cln+quoted(bankbik)+cln+ quoted(currcode)+cln+ quoted(acd['acc'])+cln+quoted(bankname)+cln+(acd['summa'])+", NULL, NULL)"
+     print sq3
+     print sq4
+    #Обработка счетов
+   elif aa['result']==negativeresult:
+    print ipid,request_id
+    sqltemp= setnegative(cur,systemcodepage,codepage,agent_code,agreement_code,dept_code,request_id,replydate,packid)
+    for sq in sqltemp:
+     print sq
+   else:
+    print 'Исключение'
 if __name__ == "__main__":
     main()
