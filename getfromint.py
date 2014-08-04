@@ -65,10 +65,10 @@ def main():
  print filetype
  filenum=filepar.find('numeric').text
  fileprefix=filepar.find('prefix').text
- fileorgamd=filepar.find('orgamd').text
- filedivamd=filepar.find('divamd').text
- fileedotype=filepar.find('edotype').text
- fileformat=filepar.find('format').text
+ #fileorgamd=filepar.find('orgamd').text
+ #filedivamd=filepar.find('divamd').text
+ #fileedotype=filepar.find('edotype').text
+ #fileformat=filepar.find('format').text
  #Определение схемы файла должна быть ветка для типов файлов пока разбираем xml
  filiescheme=filepar.findall('scheme')[0]
  #создание root
@@ -141,6 +141,11 @@ def main():
   #setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
 
  elif filetype=='xmlatrib' or filetype=='pfr':
+  fileorgamd=filepar.find('orgamd').text
+  filedivamd=filepar.find('divamd').text
+  fileedotype=filepar.find('edotype').text
+  fileformat=filepar.find('format').text
+
   #print 'XML',root2.attrib.keys(),root2.attrib.values()
   ch=root2.getchildren()
   reqq=[]

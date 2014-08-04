@@ -497,7 +497,7 @@ def main():
       else:
        ipid=getipid(cur,'UTF-8','CP1251',request_id)
      if ipid<>-1:
-      inform(u'Начало процесса загрузки, файла '+ff.decode('UTF-8')+u'. Файл содержит ' +str(len(db))+u'Записей.')
+      inform(u'Начало процесса загрузки, файла '+ff.decode('UTF-8')+u'. Файл содержит ' +str(len(db))+u' Записей.')
       with Profiler() as p:
        packid=getgenerator(cur,"DX_PACK")
        #print "Запроса с id=",request_id," не найдено!!!"
@@ -616,7 +616,7 @@ def main():
           sqlbuff.append(sq)
         else:
          if ipid==-1:
-          informerr(u'В теле ответа присутвует ошибочный ответ, файл:'+ff+u' request_id:'+request_id+u'Номер записи: '+str(j) )
+          informerr(u'В теле ответа присутвует ошибочный ответ, файл:'+ff+u' request_id:'+request_id+u' Номер записи: '+str(j) )
          else:
           informerr(u'Ошибка типа ХЗ. Возможно из-за того что результат равен '+ aa['result']+ff+u' request_id:'+request_id+u'Номер записи: '+str(j) )
       inform(u'Загружаем запросы:'+str(len(sqlbuff)) )
