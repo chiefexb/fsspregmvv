@@ -12,6 +12,7 @@ import datetime
 import hashlib
 import logging
 import timeit
+import time
 #import xml.etree.ElementTree as etree
 from lxml import etree
 def getdivname (cur):
@@ -65,9 +66,9 @@ def getnumfrompacknumber(cur,systcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_d
    num=1
  elif len(pp)>1:
   for ii in range (0,len(pp)):
-   print packnum,pp[ii][0]
+   #print packnum,pp[ii][0]
    if pp[ii][0]==packnum:
-    print packnum,pp[ii][0],'ii=',ii
+    #print packnum,pp[ii][0],'ii=',ii
     num=ii+1
  #print 'ii=',ii,'num=',num
  return num
@@ -104,9 +105,12 @@ def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
   elif str(type(dbvalue))=="<type 'unicode'>":
    if dbfcp=="UTF-8":
     val=dbvalue
+   elif dbfcp=="CP866":
+    val=dbvalue.replace(unichr(0xab),chr(0x22))
+    val=val.replace(unichr(0xbb),chr(0x22))
+    val =val.encode(dbfcp)#BUG FIX
    else:
-    #print dbvalue,str(type(dbvalue))
-    val =dbvalue.encode(dbfcp)#BUG FIX
+    val =val.encode(dbfcp)
   else:
    try:
     val =(dbvalue).encode(dbfcp)
@@ -136,7 +140,7 @@ def dbfaddrecord(rec,dbfscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur):
    v=dbscheme[i][0]
   if v in const.keys():
    #print v,dbvalues[const[v]]
-   #print dbfscheme[i][0]
+   #print dbfscheme[i],str(type(dbvalues[const[v]])),dbvalues[const[v]]
    rec[dbfscheme[i][0]]=convtotype(dbfscheme[i], dbvalues[const[v]],dbcp,dbfcp)
   # dbvalues[const[v]]
   else:
@@ -744,6 +748,15 @@ def informerr(st):
  logging.error(st)
  print st
  return
+class Profiler(object):
+    def __enter__(self):
+        self._startTime = time.time()
+
+    def __exit__(self, type, value, traceback):
+        print "Elapsed time:",time.time() - self._startTime # {:.3f} sec".format(time.time() - self._startTime)
+        st="Elapsed time:"+str(time.time() - self._startTime) # {:.3f} sec".format(time.time() - self._startTime)
+        logging.info(st)
+
 #def setlogging()
 # logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')  
 # return

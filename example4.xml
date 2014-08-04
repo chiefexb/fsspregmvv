@@ -16,6 +16,8 @@
 <logging>
   <log_path>./</log_path>
   <log_file>rs.log</log_file>
+  <log_file2>rs2.log</log_file2>
+
 </logging>
 <file>
  <codepage>CP866</codepage>
@@ -35,7 +37,6 @@
   <bik>049133818</bik>
   <name>КАРАЧАЕВО-ЧЕРКЕССКИЙ РФ ОАО "РОССЕЛЬХОЗБАНК"</name>
  </bank>
-
  <scheme>
  <UNICODE  field_type='N'  field_size='10' start='9112'>er_req_id</UNICODE>
  <ORGAN    field_type='C'  field_size='100'>divname</ORGAN>
@@ -52,7 +53,7 @@
 </scheme>
 <scheme>
  <UNICODE  field_type='N'  field_size='10'></UNICODE>
- <ID_ZAPR  field_type='N'  field_size='10' start='9102' >request_id</ID_ZAPR>
+ <ID_ZAPR  field_type='N'  field_size='10' start='9112' >request_id</ID_ZAPR>
  <ORGAN    field_type='C'  field_size='100'></ORGAN>
  <NUMISP   field_type='C'  field_size='40'></NUMISP>
  <DT	   field_type='D'  field_size='10'></DT>

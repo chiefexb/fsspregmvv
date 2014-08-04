@@ -5,6 +5,7 @@ from lxml import etree
 from dbfpy import dbf
 import fdb
 import sys
+import logging
 def main():
 #Обработка параметров
  #print len (sys.argv)
@@ -39,6 +40,10 @@ def main():
  dept_code=mvv.find('dept_code').text
  agreement_code=mvv.find('agreement_code').text
  pre=mvv.find('preprocessing')
+ logpar=cfgroot.find('logging')
+ log_path=logpar.find('log_path').text
+ log_file=logpar.find('log_file2').text
+
  try:
   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
  except  Exception, e:
@@ -268,23 +273,26 @@ def main():
   packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
   p=len(packets)
   if p>0:
-   for i in range(0,p):
-    pp=packets[i][0]
-    print pp
-    r=getrecords(cur,pp)
-    rr=r[0]
-    num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
-    filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.dbf'
-    db = dbf.Dbf(output_path+filename, new=True)
-    db.addField(*reqdbfscheme)
-    for rr in r:
-     rec = db.newRecord()
-     dbfaddrecord(rec,reqdbfscheme,int2dbfscheme,rr,'UTF-8',codepage,filecodepage,cur)
-    print db
-    db.close()
-    #setprocessed(cur,con,'UTF-8',codepage,pp)
+   inform(u'Найдено '+str(p) +u' пакетов для выгрузки.')
+   with Profiler() as p2:
+    for i in range(0,p):
+     pp=packets[i][0]
+     #print pp
+     r=getrecords(cur,pp)
+     rr=r[0]
+     num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
+     filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.dbf'
+     db = dbf.Dbf(output_path+filename, new=True)
+     db.addField(*reqdbfscheme)
+     inform(u'Готовим файл:'+filename+u' для выгрузки ' +str(len(r)) +u' записей.')
+     for rr in r:
+      rec = db.newRecord()
+      dbfaddrecord(rec,reqdbfscheme,int2dbfscheme,rr,'UTF-8',codepage,filecodepage,cur)
+      #print db
+     db.close()
+     #setprocessed(cur,con,'UTF-8',codepage,pp)
   else:
-   print "Нет пакетов для выгрузки"
+   inform(u"Нет пакетов для выгрузки")
 # f.close()
  con.close()
  
