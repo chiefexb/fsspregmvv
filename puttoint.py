@@ -432,7 +432,7 @@ def main():
     for sqt in sqlbuff:
      try:
       cur.execute(sqt)
-     except Exceptin,e:
+     except Exception,e:
       informerr (u'Ошибка скрипта: '+str(e)+u' '+sqt)
     con.commit()
   f.close()
@@ -488,9 +488,14 @@ def main():
       request_id=u'Ошибка открытия файла'
      else:
       #Проверяем ipid
-      request_id=(reqstart+str (db[0][flds['request_id']]))
-      #print "TEST"
-      ipid=getipid(cur,'UTF-8','CP1251',request_id)
+      #print ff,flds['request_id'],reqstart,db[0]
+      try:
+       request_id=(reqstart+str (db[0][flds['request_id']]))
+      except:
+       ipid=-1
+       request_id=u'Ошибка открытия файла'
+      else:
+       ipid=getipid(cur,'UTF-8','CP1251',request_id)
      if ipid<>-1:
       inform(u'Начало процесса загрузки, файла '+ff.decode('UTF-8')+u'. Файл содержит ' +str(len(db))+u'Записей.')
       with Profiler() as p:
@@ -542,7 +547,7 @@ def main():
         replydate=aa['reply_date']
         request_id=aa['request_id']
         ipid=getipid(cur,'UTF-8','CP1251',request_id)
-        if aa['result']==positiveresult :
+        if aa['result']==positiveresult  and ipid<>-1:
          id=getgenerator(cur,"SEQ_DOCUMENT")
          ipid=getipid (cur,systemcodepage,codepage,request_id)
          #print "IPID",ipid,request_id
@@ -603,14 +608,17 @@ def main():
           sqlbuff.append(sq3)
           sqlbuff.append(sq4)
          #Обработка счетов
-        elif aa['result']==negativeresult:
+        elif aa['result']==negativeresult and ipid<>-1:
          #print ipid,request_id
          sqltemp= setnegative(cur,systemcodepage,codepage,agent_code,agreement_code,dept_code,request_id,replydate,packid)
          for sq in sqltemp:
           #print sq
           sqlbuff.append(sq)
         else:
-         print 'Исключение'
+         if ipid==-1:
+          informerr(u'В теле ответа присутвует ошибочный ответ, файл:'+ff+u' request_id:'+request_id+u'Номер записи: '+str(j) )
+         else:
+          informerr(u'Ошибка типа ХЗ. Возможно из-за того что результат равен '+ aa['result']+ff+u' request_id:'+request_id+u'Номер записи: '+str(j) )
       inform(u'Загружаем запросы:'+str(len(sqlbuff)) )
       with Profiler() as p:
        for sq in sqlbuff:
