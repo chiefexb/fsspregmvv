@@ -277,7 +277,7 @@ def main():
      dbfaddrecord(rec,reqdbfscheme,int2dbfscheme,rr,'UTF-8',codepage,filecodepage,cur)
     print db
     db.close()
-    setprocessed(cur,con,'UTF-8',codepage,pp)
+    #setprocessed(cur,con,'UTF-8',codepage,pp)
   else:
    print "Нет пакетов для выгрузки"
 # f.close()

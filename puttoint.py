@@ -430,7 +430,10 @@ def main():
    logging.info( st )
    with Profiler() as p:
     for sqt in sqlbuff:
-     cur.execute(sqt)
+     try:
+      cur.execute(sqt)
+     except Exceptin,e:
+      informerr (u'Ошибка скрипта: '+str(e)+u' '+sqt)
     con.commit()
   f.close()
   con.close() 
