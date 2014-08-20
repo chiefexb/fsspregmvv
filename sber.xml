@@ -1,0 +1,124 @@
+<config>
+<codepage>UTF-8</codepage>
+<database_params>
+ <username>SYSDBA</username>
+ <password>masterkey</password>
+ <hostname>10.9.4.16</hostname>
+ <database>ncore-fssp</database>
+ <connection_codepage>WIN1251</connection_codepage>
+ <codepage>CP1251</codepage>
+</database_params>
+<logging>
+  <log_path>/root/git/fsspregmvv/</log_path>
+  <log_file>rosr.log</log_file>
+</logging>
+<mvv>
+ <agent_code>РСХБАНК</agent_code>
+ <dept_code>ЧЕРК</dept_code>
+ <agreement_code>РСБАНКИНТ</agreement_code>
+</mvv>
+<file>
+ <codepage>CP1251</codepage>
+ <output_path>/home/chief/work/reg/</output_path>
+ <input_path>/home/chief/work/regin/</input_path>
+ <input_path_err>/home/chief/work/regerr/</input_path_err> 
+ <input_path_arc>/home/chief/work/regarc/</input_path_arc>
+ <type>xml</type>
+ <numeric>normal</numeric>
+ <prefix>rr</prefix>
+<scheme>
+<Request records=''>
+ <Zapros>
+ <File_Name>filename</File_Name>
+ <Req_ID size=10>er_pack_id</Req_ID>
+ <User_ID>er_spi_id</User_ID>
+ <Req_Date>er_req_date</Req_Date>
+ <Req_Time></Req_Time>
+ <Req_Type>1</Req_Type>
+ <OSB_List>8617</OSB_List>
+ <Prs_Dep>04</Prs_Dep>
+ <FIO_SPI>Я Марина Анатольевна</FIO_SPI>
+ <H_PRISTAV>Ш Максим Дмитриевич</H_PRISTAV>
+ <Isp_Num>24380/14/11004-ИП</Isp_Num>
+ <Isp_Sum>1</Isp_Sum>
+ <Id_Num>2-/2011</Id_Num>
+ <Id_Date>29.03.2011</Id_Date>
+ <Dolg_Surname>Р</Dolg_Surname>
+ <Dolg_Name>Ирина</Dolg_Name>
+ <Dolg_Secondname>Михайловна</Dolg_Secondname>
+ <Dolg_Birth_Year>196</Dolg_Birth_Year>
+ <Dolg_Addr>РОССИЯ,169600,КОМИ РЕСП,,Г. ПЕЧОРА,,УЛ СОЦИАЛИСТИЧЕСКАЯ,Д.80,,КВ.7</Dolg_Addr>
+ <Dolg_Birth_Day>17.04.1960</Dolg_Birth_Day>
+ <Dolg_Place_Birth>, Украина, Днепропетровская обл., Томаковский р-он, , п. Томаковка, , , , </Dolg_Place_Birth>
+ <TypeDoc>Код типа документа </TypeDoc>
+ <SerDoc>Серия документа</SerDoc>
+ <NumDoc>Номер документа</NumDoc>
+ <IssuedDoc>Государственный орган, выдавший документ</IssuedDoc>
+ <DateDoc>Дата выдачи</DateDoc>
+  <CodeDep>Код подразделения</CodeDep>
+ </Zapros>
+ </Request>
+</scheme>
+ <scheme>
+<RequestRightsPersons>
+ <RequestID>er_pack_id</RequestID>
+ <RequestType>Запрос в Росреестр № ;er_pack_id; от ;er_pack_date</RequestType>
+ <RequestDate>er_pack_date</RequestDate>
+<Persons records=''>
+ <Person>
+  <PersonID>er_req_id</PersonID>
+  <FirstName>firstname</FirstName>
+  <SecondName>secondname</SecondName>
+  <LastName>lastname</LastName>
+  <BirthDate>er_debtor_birthday</BirthDate>
+ </Person>
+</Persons>
+</RequestRightsPersons>
+ </scheme>
+  <scheme>
+<RequestRightsPersonsReply depth='3'>
+ <RequestID>request_id</RequestID>
+ <ReplyDate>reply_date</ReplyDate>
+ <OrganizationName></OrganizationName>
+ <RegionID></RegionID>
+ <Persons answers="" >
+ <Person answerstart="">
+  <PersonID>request_id</PersonID>
+  <FirstName>firstname</FirstName>
+  <SecondName>secondname</SecondName>
+  <LastName>lastname</LastName>
+  <BirthDate>er_debtor_birthday</BirthDate>
+  <Document answer='01' >
+   <Type_Document>rr_type_doc</Type_Document>
+   <Name>pass</Name>
+   <Series>ser_doc</Series>
+   <Number>num_doc</Number>
+   <Date>date_doc</Date>
+   <IssueOrgan>issue_organ</IssueOrgan>
+  </Document>
+  <Rights answer='11'>
+   <Right>
+    <CadastralNumber>kadastr_n</CadastralNumber>
+    <RegNumber>inv_n_nedv</RegNumber>
+    <StartDate>startdate</StartDate>
+    <EndDate>enddate</EndDate>
+    <Area>s_nedv</Area>
+    <AreaUnits>012002001000</AreaUnits>
+    <Purpose>purpose</Purpose>
+    <Share>share</Share>
+    <Address childrens="">
+     <Region>09</Region>
+     <District>Малокарачаевский</District>
+     <Street>Родниковая</Street>
+     <House>8а</House>
+     <Note>adres_nedv</Note>
+    </Address>
+   </Right>
+  </Rights>
+ </Person>
+ </Persons>
+</RequestRightsPersonsReply>
+</scheme>
+</file>
+</config>	
+
