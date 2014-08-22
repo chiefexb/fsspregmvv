@@ -143,6 +143,7 @@ def main():
    f2=open(output_path+filename,'w')
    f2.write(xml)
    f2.close()
+  #Убрать
   #setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
 
  elif filetype=='xmlatrib' or filetype=='pfr':
