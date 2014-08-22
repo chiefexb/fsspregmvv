@@ -83,22 +83,24 @@ def main():
  cfgroot.find('file')
  if filetype=='xml':
   #Определение заголовка
-  ch=root2.getchildren()	
-  reqq=[]
-  int2str=[]
-  for i in range(len(ch)):
-   req=[]
-   if ch[i].attrib<>{}:
-    if 'records' in ch[i].attrib.keys(): 
-     #print ch[i].attrib, ch[i].tag
-     zapros=ch[i]
-    break
-   req.append(ch[i].tag)
-   req.append('C')
-   reqq.append(req)
-   int2str.append(ch[i].text)
-  #print reqq,int2str[0]
-  #print zapros.tag
+  if 'records' in root2.attrib.keys():
+   zapros=root2
+   ch=root2.getchildren()	
+   reqq=[]
+   int2str=[]
+   for i in range(len(ch)):
+    req=[]
+    if ch[i].attrib<>{}:
+     if 'records' in ch[i].attrib.keys(): 
+      #print ch[i].attrib, ch[i].tag
+      zapros=ch[i]
+     break
+    req.append(ch[i].tag)
+    req.append('C')
+    reqq.append(req)
+    int2str.append(ch[i].text)
+   #print reqq,int2str[0]
+   #print zapros.tag
   ch=zapros.getchildren()[0]
   reqq2=[]
   int2str2=[]

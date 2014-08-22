@@ -11,6 +11,7 @@
 <logging>
   <log_path>./</log_path>
   <log_file>sber.log</log_file>
+  <log_file2>sber2.log</log_file2>
 </logging>
 <mvv>
  <agent_code>РСХБАНК</agent_code>
@@ -27,8 +28,7 @@
  <numeric>normal</numeric>
  <prefix>rr</prefix>
 <scheme>
-<Request records=''>
- <Request>
+ <Request records=''>
     <Zapros>
         <File_Name>filename</File_Name>
         <Req_ID>er_req_id</Req_ID>
@@ -54,11 +54,13 @@
         <TypeDoc>21</TypeDoc>
         <SerDoc>81 11</SerDoc>
         <NumDoc>152347</NumDoc>
-        <IssuedDoc/>
+        <IssuedDoc></IssuedDoc>
         <DateDoc>22.09.2003</DateDoc>
-        <CodeDep/>
+        <CodeDep></CodeDep>
     </Zapros>
-</scheme>
+</Request>
+
+ </scheme>
  <scheme>
 <RequestRightsPersons>
  <RequestID>er_pack_id</RequestID>
