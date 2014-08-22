@@ -108,9 +108,9 @@ def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
    elif dbfcp=="CP866":
     val=dbvalue.replace(unichr(0xab),chr(0x22))
     val=val.replace(unichr(0xbb),chr(0x22))
-    val =val.encode(dbfcp)#BUG FIX
+    val=val.encode(dbfcp)#BUG FIX
    else:
-    val =val.encode(dbfcp)
+    val=dbvalue.encode(dbfcp)
   else:
    try:
     val =(dbvalue).encode(dbfcp)
@@ -137,6 +137,7 @@ def dbfaddrecord(rec,dbfscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur):
   if str(type(dbscheme[i][0]))=="<type 'list'>":
    v=dbscheme[i][0][fizurnum-1]
   else:
+   print dbscheme[i][0]
    v=dbscheme[i][0]
   if v in const.keys():
    #print v,dbvalues[const[v]]

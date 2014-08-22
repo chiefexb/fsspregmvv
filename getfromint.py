@@ -47,7 +47,7 @@ def main():
  try:
   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
  except  Exception, e:
-  #print("Ошибка при открытии базы данных:\n"+str(e))
+  print("Ошибка при открытии базы данных:\n"+str(e))
   sys.exit(2)
  cur = con.cursor()
  #print str(type(pre)),str(type(pre))<>"<type 'NoneType'>"
@@ -116,7 +116,7 @@ def main():
   try:
    con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
   except  Exception, e:
-   #print("Ошибка при открытии базы данных:\n"+str(e))
+   print("Ошибка при открытии базы данных:\n"+str(e))
    sys.exit(2)
   cur = con.cursor()
   root=etree.Element(root2.tag)
@@ -136,6 +136,7 @@ def main():
    for rr in r:
    #rr=r[0]
     #print "ZP",zp.tag,'INT',int2str2,zpp.tag
+    print zpp.tag
     xmladdrecord(zpp.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage)
    xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
    #print xml
