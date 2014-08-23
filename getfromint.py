@@ -65,6 +65,7 @@ def main():
  filepar=cfgroot.find('file')
  #print filepar
  filecodepage=filepar.find('codepage').text
+ print 'CodePage',filecodepage
  output_path=filepar.find('output_path').text
  filetype=filepar.find('type').text
  print filetype

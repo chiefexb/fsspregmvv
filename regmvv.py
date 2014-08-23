@@ -110,6 +110,7 @@ def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
     val=val.replace(unichr(0xbb),chr(0x22))
     val=val.encode(dbfcp)#BUG FIX
    else:
+    print type(dbvalue),dbfcp
     val=dbvalue.encode(dbfcp)
   else:
    try:
@@ -291,7 +292,8 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
    print dbscheme[i] in const.keys()
    if dbscheme[i] in const.keys():
     el=etree.SubElement(zapros,xmlscheme[i][0])
-    el.text=convtotype(xmlscheme[i],dbvalues[const[dbscheme[i]]],dbcp,dbfcp).decode(dbsystcp)
+    el.text=convtotype(xmlscheme[i],dbvalues[const[dbscheme[i]]],dbcp,dbfcp)
+    #.decode(dbsystcp)
    elif dbscheme[i]=='lastname':
     el=etree.SubElement(zapros,xmlscheme[i][0])
     el.text=lastname
