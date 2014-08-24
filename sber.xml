@@ -3,7 +3,7 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname>localhost</hostname>
+ <hostname>10.9.4.16</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
@@ -25,7 +25,7 @@
  <input_path_err>/home/chief/work/sbinerr/</input_path_err> 
  <input_path_arc>/home/chief/work/sbinarc/</input_path_arc>
  <type>xml</type>
- <numeric>normal</numeric>
+ <numeric>sber</numeric>
  <prefix>rr</prefix>
 <scheme>
  <Request records=''>
@@ -33,8 +33,8 @@
         <File_Name>filename</File_Name>
         <Req_ID>er_req_id</Req_ID>
         <User_ID>er_spi_id</User_ID>
-        <Req_Date>06.08.2014</Req_Date>
-        <Req_Time>er_req_date</Req_Time>
+        <Req_Date>er_req_date</Req_Date>
+        <Req_Time>er_req_time</Req_Time>
         <Req_Type>1</Req_Type>
         <OSB_List>8558</OSB_List>
         <Prs_Dep>1</Prs_Dep>
@@ -47,16 +47,16 @@
         <Dolg_Surname>lastname</Dolg_Surname>
         <Dolg_Name>firstname</Dolg_Name>
         <Dolg_Secondname>secondname</Dolg_Secondname>
-        <Dolg_Birth_Year>1935</Dolg_Birth_Year>
+        <Dolg_Birth_Year>er_debtor_birthyear</Dolg_Birth_Year>
         <Dolg_Addr>er_debtor_address</Dolg_Addr>
         <Dolg_Birth_Day>er_debtor_birthday</Dolg_Birth_Day>
         <Dolg_Place_Birth>er_debtor_birthplace</Dolg_Place_Birth>
-        <TypeDoc>21</TypeDoc>
-        <SerDoc>81 11</SerDoc>
-        <NumDoc>152347</NumDoc>
-        <IssuedDoc></IssuedDoc>
-        <DateDoc>22.09.2003</DateDoc>
-        <CodeDep></CodeDep>
+        <TypeDoc>rr_type_doc</TypeDoc>
+        <SerDoc>ser_doc</SerDoc>
+        <NumDoc>ser_doc</NumDoc>
+        <IssuedDoc>issue_organ</IssuedDoc>
+        <DateDoc>date_doc</DateDoc>
+        <CodeDep>issue_organ_code</CodeDep>
     </Zapros>
 </Request>
 
