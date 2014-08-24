@@ -83,9 +83,11 @@ def main():
  #print "X", filetype
  cfgroot.find('file')
  if filetype=='xml':
+  print filenum
   #Определение заголовка
   if 'records' in root2.attrib.keys():
    zapros=root2
+   print zapros.tag
    ch=root2.getchildren()	
    reqq=[]
    int2str=[]
@@ -100,7 +102,7 @@ def main():
     req.append('C')
     reqq.append(req)
     int2str.append(ch[i].text)
-   #print reqq,int2str[0]
+   print 'reqq',reqq,int2str[0]
    #print zapros.tag
   ch=zapros.getchildren()[0]
   reqq2=[]
@@ -123,16 +125,24 @@ def main():
   root=etree.Element(root2.tag)
   print agreement_code, dept_code
   packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
-  p=len(packets)
+  #p=len(packets)
+  p=1
   for pp in range(0,p):
    root=etree.Element(root2.tag)
    r=getrecords(cur,packets[pp][0])
    #print "PP",pp,packets[pp][0],"LEN R",len(r)
    rr=r[0]
-   xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
+   #print 'ZP',root.tag,zapros.tag
+   #Если корень равен запросу значит нету заголовка
+   if root.tag<>zapros.tag:
+    xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
    #xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
    #print xml
-   zp=etree.SubElement(root,zapros.tag)
+   print "ROOT",root.tag,zapros.tag
+   if root.tag<>zapros.tag:
+    zp=etree.SubElement(root,zapros.tag)
+   else:
+    zp=root
    zpp=zapros.getchildren()[0]
    for rr in r:
    #rr=r[0]

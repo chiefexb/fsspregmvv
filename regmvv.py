@@ -246,13 +246,14 @@ def xmladdrecordold(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp)
      el.text=dbscheme[i].decode('UTF-8')
    else:
      el=etree.SubElement(zapros,xmlscheme[i][0])
-     el.text=convtotype(xmlscheme[i],dbvalues[dbscheme[i]],dbcp,dbfcp).decode('UTF-8')
+     el.text=convtotype(xmlscheme[i],dbvalues[dbscheme[i]],dbcp,'UTF-8').decode('UTF-8')
      #print convtotype(xmlscheme[i],dbvalues[dbscheme[i]],dbcp,dbfcp)
   else:
    #print str(type(dbscheme[i][j-1])),xmlscheme[i][1]
    if str(type(dbscheme[i][j-1]))=="<type 'unicode'>":
      print "UN"
      el=etree.SubElement(zapros,xmlscheme[i][0])
+     #bug
      el.text=dbscheme[i][j-1].decode(dbsystcp).encode(dbfcp)
    elif str(type(dbscheme[i][j-1]))=="<type 'str'>" and dbscheme[i][j-1]=='fizur':
      el=etree.SubElement(zapros,xmlscheme[i][0])
@@ -264,6 +265,7 @@ def xmladdrecordold(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp)
 def strtoconst(str):
  return
 def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
+ print 'XMLs',root.tag, elname
  if root.tag==elname:
   zapros=root
  else:
@@ -289,10 +291,10 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
   else:
    j=0
   if j==0:
-   print dbscheme[i] in const.keys()
+   #print dbscheme[i], dbscheme[i] in const.keys()
    if dbscheme[i] in const.keys():
     el=etree.SubElement(zapros,xmlscheme[i][0])
-    el.text=convtotype(xmlscheme[i],dbvalues[const[dbscheme[i]]],dbcp,dbfcp)
+    el.text=convtotype(xmlscheme[i],dbvalues[const[dbscheme[i]]],dbcp,'UTF-8')
     #.decode(dbsystcp)
    elif dbscheme[i]=='lastname':
     el=etree.SubElement(zapros,xmlscheme[i][0])
@@ -304,6 +306,7 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
     el=etree.SubElement(zapros,xmlscheme[i][0])
     el.text=secondname
    else:
+    #print 'split', ';' in dbscheme[i]
     st=dbscheme[i].split(';')
     #print st[1]
     st2=''
