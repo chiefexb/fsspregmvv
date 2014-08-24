@@ -164,6 +164,7 @@ def getsbfilename (packdate,num,filial,client):
 def getsbnum (con,cur,packdate):
  dd=packdate
  dstr=str((dd).strftime('%d.%m.%y'))
+ print dstr
  cur.execute(getsbnumsql+"'"+(dstr)+"'")
  cnt=cur.fetchall()
  if len (cnt)<>0:
@@ -264,7 +265,7 @@ def xmladdrecordold(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp)
  return root
 def strtoconst(str):
  return
-def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur):
+def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur,par):
  #print 'XMLs',root.tag, elname
  if root.tag==elname:
   zapros=root
@@ -324,7 +325,7 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur
     el.text=passport[1]
    elif dbscheme[i]=='date_doc':
     el=etree.SubElement(zapros,xmlscheme[i][0])
-    print  str(type(passport[2])) 
+    #print  str(type(passport[2])) 
     if str(type(passport[2]))=="<type 'datetime.date'>":
      el.text=passport[2].strftime('%d.%m.%Y')
     else:
@@ -339,7 +340,13 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur
      el.text=dt.strftime('%Y')
     else:
      el.text=''
-   else:
+   elif dbscheme[i]=='ignore':
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    el.text=''
+   elif dbscheme[i]=='filename':
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    el.text=par['filename']
+   elif ';' in dbscheme[i]:
     #print 'split', ';' in dbscheme[i]
     st=dbscheme[i].split(';')
     #print st[1]
@@ -352,6 +359,10 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur
       st2=st2+st[k]
     el=etree.SubElement(zapros,xmlscheme[i][0])
     el.text=st2#.decode(dbsystcp)
+   else:
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    el.text=dbscheme[i]
+
 def getanswertype(ansfields,ansnodes):
  #Если данных нет возвращаем []
  #Если есть данные возвращаем список полей которые есть

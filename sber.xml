@@ -3,7 +3,7 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname>10.9.4.16</hostname>
+ <hostname>localhost</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
@@ -27,6 +27,16 @@
  <type>xml</type>
  <numeric>sber</numeric>
  <prefix>rr</prefix>
+ <filial>8558</filial>
+ <osp>01</osp>
+ <counter_db>
+  <username>SYSDBA</username>
+  <password>masterkey</password>
+  <hostname>localhost</hostname>
+  <database>mvv</database>
+  <connection_codepage>WIN1251</connection_codepage>
+  <codepage>CP1251</codepage>  
+ </counter_db>
 <scheme>
  <Request records=''>
     <Zapros>
