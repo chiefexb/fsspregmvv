@@ -51,12 +51,12 @@
         <Dolg_Addr>er_debtor_address</Dolg_Addr>
         <Dolg_Birth_Day>er_debtor_birthday</Dolg_Birth_Day>
         <Dolg_Place_Birth>er_debtor_birthplace</Dolg_Place_Birth>
-        <TypeDoc>rr_type_doc</TypeDoc>
+        <TypeDoc>21</TypeDoc>
         <SerDoc>ser_doc</SerDoc>
-        <NumDoc>ser_doc</NumDoc>
+        <NumDoc>num_doc</NumDoc>
         <IssuedDoc>issue_organ</IssuedDoc>
         <DateDoc>date_doc</DateDoc>
-        <CodeDep>issue_organ_code</CodeDep>
+        <CodeDep>ignore</CodeDep>
     </Zapros>
 </Request>
 

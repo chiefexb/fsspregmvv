@@ -148,7 +148,7 @@ def main():
    #rr=r[0]
     #print "ZP",zp.tag,'INT',int2str2,zpp.tag
     print zpp.tag
-    xmladdrecord(zpp.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage)
+    xmladdrecord(zpp.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage,cur)
    xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
    #print xml
    num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])

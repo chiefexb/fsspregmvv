@@ -264,8 +264,8 @@ def xmladdrecordold(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp)
  return root
 def strtoconst(str):
  return
-def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
- print 'XMLs',root.tag, elname
+def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur):
+ #print 'XMLs',root.tag, elname
  if root.tag==elname:
   zapros=root
  else:
@@ -291,6 +291,8 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
   else:
    j=0
   if j==0:
+   passport=getpassport(cur,dbvalues[const['er_ip_id']])
+   #print 'PW',passport
    #print dbscheme[i], dbscheme[i] in const.keys()
    if dbscheme[i] in const.keys():
     el=etree.SubElement(zapros,xmlscheme[i][0])
@@ -305,6 +307,38 @@ def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp):
    elif dbscheme[i]=='secondname':
     el=etree.SubElement(zapros,xmlscheme[i][0])
     el.text=secondname
+   elif dbscheme[i]=='er_req_time':
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    reqid=dbvalues[const['er_req_id']]
+    cur.execute('select document.create_date from document where id='+str(reqid))
+    r=cur.fetchall()
+    dt=r[0][0]
+    #print dt,dt.strftime('%H:%M')
+    el.text=dt.strftime('%H:%M')
+   #'er_req_time'
+   elif dbscheme[i]=='ser_doc':
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    el.text=passport[0]
+   elif dbscheme[i]=='num_doc':
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    el.text=passport[1]
+   elif dbscheme[i]=='date_doc':
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    print  str(type(passport[2])) 
+    if str(type(passport[2]))=="<type 'datetime.date'>":
+     el.text=passport[2].strftime('%d.%m.%Y')
+    else:
+     el.text=''
+   elif dbscheme[i]=='issue_organ': 
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    el.text=passport[3]
+   elif dbscheme[i]=='er_debtor_birthyear':            
+    el=etree.SubElement(zapros,xmlscheme[i][0])
+    dt=dbvalues[const['er_debtor_birthday']]
+    if str(type(dt))=="<type 'datetime.date'>":
+     el.text=dt.strftime('%Y')
+    else:
+     el.text=''
    else:
     #print 'split', ';' in dbscheme[i]
     st=dbscheme[i].split(';')
@@ -762,7 +796,16 @@ class Profiler(object):
         print "Elapsed time:",time.time() - self._startTime # {:.3f} sec".format(time.time() - self._startTime)
         st="Elapsed time:"+str(time.time() - self._startTime) # {:.3f} sec".format(time.time() - self._startTime)
         logging.info(st)
-
+def getpassport(cur,ipid):
+ sql='select doc_ip_doc.id_dbtr_id_serial, doc_ip_doc.id_dbtr_id_number, doc_ip_doc.id_dbtr_id_date,doc_ip_doc.id_dbtr_id_office from doc_ip_doc where id='+str(ipid)
+ #print sql
+ cur.execute(sql)
+ r=cur.fetchall()
+ serial=r[0][0]
+ number=r[0][1] 
+ date=r[0][2]
+ issue=r[0][3]
+ return serial,number,date,issue
 #def setlogging()
 # logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'./regmvv.log')  
 # return
