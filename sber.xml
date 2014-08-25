@@ -31,8 +31,8 @@
  <osp>01</osp>
  <counter_db>
   <username>SYSDBA</username>
-  <password>pedq15A</password>
-  <hostname>10.9.4.11</hostname>
+  <password></password>
+  <hostname></hostname>
   <database>mvv</database>
   <connection_codepage>WIN1251</connection_codepage>
   <codepage>CP1251</codepage>  
