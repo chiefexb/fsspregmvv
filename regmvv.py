@@ -98,6 +98,8 @@ def convtotype(rowdbf,dbvalue,dbcp,dbfcp):
     val=''
   elif str(type(dbvalue))=="<type 'int'>":
    val=str(dbvalue)
+  elif str(type(dbvalue))=="<type 'long'>":
+   val=str(dbvalue)
   elif str(type(dbvalue))=="<class 'decimal.Decimal'>":
    val=str(dbvalue)
   elif str(type(dbvalue))=="<type 'NoneType'>":

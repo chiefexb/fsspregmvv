@@ -3,7 +3,7 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname>localhost</hostname>
+ <hostname>10.9.4.16</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
@@ -31,8 +31,8 @@
  <osp>01</osp>
  <counter_db>
   <username>SYSDBA</username>
-  <password>masterkey</password>
-  <hostname>localhost</hostname>
+  <password>pedq15A</password>
+  <hostname>10.9.4.11</hostname>
   <database>mvv</database>
   <connection_codepage>WIN1251</connection_codepage>
   <codepage>CP1251</codepage>  
