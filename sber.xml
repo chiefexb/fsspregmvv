@@ -3,7 +3,7 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname>10.9.4.16</hostname>
+ <hostname>localhost</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
@@ -31,12 +31,16 @@
  <osp>01</osp>
  <counter_db>
   <username>SYSDBA</username>
-  <password></password>
-  <hostname></hostname>
+  <password>masterkey</password>
+  <hostname>localhost</hostname>
   <database>mvv</database>
   <connection_codepage>WIN1251</connection_codepage>
   <codepage>CP1251</codepage>  
  </counter_db>
+ <result>
+  <positiveresult>2</positiveresult>
+  <negativeresult>1</negativeresult>
+ </result>
 <scheme>
  <Request records=''>
     <Zapros>
@@ -71,65 +75,32 @@
 </Request>
 
  </scheme>
- <scheme>
-<RequestRightsPersons>
- <RequestID>er_pack_id</RequestID>
- <RequestType>Запрос в Росреестр № ;er_pack_id; от ;er_pack_date</RequestType>
- <RequestDate>er_pack_date</RequestDate>
-<Persons records=''>
- <Person>
-  <PersonID>er_req_id</PersonID>
-  <FirstName>firstname</FirstName>
-  <SecondName>secondname</SecondName>
-  <LastName>lastname</LastName>
-  <BirthDate>er_debtor_birthday</BirthDate>
- </Person>
-</Persons>
-</RequestRightsPersons>
- </scheme>
-  <scheme>
-<RequestRightsPersonsReply depth='3'>
- <RequestID>request_id</RequestID>
- <ReplyDate>reply_date</ReplyDate>
- <OrganizationName></OrganizationName>
- <RegionID></RegionID>
- <Persons answers="" >
- <Person answerstart="">
-  <PersonID>request_id</PersonID>
-  <FirstName>firstname</FirstName>
-  <SecondName>secondname</SecondName>
-  <LastName>lastname</LastName>
-  <BirthDate>er_debtor_birthday</BirthDate>
-  <Document answer='01' >
-   <Type_Document>rr_type_doc</Type_Document>
-   <Name>pass</Name>
-   <Series>ser_doc</Series>
-   <Number>num_doc</Number>
-   <Date>date_doc</Date>
-   <IssueOrgan>issue_organ</IssueOrgan>
-  </Document>
-  <Rights answer='11'>
-   <Right>
-    <CadastralNumber>kadastr_n</CadastralNumber>
-    <RegNumber>inv_n_nedv</RegNumber>
-    <StartDate>startdate</StartDate>
-    <EndDate>enddate</EndDate>
-    <Area>s_nedv</Area>
-    <AreaUnits>012002001000</AreaUnits>
-    <Purpose>purpose</Purpose>
-    <Share>share</Share>
-    <Address childrens="">
-     <Region>09</Region>
-     <District>Малокарачаевский</District>
-     <Street>Родниковая</Street>
-     <House>8а</House>
-     <Note>adres_nedv</Note>
-    </Address>
-   </Right>
-  </Rights>
- </Person>
- </Persons>
-</RequestRightsPersonsReply>
+<scheme>
+<Response answers="">
+ <otvet answer='09'>
+  <RESULT>result</RESULT>
+  <File_Name>r2688617.201</File_Name>
+  <Req_ID>er_req_id</Req_ID>
+  <User_ID>87210100000076</User_ID>
+  <Req_Type>1</Req_Type>
+  <File_Exp_Name>f2688617.201</File_Exp_Name>
+  <Resp_ID>42837</Resp_ID>
+  <Req_Date>2014.08.27</Req_Date>
+  <Req_Time>10:14</Req_Time>
+  <INN></INN>
+  <OSB_Name></OSB_Name>
+  <OSB_Addr></OSB_Addr>
+  <OSB_Num>dept_code</OSB_Num>
+  <OSB_Tel></OSB_Tel>
+  <BIC>bic_bank</BIC>
+  <Account>acc</Account>
+  <Op_Date></Op_Date>
+  <Balance>summa</Balance>
+  <Vid_vkl>summa_info</Vid_vkl>
+  <Val_vkl>currency_code</Val_vkl>
+  <DebtorName>ЧУПРОВА СВЕТЛАНА СЕРГЕЕВНА</DebtorName>
+</otvet>
+</Response>
 </scheme>
 </file>
 </config>	

@@ -98,8 +98,11 @@ def main():
  if filetype=='xml':
   #print ans_scheme.tag,ans_scheme.keys()
   #Проверяем явлется ли root контейнером ответов
+  print ans_scheme.tag,ans_scheme.attrib.keys()
   if 'answers' in ans_scheme.keys():
-   ans=ans_scheme
+   answer=ans_scheme.getchildren()[0]
+   answers=answer.tag
+   print "HERE"
   else:
    for ch in ans_scheme.getchildren():
     print ch.tag
@@ -111,6 +114,7 @@ def main():
      answers=ch.tag
      break
   #Ищем поля сведений
+  print 'ANSWERS',answers
   ansnodes=[]
   for ch in answer.getchildren(): #ограничение на кол-во ответов debug
    #ans2=[]
@@ -138,8 +142,13 @@ def main():
          if chh3.text==af:
           #print af,ans2	
           ans2[af]=chh2.tag+':'+chh3.tag
+    if ch.attrib.values()[0]=='09':
+     for chh in ch:
+      for af in ansfields['09']:
+       if chh.text==af:
+        ans2[af]=chh.tag
     ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
-
+    print ansnodes
   #print ansnodes
   #Ищем в значениях тег request_id
   for ch in answer.getchildren():
@@ -170,6 +179,7 @@ def main():
      replydatetag=ch.tag
    #Ищем контейнер ответов
    xmlanswers=xmlroot.find(answers)
+   print 'xmlanswers',xmlanswers.tag
   #Начинаем разбор ответов
    cn=0
    packid=getgenerator(cur,"DX_PACK")
@@ -178,7 +188,7 @@ def main():
    with Profiler() as p:
     for a in xmlanswers.getchildren():#[11:20]: #!Ограничение
      #Проверить запрос с этим id был или нет загружен
-     print "REQ",reqidtag
+     print "REQ",reqidtag,a.tag
      request_id=a.find(reqidtag).text
      #print "Req_id",request_id,str(type(request_id))
      ipid=getipid(cur,'UTF-8','CP1251',request_id)
