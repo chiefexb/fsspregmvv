@@ -45,6 +45,12 @@ def main():
  concodepage=dbparams.find('connection_codepage').text
  codepage=dbparams.find('codepage').text
  database=dbparams.find('database').text
+ try:
+  port=dbparams.find('port').text
+ except:
+  print 'default port 3050'
+  port='3050'
+
  #print username,password,hostname,concodepage,codepage
 #Ищем параметры МВВ
  mvv=cfgroot.find('mvv')
@@ -145,7 +151,7 @@ def main():
     #print ch.tag
  #Соединяемся с базой ОСП
   try:
-   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage,port=port)
   except  Exception, e:
    print("Ошибка при открытии базы данных:\n"+str(e))
    sys.exit(2)
@@ -285,7 +291,7 @@ def main():
   if  len(listdir(input_path))==0:
    inform(u'Нет файлов для загрузки')
   try:
-   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage,port=port)
   except  Exception, e:
    print("Ошибка при открытии базы данных:\n"+str(e))
    sys.exit(2)
@@ -469,7 +475,7 @@ def main():
    #print positiveresult
    #Соединяемся с базой ОСП
    try:
-    con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+    con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage,port=port)
    except  Exception, e:
     print("Ошибка при открытии базы данных:\n"+str(e))
     sys.exit(2)
