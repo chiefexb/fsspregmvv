@@ -33,6 +33,12 @@ def main():
  concodepage=dbparams.find('connection_codepage').text
  codepage=dbparams.find('codepage').text
  database=dbparams.find('database').text
+ try:
+  port=dbparams.find('port').text
+ except:
+  print 'default port 3050'
+  port='3050'
+ 
  #print username,password,hostname,concodepage,codepage
 #Ищем параметры МВВ
  mvv=cfgroot.find('mvv')
@@ -45,7 +51,7 @@ def main():
  log_file=logpar.find('log_file2').text
 
  try:
-  con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+  con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage,port=port)
  except  Exception, e:
   print("Ошибка при открытии базы данных:\n"+str(e))
   sys.exit(2)
@@ -91,6 +97,10 @@ def main():
    cntdb_hostname   =cntdbpar.find('hostname').text
    cntdb_concodepage=cntdbpar.find('connection_codepage').text
    cntdb_codepage   =cntdbpar.find('codepage').text
+   try:
+    cntdb_port   =cntdbpar.find('port').text
+   except:
+    cntdb_port='3050'
    cntdb_database   =cntdbpar.find('database').text
    filial=filepar.find('filial').text
    osp=filepar.find('osp').text
@@ -127,14 +137,14 @@ def main():
   #print reqq2,int2str2
  #Соединяемся с базой ОСП
   try:
-   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage,port=port)
   except  Exception, e:
    print("Ошибка при открытии базы данных:\n"+str(e))
    sys.exit(2)
   cur = con.cursor()
   if filenum=='sber':
    try:
-    con2 = fdb.connect (host=cntdb_hostname, database=cntdb_database, user=cntdb_username, password=cntdb_password,charset=cntdb_concodepage)
+    con2 = fdb.connect (host=cntdb_hostname, database=cntdb_database, user=cntdb_username, password=cntdb_password,charset=cntdb_concodepage,port=cntdb_port)
    except  Exception, e:
     print("Ошибка при открытии базы данных счетчика:\n"+str(e))
     sys.exit(2)
@@ -200,7 +210,7 @@ def main():
   #Создание заголовка xml
 #Соединяемся с базой ОСП
   try:
-   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage,port=port)
   except  Exception, e:
    #print("Ошибка при открытии базы данных:\n"+str(e))
    sys.exit(2)
@@ -278,7 +288,7 @@ def main():
   ch=filiescheme.getchildren()
  #Соединяемся с базой ОСП
   try:
-   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage)
+   con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage,port=port)
   except  Exception, e:
    #print("Ошибка при открытии базы данных:\n"+str(e))
    sys.exit(2)
