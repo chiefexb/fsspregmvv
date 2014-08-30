@@ -96,18 +96,20 @@ def main():
  logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = log_path+log_file)
  #logging.info( u'This is an info message' )
  if filetype=='xml':
+  replydatefrom=-1
   #print ans_scheme.tag,ans_scheme.keys()
   #Проверяем явлется ли root контейнером ответов
   print ans_scheme.tag,ans_scheme.attrib.keys()
   if 'answers' in ans_scheme.keys():
    answer=ans_scheme.getchildren()[0]
-   answers=answer.tag
-   print "HERE"
+   answers=ans_scheme.tag
+   print "HERE",answer.tag
   else:
    for ch in ans_scheme.getchildren():
     print ch.tag
     if ch.text=='reply_date':
      replydatetag=ch.tag
+     replydatefrom=1
     if 'answers' in ch.keys():
      #print ch.tag
      answer=ch.getchildren()[0]
@@ -116,6 +118,7 @@ def main():
   #Ищем поля сведений
   print 'ANSWERS',answers
   ansnodes=[]
+ 
   for ch in answer.getchildren(): #ограничение на кол-во ответов debug
    #ans2=[]
    if 'answer' in ch.keys():
@@ -148,15 +151,16 @@ def main():
        if chh.text==af:
         ans2[af]=chh.tag
     ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
-    print ansnodes
+    print 'NODES',ansnodes
   #print ansnodes
   #Ищем в значениях тег request_id
   for ch in answer.getchildren():
    print ch.tag,ch.text
    if ch.text=='er_req_id': 
     reqidtag=ch.tag
-   #if ch.text=='reply_date': 
-   # replydatetag=ch.tag 
+   if ch.text=='reply_date': 
+    replydatetag=ch.tag 
+    replydatefrom=2
     #print ch.tag
  #Соединяемся с базой ОСП
   try:
@@ -174,11 +178,16 @@ def main():
    xml=etree.parse(xmlfile)
    xmlroot=xml.getroot()
    #print xmlroot.tag
-   for ch in xmlroot.getchildren(): 
-    if ch.text=='reply_date':
-     replydatetag=ch.tag
+   #for ch in xmlroot.getchildren(): ###Зачем
+   # if ch.text=='reply_date':
+   #  replydatetag=ch.tag
+   #  replydatefrom=2
    #Ищем контейнер ответов
-   xmlanswers=xmlroot.find(answers)
+   print 'ANSWER',answers,xmlroot.tag
+   if xmlroot.tag==answers:
+    xmlanswers=xmlroot
+   else:
+    xmlanswers=xmlroot.find(answers)
    print 'xmlanswers',xmlanswers.tag
   #Начинаем разбор ответов
    cn=0
@@ -193,7 +202,14 @@ def main():
      #print "Req_id",request_id,str(type(request_id))
      ipid=getipid(cur,'UTF-8','CP1251',request_id)
      #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
-     replydate=xmlroot.find(replydatetag).text
+     print str(xmlroot.getchildren())
+     if replydatefrom==1:
+      replydate=xmlroot.find(replydatetag).text
+     elif replydatefrom==2:
+      replydate=a.find(replydatetag).text
+     else:
+      replydate=datetime.datetime.now().strftime('%d.%m.%y')  
+   
      if len(getanswertype(ansnodes,a))==0 and ipid<>-1:
       #request_id=a.find(reqidtag).text
       #request_dt="06.12.2013"
