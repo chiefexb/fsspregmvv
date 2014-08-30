@@ -103,7 +103,7 @@ def main():
   if 'answers' in ans_scheme.keys():
    answer=ans_scheme.getchildren()[0]
    answers=ans_scheme.tag
-   print "HERE",answer.tag
+   print "HERE",answer.tag #testing
   else:
    for ch in ans_scheme.getchildren():
     print ch.tag
