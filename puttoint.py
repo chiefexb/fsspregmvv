@@ -116,11 +116,12 @@ def main():
      answers=ch.tag
      break
   #Ищем поля сведений
-  print 'ANSWERS',answers
+  print 'ANSWERS',answers,answer.tag,answer.getchildren()
   ansnodes=[]
  
   for ch in answer.getchildren(): #ограничение на кол-во ответов debug
    #ans2=[]
+   print 'answer',ch.keys
    if 'answer' in ch.keys():
     #Заполняем ключи для данных
     ans2={}
@@ -151,7 +152,7 @@ def main():
        if chh.text==af:
         ans2[af]=chh.tag
     ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
-    print 'NODES',ansnodes
+  print 'NODES',ansnodes
   #print ansnodes
   #Ищем в значениях тег request_id
   for ch in answer.getchildren():
@@ -239,13 +240,13 @@ def main():
    #con.commit()
    st=u'Выгружаем буфер sql запросов:'+str(len(sqlbuff))
    logging.info( st )
-   with Profiler() as p:
-    for sqt in sqlbuff:
-     try:
-      cur.execute(sqt)
-     except:
-      print sqt
-    con.commit()
+   #with Profiler() as p:
+   # for sqt in sqlbuff:
+   #  try:
+   #   cur.execute(sqt)
+   #  except:
+   #   print sqt
+   # con.commit()
    xmlfile.close()
    if ipid <>-1:
     #rename(input_path+ff, input_arc_path+ff)
