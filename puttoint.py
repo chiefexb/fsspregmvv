@@ -99,14 +99,14 @@ def main():
   replydatefrom=-1
   #print ans_scheme.tag,ans_scheme.keys()
   #Проверяем явлется ли root контейнером ответов
-  print ans_scheme.tag,ans_scheme.attrib.keys()
+  #print  ans_scheme.tag, ans_scheme.attrib.keys()
   if 'answers' in ans_scheme.keys():
    answer=ans_scheme.getchildren()[0]
    answers=ans_scheme.tag
-   print "HERE",answer.tag #testing
+   print 'ANSWERS',answers,'Answers.tag ', answer.tag#answer.tag,answer.getchildren()
   else:
    for ch in ans_scheme.getchildren():
-    print ch.tag
+    #print ch.tag
     if ch.text=='reply_date':
      replydatetag=ch.tag
      replydatefrom=1
@@ -116,12 +116,12 @@ def main():
      answers=ch.tag
      break
   #Ищем поля сведений
-  print 'ANSWERS',answers,answer.tag,answer.getchildren()
+   print 'ANSWERS',answers,'Answers.tag ',answer.tag#,answer.getchildren()
   ansnodes=[]
  
   for ch in answer.getchildren(): #ограничение на кол-во ответов debug
    #ans2=[]
-   print 'answer',ch.keys
+   #print 'answer',ch.keys
    if 'answer' in ch.keys():
     #Заполняем ключи для данных
     ans2={}
@@ -152,11 +152,11 @@ def main():
        if chh.text==af:
         ans2[af]=chh.tag
     ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
-  print 'NODES',ansnodes
+  #print 'NODES',ansnodes
   #print ansnodes
   #Ищем в значениях тег request_id
   for ch in answer.getchildren():
-   print ch.tag,ch.text
+   #print ch.tag,ch.text
    if ch.text=='er_req_id': 
     reqidtag=ch.tag
    if ch.text=='reply_date': 
@@ -184,7 +184,7 @@ def main():
    #  replydatetag=ch.tag
    #  replydatefrom=2
    #Ищем контейнер ответов
-   print 'ANSWER',answers,xmlroot.tag
+   #print 'ANSWER',answers,xmlroot.tag
    if xmlroot.tag==answers:
     xmlanswers=xmlroot
    else:
@@ -198,12 +198,12 @@ def main():
    with Profiler() as p:
     for a in xmlanswers.getchildren():#[11:20]: #!Ограничение
      #Проверить запрос с этим id был или нет загружен
-     print "REQ",reqidtag,a.tag
+     #print "REQ",reqidtag,a.tag
      request_id=a.find(reqidtag).text
      #print "Req_id",request_id,str(type(request_id))
      ipid=getipid(cur,'UTF-8','CP1251',request_id)
      #request_dt=a.find(replydatetag).text #reply_date      #    "06.12.2013" #???
-     print str(xmlroot.getchildren())
+     #print str(xmlroot.getchildren())
      if replydatefrom==1:
       replydate=xmlroot.find(replydatetag).text
      elif replydatefrom==2:
