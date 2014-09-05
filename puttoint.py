@@ -101,9 +101,11 @@ def main():
   #Проверяем явлется ли root контейнером ответов
   #print  ans_scheme.tag, ans_scheme.attrib.keys()
   if 'answers' in ans_scheme.keys():
-   answer=ans_scheme.getchildren()[0]
-   answers=ans_scheme.getchildren()[0].tag #ans_scheme.tag
+   answer=ans_scheme
+   answers=ans_scheme.tag #ans_scheme.tag
    print 'ANSWERS',answers,'Answers.tag ', answer.tag#answer.tag,answer.getchildren()
+   #Ищем er_req_id
+   
   else:
    for ch in ans_scheme.getchildren():
     #print ch.tag
@@ -118,10 +120,18 @@ def main():
   #Ищем поля сведений
    print 'ANSWERS',answers,'Answers.tag ',answer.tag#,answer.getchildren()
   ansnodes=[]
- 
+  print answer.getchildren()
   for ch in answer.getchildren(): #ограничение на кол-во ответов debug
    #ans2=[]
+   
    #print 'answer',ch.keys
+   if 'req_id_in' in ch.keys():
+    for chh in ch:
+     if chh.text=='er_req_id':
+      reqidtag=chh.tag
+      print chh.tag
+     if chh.text=='reply_date'
+      replydatetag=chh.tag
    if 'answer' in ch.keys():
     #Заполняем ключи для данных
     ans2={}
@@ -153,10 +163,10 @@ def main():
         ans2[af]=chh.tag
     ansnodes.append([ch.tag,ch.attrib.values()[0],ans2])
   #print 'NODES',ansnodes
-  #print ansnodes
+  print ansnodes
   #Ищем в значениях тег request_id
   for ch in answer.getchildren():
-   print 'TEST',ch.tag,ch.text
+   print 'er_req_id',ch.tag,ch.text
    if ch.text=='er_req_id': 
     reqidtag=ch.tag
    if ch.text=='reply_date': 
@@ -200,7 +210,7 @@ def main():
    with Profiler() as p:
     for a in xmlanswers.getchildren():#[11:20]: #!Ограничение
      #Проверить запрос с этим id был или нет загружен
-     #print "REQ",reqidtag,a.tag
+     print "REQ",reqidtag,a.tag
      print a.tag
      request_id=a.find(reqidtag).text
      #print "Req_id",request_id,str(type(request_id))
