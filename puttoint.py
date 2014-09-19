@@ -121,16 +121,19 @@ def main():
    print 'ANSWERS',answers,'Answers.tag ',answer.tag#,answer.getchildren()
   ansnodes=[]
   print answer.getchildren()
+  req_id_in=0
   for ch in answer.getchildren(): #ограничение на кол-во ответов debug
    #ans2=[]
    
    #print 'answer',ch.keys
+   # if 'req_id_in' in ch.keys():
    if 'req_id_in' in ch.keys():
     for chh in ch:
      if chh.text=='er_req_id':
+      req_id_in=1
       reqidtag=chh.tag
       print chh.tag
-     if chh.text=='reply_date'
+     if chh.text=='reply_date':
       replydatetag=chh.tag
    if 'answer' in ch.keys():
     #Заполняем ключи для данных
@@ -386,11 +389,19 @@ def main():
         for aa in a:
          ipid=getipid(cur,'UTF-8','CP1251',request_id)
          if aa.attrib['KindData']=='93':
-          id=getgenerator(cur,"SEQ_DOCUMENT")
+          id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
+          cur.execute('select max(id) from ext_input_header ')
+          er=cur.fetchall()
+          max=er[0][0]
+          if id<max:
+           cur.execute('ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(max))
+           con.commit()
+           informwarn(u'Сбит генератор SEQ_EXT_INPUT_HEADER. Исправляю значение.'+str(max)+','+str(id))
+           id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
           hsh=hashlib.md5()
           hsh.update(str(id))
           extkey=hsh.hexdigest()
-          sqltemp=setresponse(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Есть сведения")
+          sqltemp=setresponse(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Сведения о пенсии.")
           for sqt in sqltemp:
            sqlbuff.append(sqt)
           #Вставка сведений о статусе
@@ -426,11 +437,19 @@ def main():
            #print ff,request_id,aaa.attrib.keys()
            informwarn(u'Неполные сведения о работе, данные проигнорированы:'+ff.decode('UTF-8')+' '+request_id)
           if tt:
-           id=getgenerator(cur,"SEQ_DOCUMENT")
+           id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
+           cur.execute('select max(id) from ext_input_header ')
+           er=cur.fetchall()
+           max=er[0][0]
+           if id<max:
+            cur.execute('ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(max))
+            con.commit()
+            informwarn(u'Сбит генератор SEQ_EXT_INPUT_HEADER. Исправляю значение.'+str(max)+','+str(id))
+            id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER") 
            hsh=hashlib.md5()
            hsh.update(str(id))
            extkey=hsh.hexdigest()
-           sqltemp=setresponse(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Есть сведения")
+           sqltemp=setresponse(cur,con,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,'01',id,packid,extkey,"Есть сведения о работе.")
            for sqt in sqltemp:
             sqlbuff.append(sqt)
           #Вставка сведений о статусе
@@ -461,6 +480,15 @@ def main():
           # for sqt in sqltemp:
           #  sqlbuff.append(sqt)
        elif ipid<>-1:
+        #id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
+        #cur.execute('select max(id) from ext_input_header ')
+        #er=cur.fetchall()
+        #max=er[0][0]
+        #if id<max:
+        # cur.execute('ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(max))
+        # con.commit()
+        # #informwarn(u'Сбит генератор SEQ_DOCUMENT. Исправляю значение.'+str(max)+','+str(id))
+        #id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
         sqltemp= setnegative(cur,'UTF-8','CP1251',agent_code,agreement_code,dept_code,request_id,replydate,packid)
         for sqt in sqltemp:
          sqlbuff.append(sqt)
