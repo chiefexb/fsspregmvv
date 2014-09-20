@@ -393,6 +393,7 @@ def main():
           cur.execute('select max(id) from ext_input_header ')
           er=cur.fetchall()
           max=er[0][0]
+          print max,id
           if id<max:
            cur.execute('ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(max))
            con.commit()
@@ -418,6 +419,16 @@ def main():
           req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
           ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
           id=getgenerator(cur,"EXT_INFORMATION")
+          cur.execute('select max(id) from EXT_INFORMATION ')
+          er=cur.fetchall()
+          max=er[0][0]
+          print max,id
+          if id<max:
+           cur.execute('ALTER SEQUENCE EXT_INFORMATION RESTART WITH '+str(max))
+           con.commit()
+           informwarn(u'Сбит генератор EXT_INFORMATION. Исправляю значение.'+str(max)+','+str(id))
+           id=getgenerator(cur,"EXT_INFORMATION")
+   
           hsh.update(str(id))
           svextkey=hsh.hexdigest()
           sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(replydate)+cln+quoted('08')+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"       #print sqltemp
@@ -466,6 +477,15 @@ def main():
            req_num=convtotype([' ','C'],er[0][const["er_req_number"]],'UTF-8','UTF-8')
            ipnum=convtotype([' ','C'],er[0][const["er_ip_num"]],'UTF-8','UTF-8')
            id=getgenerator(cur,"EXT_INFORMATION")
+           cur.execute('select max(id) from EXT_INFORMATION ')
+           er=cur.fetchall()
+           max=er[0][0]
+           print max,id
+           if id<max:
+            cur.execute('ALTER SEQUENCE EXT_INFORMATION RESTART WITH '+str(max))
+            con.commit()
+            informwarn(u'Сбит генератор EXT_INFORMATION. Исправляю значение.'+str(max)+','+str(id))
+            id=getgenerator(cur,"EXT_INFORMATION")
            hsh.update(str(id))
            svextkey=hsh.hexdigest()
            sq3="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES ("+str(id)+cln+quoted(replydate)+cln+quoted('56')+cln+quoted(ent_name)+cln+quoted(svextkey)+cln+quoted(ent_bdt)+cln+quoted(ent_by)+cln+quoted('0')+cln+quoted(extkey)+cln+quoted(ent_inn)+")"       #print sqltemp
@@ -508,7 +528,7 @@ def main():
       cur.execute(sqt)
      except Exception,e:
       informerr (u'Ошибка скрипта: '+str(e)+u' '+sqt)
-    con.commit()
+    #con.commit()
   f.close()
   con.close() 
  if filetype=='dbf': #Тип dbf определяет только банки для других целей будут dbf2 и т д

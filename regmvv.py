@@ -437,7 +437,6 @@ def setnegative(cur,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_cod
   con.commit()
   informwarn(u'Сбит генератор SEQ_DOCUMENT. Исправляю значение.'+str(max)+','+str(id))
   id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
-
  ipid=getipid (cur,dbsystcp,dbcp,req_id)
  #packid=getgenerator(cur,"DX_PACK")
  hsh=hashlib.md5()
