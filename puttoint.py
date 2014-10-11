@@ -353,6 +353,7 @@ def main():
    #Логирование и учет
    inform(u'Загружаем: '+ff.decode('UTF-8'))
    with Profiler() as p:
+    sqlbuff=[]
     xml=etree.parse(xmlfile)
     xmlroot=xml.getroot()
     #Ищем контейнер ответов
