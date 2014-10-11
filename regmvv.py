@@ -428,15 +428,15 @@ def setnegative(cur,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_cod
  sqltemp=[]
  #print type
  meta="EXT_RESPONSE"
- id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER") #"SEQ_DOCUMENT")
- cur.execute('select max(id) from ext_input_header ')
- er=cur.fetchall()
- max=er[0][0]
- if id<max:
-  cur.execute('ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(max))
-  con.commit()
-  informwarn(u'Сбит генератор SEQ_DOCUMENT. Исправляю значение.'+str(max)+','+str(id))
-  id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
+ id=getgenerator(cur, "SEQ_DOCUMENT") #"SEQ_EXT_INPUT_HEADER") #"SEQ_DOCUMENT")
+ #cur.execute('select max(id) from ext_input_header ')
+ #er=cur.fetchall()
+ #max=er[0][0]
+ #if id<max:
+ # cur.execute('ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(max))
+ # con.commit()
+ # informwarn(u'Сбит генератор SEQ_DOCUMENT. Исправляю значение.'+str(max)+','+str(id))
+ # id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
  ipid=getipid (cur,dbsystcp,dbcp,req_id)
  #packid=getgenerator(cur,"DX_PACK")
  hsh=hashlib.md5()

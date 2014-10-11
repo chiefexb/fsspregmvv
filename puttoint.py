@@ -389,16 +389,16 @@ def main():
         for aa in a:
          ipid=getipid(cur,'UTF-8','CP1251',request_id)
          if aa.attrib['KindData']=='93':
-          id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
-          cur.execute('select max(id) from ext_input_header ')
-          er=cur.fetchall()
-          max=er[0][0]
-          print max,id
-          if id<max:
-           cur.execute('ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(max))
-           con.commit()
-           informwarn(u'Сбит генератор SEQ_EXT_INPUT_HEADER. Исправляю значение.'+str(max)+','+str(id))
-           id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
+          id=getgenerator(cur, "SEQ_DOCUMENT") #"SEQ_EXT_INPUT_HEADER") #Надо_SEQ_EXT
+          #cur.execute('select max(id) from ext_input_header ')
+          #er=cur.fetchall()
+          #max=er[0][0]
+          #print max,id
+          #if id<max:
+          # cur.execute('ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(max))
+          # con.commit()
+          # informwarn(u'Сбит генератор SEQ_EXT_INPUT_HEADER. Исправляю значение.'+str(max)+','+str(id))
+          # id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
           hsh=hashlib.md5()
           hsh.update(str(id))
           extkey=hsh.hexdigest()
@@ -448,15 +448,15 @@ def main():
            #print ff,request_id,aaa.attrib.keys()
            informwarn(u'Неполные сведения о работе, данные проигнорированы:'+ff.decode('UTF-8')+' '+request_id)
           if tt:
-           id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER")
-           cur.execute('select max(id) from ext_input_header ')
-           er=cur.fetchall()
-           max=er[0][0]
-           if id<max:
-            cur.execute('ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(max))
-            con.commit()
-            informwarn(u'Сбит генератор SEQ_EXT_INPUT_HEADER. Исправляю значение.'+str(max)+','+str(id))
-            id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER") 
+           id=getgenerator(cur,"SEQ_DOCUMENT") #"SEQ_EXT_INPUT_HEADER")
+           #cur.execute('select max(id) from ext_input_header ')
+           #er=cur.fetchall()
+           #max=er[0][0]
+           #if id<max:
+           # cur.execute('ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(max))
+           # con.commit()
+           # informwarn(u'Сбит генератор SEQ_EXT_INPUT_HEADER. Исправляю значение.'+str(max)+','+str(id))
+           # id=getgenerator(cur,"SEQ_EXT_INPUT_HEADER") 
            hsh=hashlib.md5()
            hsh.update(str(id))
            extkey=hsh.hexdigest()
@@ -528,7 +528,7 @@ def main():
       cur.execute(sqt)
      except Exception,e:
       informerr (u'Ошибка скрипта: '+str(e)+u' '+sqt)
-    #con.commit()
+    con.commit()
   f.close()
   con.close() 
  if filetype=='dbf': #Тип dbf определяет только банки для других целей будут dbf2 и т д
