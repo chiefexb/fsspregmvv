@@ -74,11 +74,11 @@ def main():
   with Profiler() as p:
    #ff='9112_2014_07_27_11_fix.txt'
    f1=file(input_path+ff)
-   ff2=ff.replace('.txt','')+'.csv'
-   f2=file(output_path+ff2,'w')
+   #ff2=ff.replace('.txt','')+'.csv'
+   #f2=file(output_path+ff2,'w')
    fl=f1.readlines()
    st='ФИО СПИ;Номер ИП;Должник;Номер ИД;Сумма платежа;Дата платежа'
-   f2.write(st+'\n')
+   #f2.write(st+'\n')
    packid=getgenerator(cur,"DX_PACK")
    for j in range(0,len(fl)):
     id=getgenerator(cur,"SEQ_DOCUMENT") #"SEQ_EXT_INPUT_HEADER")
@@ -100,8 +100,8 @@ def main():
      #'ФИО СПИ;Номер ИП;Должник;Номер ИД;Сумма платежа;Дата платежа'
      pristav=(rr[0][3])
      st=st+pristav+clm+ip_num+clm+fio+id_num+clm+str(pay_sum)+clm+pd_date.strftime('%d.%m.%Y') +'\n'
-     print str(type(st))
-     f2.write(st.encode('UTF-8'))
+     #print str(type(st))
+     #f2.write(st.encode('UTF-8'))
      extkey=str(rr[0][0])
      prim=(fls[8]+clm+fls[9]+clm+ff).decode('UTF-8')
      #print str(type(prim))
@@ -116,7 +116,7 @@ def main():
   with Profiler() as p:
    con.commit()
   f1.close()
-  f2.close()
+  #f2.close()
   rename(input_path+ff, input_arc_path+ff)
  f.close()
  con.close()
