@@ -99,7 +99,7 @@ def main():
     if len (rr) <>0:
      #'ФИО СПИ;Номер ИП;Должник;Номер ИД;Сумма платежа;Дата платежа'
      pristav=(rr[0][3])
-     st=st+pristav+clm+ip_num+clm+fio+id_num+clm+str(pay_sum)+clm+pd_date.strftime('%d.%m.%Y') +'\n'
+     #st=st+pristav+clm+ip_num+clm+fio+id_num+clm+str(pay_sum)+clm+pd_date.strftime('%d.%m.%Y') +'\n'
      #print str(type(st))
      #f2.write(st.encode('UTF-8'))
      extkey=str(rr[0][0])
