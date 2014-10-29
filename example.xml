@@ -3,15 +3,11 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname>10.9.4.16</hostname>
+ <hostname>localhost</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
  <codepage>CP1251</codepage>
 </database_params>
-<logging>
-  <log_path>/root/git/fsspregmvv/</log_path>
-  <log_file>rosr.log</log_file>
-</logging>
 <mvv>
  <preprocessing>
   <sql>ext_request.mvv_agent_code='РОСРЕЕСТР' and ext_request.entity_type not in (95,2)</sql>
@@ -21,12 +17,18 @@
  <dept_code>ЧЕРК</dept_code>
  <agreement_code>ЧЕРКИНТ</agreement_code>
 </mvv>
+<logging>
+  <log_path>/home/chief/work/git/fsspregmvv</log_path>
+  <log_file>rosr.log</log_file>
+  <log_file2>rosr2.log</log_file2> 
+</logging>
+
 <file>
  <codepage>CP1251</codepage>
  <output_path>/home/chief/work/reg/</output_path>
- <input_path>/home/chief/work/regin/</input_path>
- <input_path_err>/home/chief/work/regerr/</input_path_err> 
- <input_path_arc>/home/chief/work/regarc/</input_path_arc>
+ <input_path>/home/chief/work/rr_in/</input_path>
+ <input_path_arc>/home/chief/work/rr_in_arc</input_path_arc>
+  <input_path_err>/home/chief/work/rr_in_err</input_path_err>
  <type>xml</type>
  <numeric>normal</numeric>
  <prefix>rr</prefix>
@@ -54,7 +56,7 @@
  <RegionID></RegionID>
  <Persons answers="" >
  <Person answerstart="">
-  <PersonID>request_id</PersonID>
+  <PersonID>er_req_id</PersonID>
   <FirstName>firstname</FirstName>
   <SecondName>secondname</SecondName>
   <LastName>lastname</LastName>
@@ -72,7 +74,6 @@
     <CadastralNumber>kadastr_n</CadastralNumber>
     <RegNumber>inv_n_nedv</RegNumber>
     <StartDate>startdate</StartDate>
-    <EndDate>enddate</EndDate>
     <Area>s_nedv</Area>
     <AreaUnits>012002001000</AreaUnits>
     <Purpose>purpose</Purpose>

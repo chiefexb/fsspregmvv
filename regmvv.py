@@ -727,7 +727,9 @@ def gettypedoc(cur,dbsystcp,dbcp,docs):
   cur.execute('select directory_types.dirt_code from directory_types where directory_types.dirt_code_rosreestr='+quoted(rr))
   r=cur.fetchall() 
   #print r[0][0]
-  docs['type_doc']=convtotype([' ','C'],r[0][0],'UTF-8','UTF-8')
+  print docs.keys(),len(r),rr
+  if len(r)>0:
+   docs['type_doc']=convtotype([' ','C'],r[0][0],'UTF-8','UTF-8')
  return docs
 def setattribs(cur,dbcp,dbfcp,xml,xmlscheme,rr,delta,num,param):
  fizur=(rr[const['er_entity_type']] in (95,2))
