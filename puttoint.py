@@ -256,13 +256,13 @@ def main():
    #con.commit()
    st=u'Выгружаем буфер sql запросов:'+str(len(sqlbuff))
    logging.info( st )
-   #with Profiler() as p:
-   # for sqt in sqlbuff:
-   #  try:
-   #   cur.execute(sqt)
-   #  except:
-   #   print sqt
-   # con.commit()
+   with Profiler() as p:
+    for sqt in sqlbuff:
+     try:
+      cur.execute(sqt)
+     except:
+      print sqt
+    con.commit()
    xmlfile.close()
    if ipid <>-1:
     #rename(input_path+ff, input_arc_path+ff)
@@ -423,7 +423,7 @@ def main():
           cur.execute('select max(id) from EXT_INFORMATION ')
           er=cur.fetchall()
           max=er[0][0]
-          print max,id
+          #print max,id
           if id<max:
            cur.execute('ALTER SEQUENCE EXT_INFORMATION RESTART WITH '+str(max))
            con.commit()
@@ -481,7 +481,7 @@ def main():
            cur.execute('select max(id) from EXT_INFORMATION ')
            er=cur.fetchall()
            max=er[0][0]
-           print max,id
+           #print max,id
            if id<max:
             cur.execute('ALTER SEQUENCE EXT_INFORMATION RESTART WITH '+str(max))
             con.commit()
@@ -580,14 +580,16 @@ def main():
       db=dbf.Dbf(input_path+ff)
      except:
       ipid=-1
+      print "FILE " +ff
       request_id=u'Ошибка открытия файла'
      else:
       #Проверяем ipid
-      #print ff,flds['request_id'],reqstart,db[0]
+      print ff,flds['request_id'],reqstart,db[0]
       try:
        request_id=(reqstart+str (db[0][flds['request_id']]))
       except:
        ipid=-1
+       
        request_id=u'Ошибка открытия файла'
       else:
        ipid=getipid(cur,'UTF-8','CP1251',request_id)

@@ -51,7 +51,8 @@ def main():
  log_file=logpar.find('log_file2').text
 
  try:
-  con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage,port=port)
+  con = fdb.connect (host=hostname, database=database, user=username, 
+password=password,charset=concodepage,port=port)
  except  Exception, e:
   print("Ошибка при открытии базы данных:\n"+str(e))
   sys.exit(2)
