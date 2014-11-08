@@ -267,7 +267,7 @@ def xmladdrecordold(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp)
  return root
 def strtoconst(str):
  return
-def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur,par):
+def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur):
  #print 'XMLs',root.tag, elname
  if root.tag==elname:
   zapros=root
@@ -821,9 +821,10 @@ class Profiler(object):
         logging.info(st)
 def getpassport(cur,ipid):
  sql='select doc_ip_doc.id_dbtr_id_serial, doc_ip_doc.id_dbtr_id_number, doc_ip_doc.id_dbtr_id_date,doc_ip_doc.id_dbtr_id_office from doc_ip_doc where id='+str(ipid)
- #print sql
+ print sql
  cur.execute(sql)
  r=cur.fetchall()
+ print "LEN=",len(r)
  serial=r[0][0]
  number=r[0][1] 
  date=r[0][2]

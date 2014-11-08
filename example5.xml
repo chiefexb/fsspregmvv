@@ -1,0 +1,65 @@
+<config>
+<codepage>UTF-8</codepage>
+<database_params>
+ <username>SYSDBA</username>
+ <password></password>
+ <hostname>10.9.4.16</hostname>
+ <database>ncore-fssp</database>
+ <connection_codepage>WIN1251</connection_codepage>
+ <codepage>CP1251</codepage>
+</database_params>
+<mvv>
+ <agent_code>БАНК-РАЗВИТИЕ</agent_code>
+ <dept_code>ЧЕРКЕССК</dept_code>
+ <agreement_code>БАНК-РАЗВИТИЕИНТ</agreement_code>
+</mvv>
+<logging>
+  <log_path>/root/git/fsspregmvv/</log_path>
+  <log_file>rz.log</log_file>
+  <log_file>rz2.log</log_file>
+</logging>
+<file>
+ <codepage>CP866</codepage>
+ <output_path>/home/chief/work/raz_out/</output_path>
+ <input_path>/home/chief/work/raz_in/</input_path>
+ <input_path_err>/home/chief/work/raz_in_err/</input_path_err>
+ <input_path_arc>/home/chief/work/raz_in_arc/</input_path_arc>
+ <type>dbf</type>
+ <numeric>normal</numeric>
+ <prefix>rz</prefix>
+ <result>
+  <positiveresult>131</positiveresult>
+  <negativeresult>1</negativeresult>
+ </result>
+ <bank>
+  <bik>бик</bik>
+  <name>ОАО "Банк Развитие"</name>
+ </bank>
+ <scheme>
+ <UNICODE  field_type='N'  field_size='10'>er_req_id</UNICODE>
+ <ORGAN    field_type='C'  field_size='100'>divname</ORGAN>
+ <FIOISP   field_type='C'  field_size='100'>er_fio_spi</FIOISP>
+ <NUMISP   field_type='C'  field_size='40'>er_ip_num </NUMISP>
+ <DT	   field_type='D'  field_size='10'>er_req_date </DT>
+ <NUM	   field_type='C'  field_size='40'>er_req_number</NUM>
+ <FIZUR    field_type='N'  field_size='1'>fizur</FIZUR>
+ <FIOORG   field_type='C'  field_size='250'>er_debtor_name</FIOORG>
+ <DATE_R   field_type='C'  field_size='10'>er_debtor_birthday</DATE_R>
+ <ADRESS   field_type='C'  field_size='250'>er_debtor_address</ADRESS>
+ <PASSPORT field_type='C'  field_size='250'>er_debtor_document,er_debtor_ogrn</PASSPORT>
+ <SUMM     field_type='N'  field_size='12'  field_dec='2'>er_ip_sum</SUMM>
+ </scheme>
+<scheme>
+ <UNICODE  field_type='N'  field_size='10'></UNICODE>
+ <NUMISP   field_type='C'  field_size='40'></NUMISP>
+ <DT   field_type='D'  field_size='10'></DT>
+ <NUM  field_type='N'  field_size='10' start='' >request_id</NUM>
+ <NUMRES   field_type='C'  field_size='40'></NUMRES>
+ <DTRES    field_type='D'  field_size='10'>reply_date</DTRES>
+ <RESULT   field_type='N'  field_size='4'>result</RESULT>
+ <TEXT     field_type='C'  field_size='253' result='09' separator=' ' blob_field="FILENAME">ignore acc ignore summa curr</TEXT>
+ <FILENAME field_type='C'  field_size='30'>blob_filename</FILENAME>
+</scheme>
+</file>
+</config>
+

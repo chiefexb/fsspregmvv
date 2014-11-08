@@ -106,25 +106,31 @@ password=password,charset=concodepage,port=port)
    filial=filepar.find('filial').text
    osp=filepar.find('osp').text
    #Определение заголовка
-  if 'records' in root2.attrib.keys():
+  print root2.tag
+  if 'records' in root2.attrib.keys(): 
+  #Если есть атрибут records |Контейнер запроса будет корень,
+  #Заголовка нет
    zapros=root2
    #print zapros.tag
+  else: #Иначе собираем заголовок, и ищем контейнер запросов
    ch=root2.getchildren()	
    reqq=[]
    int2str=[]
    for i in range(len(ch)):
     req=[]
-    if ch[i].attrib<>{}:
-     if 'records' in ch[i].attrib.keys(): 
+    if ch[i].attrib<>{}:# Если есть атрибут
+     if 'records' in ch[i].attrib.keys(): # И атрибут records
+     #контейнер запроса будет текущий узел
       #print ch[i].attrib, ch[i].tag
       zapros=ch[i]
-     break
-    req.append(ch[i].tag)
+     break #выходим из цикла конец сбора заголовка
+    req.append(ch[i].tag) #Собираем заголовок
     req.append('C')
     reqq.append(req)
-    int2str.append(ch[i].text)
+    int2str.append(ch[i].text) #Сбор матрицы значений заголовка
    #print 'reqq',reqq,int2str[0]
    #print zapros.tag
+  #Cбор Запроса и его матрицы значений
   ch=zapros.getchildren()[0]
   reqq2=[]
   int2str2=[]
@@ -143,7 +149,7 @@ password=password,charset=concodepage,port=port)
    print("Ошибка при открытии базы данных:\n"+str(e))
    sys.exit(2)
   cur = con.cursor()
-  if filenum=='sber':
+  if filenum=='sber':# Если сбербанк подключить базу данных для счетчика
    try:
     con2 = fdb.connect (host=cntdb_hostname, database=cntdb_database, user=cntdb_username, password=cntdb_password,charset=cntdb_concodepage,port=cntdb_port)
    except  Exception, e:
@@ -163,8 +169,9 @@ password=password,charset=concodepage,port=port)
    rr=r[0]
    #print 'ZP',root.tag,zapros.tag
    #Если корень равен запросу значит нету заголовка
+   
    if root.tag<>zapros.tag:
-    xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage)
+    xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage,cur)
    #xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
    #print xml
    #print "ROOT",root.tag,zapros.tag
@@ -181,13 +188,13 @@ password=password,charset=concodepage,port=port)
     print filename
     par['filename']=filename
    else:
-    #num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
+    num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
     filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
    for rr in r:
    #rr=r[0]
     #print "ZP",zp.tag,'INT',int2str2,zpp.tag
     #print zpp.tag
-    xmladdrecord(zpp.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage,cur,par)
+    xmladdrecord(zpp.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage,cur)
    xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
    #print xml
    #print filename,num
