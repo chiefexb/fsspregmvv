@@ -162,45 +162,52 @@ password=password,charset=concodepage,port=port)
   packets=getnotprocessed(cur,systemcodepage,'CP1251',mvv_agent_code=agent_code,mvv_agreement_code=agreement_code,mvv_dept_code=dept_code)
   p=len(packets)
   #p=1
-  for pp in range(0,p):
-   root=etree.Element(root2.tag)
-   r=getrecords(cur,packets[pp][0])
-   #print "PP",pp,packets[pp][0],"LEN R",len(r)
-   rr=r[0]
-   #print 'ZP',root.tag,zapros.tag
-   #Если корень равен запросу значит нету заголовка
+  inform(u'Найдено '+str(p) +u' пакетов для выгрузки.')
+  rrr=0
+  with Profiler() as p2:
+   for pp in range(0,p):
+    root=etree.Element(root2.tag)
+    r=getrecords(cur,packets[pp][0])
+    lr=len(r)
+    rrr=rrr+lr
+    #print "PP",pp,packets[pp][0],"LEN R",len(r)
+    rr=r[0]
+    #print 'ZP',root.tag,zapros.tag
+    #Если корень равен запросу значит нету заголовка
    
-   if root.tag<>zapros.tag:
-    xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage,cur)
-   #xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
-   #print xml
-   #print "ROOT",root.tag,zapros.tag
-   if root.tag<>zapros.tag:
-    zp=etree.SubElement(root,zapros.tag)
-   else:
-    zp=root
-   zpp=zapros.getchildren()[0]
-   par={}
-   if filenum=='sber':
-    num=getsbnum (con2,cur2,rr[const['er_pack_date']])
-    print 'SB',num
-    filename=getsbfilename (num[1],num[0],filial,osp)
-    print filename
-    par['filename']=filename
-   else:
-    num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
-    filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
-   for rr in r:
-   #rr=r[0]
-    #print "ZP",zp.tag,'INT',int2str2,zpp.tag
-    #print zpp.tag
-    xmladdrecord(zpp.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage,cur)
-   xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
-   #print xml
-   #print filename,num
-   f2=open(output_path+filename,'w')
-   f2.write(xml)
-   f2.close()
+    if root.tag<>zapros.tag:
+     xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage,cur)
+    #xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
+    #print xml
+    #print "ROOT",root.tag,zapros.tag
+    if root.tag<>zapros.tag:
+     zp=etree.SubElement(root,zapros.tag)
+    else:
+     zp=root
+    zpp=zapros.getchildren()[0]
+    par={}
+    if filenum=='sber':
+     num=getsbnum (con2,cur2,rr[const['er_pack_date']])
+     print 'SB',num
+     filename=getsbfilename (num[1],num[0],filial,osp)
+     print filename
+     par['filename']=filename
+    else:
+     num= getnumfrompacknumber(cur,'UTF-8',codepage,agent_code,agreement_code,dept_code,rr[const['er_pack_date']],rr[const['er_pack_id']])
+     filename=fileprefix+str(rr[const['er_osp_number']])+'_'+str(rr[const['er_pack_date']].strftime('%d_%m_%y'))+'_'+str(num)+'.xml'
+    for rr in r:
+    #rr=r[0]
+     #print "ZP",zp.tag,'INT',int2str2,zpp.tag
+     #print zpp.tag
+     xmladdrecord(zpp.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage,cur)
+    xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
+    #print xml
+    #print filename,num
+    f2=open(output_path+filename,'w')
+    inform(u'Выгружен файл: ' + filename + u', '+str(lr)+u' запросов. Осталось выгрузить '+ str(p-pp) +u' пакетов.')
+    f2.write(xml)
+    f2.close()
+  inform(u'Выгружено: '+str(rrr)+ u' запросов. В '+str(p)+ u' пакетах') 
   #Убрать
   #setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
 

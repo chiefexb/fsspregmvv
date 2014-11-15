@@ -6,7 +6,7 @@
  <hostname>localhost</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
- <codepage>CP1251</codepage>
+ <codepage>UTF-8</codepage>
 </database_params>
 <mvv>
  <preprocessing>
