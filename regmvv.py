@@ -267,7 +267,7 @@ def xmladdrecordold(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp)
  return root
 def strtoconst(str):
  return
-def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur):
+def xmladdrecord(elname,root,xmlscheme,dbscheme,dbvalues,dbsystcp,dbcp,dbfcp,cur,par):
  #print 'XMLs',root.tag, elname
  if root.tag==elname:
   zapros=root

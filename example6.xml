@@ -1,0 +1,107 @@
+<config>
+<codepage>UTF-8</codepage>
+<database_params>
+ <username>SYSDBA</username>
+ <password>masterkey</password>
+ <hostname>10.9.4.16</hostname>
+ <database>ncore-fssp</database>
+ <connection_codepage>WIN1251</connection_codepage>
+ <codepage>CP1251</codepage>
+</database_params>
+<logging>
+  <log_path>./</log_path>
+  <log_file>sber.log</log_file>
+  <log_file2>sber2.log</log_file2>
+</logging>
+<mvv>
+ <agent_code>РСХБАНК</agent_code>
+ <dept_code>ЧЕРК</dept_code>
+ <agreement_code>РСБАНКИНТ</agreement_code>
+</mvv>
+<file>
+ <codepage>CP1251</codepage>
+ <output_path>/home/chief/work/sbout/</output_path>
+ <input_path>/home/chief/work/sbin/</input_path>
+ <input_path_err>/home/chief/work/sbinerr/</input_path_err> 
+ <input_path_arc>/home/chief/work/sbinarc/</input_path_arc>
+ <type>xml</type>
+ <numeric>sber</numeric>
+ <prefix>rr</prefix>
+ <filial>8558</filial>
+ <osp>01</osp>
+ <counter_db>
+  <username>SYSDBA</username>
+  <password>masterkey</password>
+  <hostname>10.9.4.16</hostname>
+  <database>mvv</database>
+  <connection_codepage>WIN1251</connection_codepage>
+  <codepage>CP1251</codepage>  
+ </counter_db>
+ <result>
+  <positiveresult>2</positiveresult>
+  <negativeresult>1</negativeresult>
+ </result>
+<scheme>
+ <Request records=''>
+    <Zapros>
+        <File_Name>filename</File_Name>
+        <Req_ID>er_req_id</Req_ID>
+        <User_ID>er_spi_id</User_ID>
+        <Req_Date>er_req_date</Req_Date>
+        <Req_Time>er_req_time</Req_Time>
+        <Req_Type>1</Req_Type>
+        <OSB_List>8558</OSB_List>
+        <Prs_Dep>1</Prs_Dep>
+        <FIO_SPI>er_fio_spi</FIO_SPI>
+        <H_PRISTAV>er_h_spi</H_PRISTAV>
+        <Isp_Num>er_ip_num</Isp_Num>
+        <Isp_Sum>er_ip_sum</Isp_Sum>
+        <Isd_Num>id_number</Isd_Num>
+        <Isd_Date>id_date</Isd_Date>
+        <Dolg_Surname>lastname</Dolg_Surname>
+        <Dolg_Name>firstname</Dolg_Name>
+        <Dolg_Secondname>secondname</Dolg_Secondname>
+        <Dolg_Birth_Year>er_debtor_birthyear</Dolg_Birth_Year>
+        <Dolg_Addr>er_debtor_address</Dolg_Addr>
+        <Dolg_Birth_Day>er_debtor_birthday</Dolg_Birth_Day>
+        <Dolg_Place_Birth>er_debtor_birthplace</Dolg_Place_Birth>
+        <TypeDoc>21</TypeDoc>
+        <SerDoc>ser_doc</SerDoc>
+        <NumDoc>num_doc</NumDoc>
+        <IssuedDoc>issue_organ</IssuedDoc>
+        <DateDoc>date_doc</DateDoc>
+        <CodeDep>ignore</CodeDep>
+    </Zapros>
+</Request>
+
+ </scheme>
+<scheme>
+<Response answers="" >
+ <otvet answer='09' req_id_in=''>
+  <RESULT>result</RESULT>
+  <File_Name>r2688617.201</File_Name>
+  <Req_ID>er_req_id</Req_ID>
+  <User_ID>87210100000076</User_ID>
+  <Req_Type>1</Req_Type>
+  <File_Exp_Name>f2688617.201</File_Exp_Name>
+  <Resp_ID>42837</Resp_ID>
+  <Req_Date>reply_date</Req_Date>
+  <Req_Time>10:14</Req_Time>
+  <INN></INN>
+  <OSB_Name></OSB_Name>
+  <OSB_Addr></OSB_Addr>
+  <OSB_Num>dept_code</OSB_Num>
+  <OSB_Tel></OSB_Tel>
+  <BIC>bic_bank</BIC>
+  <Account>acc</Account>
+  <Op_Date></Op_Date>
+  <Balance>summa</Balance>
+  <Vid_vkl>summa_info</Vid_vkl>
+  <Val_vkl>currency_code</Val_vkl>
+  <DebtorName>ЧУПРОВА СВЕТЛАНА СЕРГЕЕВНА</DebtorName>
+</otvet>
+</Response>
+</scheme>
+</file>
+</config>	
+

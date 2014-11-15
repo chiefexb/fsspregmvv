@@ -174,9 +174,9 @@ password=password,charset=concodepage,port=port)
     rr=r[0]
     #print 'ZP',root.tag,zapros.tag
     #Если корень равен запросу значит нету заголовка
-   
+    par={}
     if root.tag<>zapros.tag:
-     xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage,cur)
+     xmladdrecord(root.tag,root,reqq,int2str,rr,systemcodepage,codepage,filecodepage,cur,par)
     #xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
     #print xml
     #print "ROOT",root.tag,zapros.tag
@@ -199,7 +199,7 @@ password=password,charset=concodepage,port=port)
     #rr=r[0]
      #print "ZP",zp.tag,'INT',int2str2,zpp.tag
      #print zpp.tag
-     xmladdrecord(zpp.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage,cur)
+     xmladdrecord(zpp.tag,zp,reqq2,int2str2,rr,systemcodepage,codepage,filecodepage,cur,par)
     xml= etree.tostring(root, pretty_print=True, encoding=filecodepage, xml_declaration=True)
     #print xml
     #print filename,num
