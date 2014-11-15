@@ -225,7 +225,7 @@ def main():
      elif replydatefrom==2:
       replydate=a.find(replydatetag).text
      else:
-      replydate=datetime.datetime.now().strftime('%d.%m.%y')  
+      replydate=datetime.now().strftime('%d.%m.%y')  
    
      if len(getanswertype(ansnodes,a))==0 and ipid<>-1:
       #request_id=a.find(reqidtag).text
@@ -308,7 +308,7 @@ def main():
      answermatrix[am]=at
     print answermatrix
     
-   print resultattrib ,str(answer.attrib[resultattrib]==positiveresult)
+  print resultattrib #,str(answer.attrib[resultattrib]==positiveresult)
   #к параметров
   #разбор контейнеров
   xmlfile=file(intput_path+ ff)# 'PFR_20140507_12_09002_008_000_00010.xml') #'rr4.xml')
