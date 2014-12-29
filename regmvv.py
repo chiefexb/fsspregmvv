@@ -559,6 +559,7 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
    for rr in right:
     id=getgenerator(cur,"SEQ_DOCUMENT")
     ipid=getipid (cur,dbsystcp,dbcp,req_id)
+    print "TEST IPID=",ipid
     #print "IPID",ipid
     #print 'RR TAG',rr.tag,etree.tostring(rr)
     hsh=hashlib.md5()
@@ -603,7 +604,13 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     rightv={}
     for dd in ans[aa][2].keys():
      #print "DD",dd,getxmlvalue(dd,ans[aa],rr),ans[aa][2].values()
-     rightv[dd]=getxmlvalue(dd,ans[aa],rr)
+     if dd =='enddate':
+      if len(getxmlvalue(dd,ans[aa],rr))==0:
+       pass
+      else:
+       rightv[dd]=getxmlvalue(dd,ans[aa],rr)
+     else:
+      rightv[dd]=getxmlvalue(dd,ans[aa],rr)
     #print rightv
     #Вставка response
     #print str(type (rightv['purpose']))
@@ -612,7 +619,7 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     #for rrr in rightv.keys():
     # datastr=datastr+rightv[rrr].decode('UTF-8')+cln
     #print "END", len (rightv['enddate'])
-    #print "END", rightv['enddate']
+    #print "<<ENDDATE>>", rightv['enddate'],str(type(rightv['enddate'])),len(rightv['enddate'])
     if not ('enddate' in rightv.keys()):
      #print extkey ans[aa][1]
      sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'01',id,packid,extkey,datastr)
@@ -629,9 +636,9 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
      sqltemp.append(sq4)
     else:
      informwarn (u'Данные с ошибкой, сведения о ранее принадлежавшей недвижимости '+str(req_id))
-     #sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'02',id,packid,extkey,"Данные с ошибкой, сведения о ранее принадлежавшей недвижимости")
-     #for sqt in sqq:
-     # sqltemp.append(sqt)
+     sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'02',id,packid,extkey,"Нет сведений")
+     for sqt in sqq:
+      sqltemp.append(sqt)
      #print "SQ4",sq4
     #cur.execute(sq3)
 #.decode('UTF-8').encode('CP1251'))

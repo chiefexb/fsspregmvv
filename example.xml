@@ -3,10 +3,10 @@
 <database_params>
  <username>SYSDBA</username>
  <password>masterkey</password>
- <hostname>localhost</hostname>
+ <hostname>10.9.4.16</hostname>
  <database>ncore-fssp</database>
  <connection_codepage>WIN1251</connection_codepage>
- <codepage>UTF-8</codepage>
+ <codepage>CP1251</codepage>
 </database_params>
 <mvv>
  <preprocessing>
@@ -18,17 +18,17 @@
  <agreement_code>ЧЕРКИНТ</agreement_code>
 </mvv>
 <logging>
-  <log_path>/home/chief/work/git/fsspregmvv</log_path>
+  <log_path>/root/git/fsspregmvv/</log_path>
   <log_file>rosr.log</log_file>
   <log_file2>rosr2.log</log_file2> 
 </logging>
 
 <file>
- <codepage>CP1251</codepage>
+ <codepage>UTF-8</codepage>
  <output_path>/home/chief/work/reg/</output_path>
- <input_path>/home/chief/work/rr_in/</input_path>
- <input_path_arc>/home/chief/work/rr_in_arc</input_path_arc>
-  <input_path_err>/home/chief/work/rr_in_err</input_path_err>
+ <input_path>/home/chief/work/regin/</input_path>
+ <input_path_arc>/home/chief/work/regarc/</input_path_arc>
+  <input_path_err>/home/chief/work/regerr/</input_path_err>
  <type>xml</type>
  <numeric>normal</numeric>
  <prefix>rr</prefix>
@@ -74,6 +74,7 @@
     <CadastralNumber>kadastr_n</CadastralNumber>
     <RegNumber>inv_n_nedv</RegNumber>
     <StartDate>startdate</StartDate>
+    <EndDate>enddate</EndDate>
     <Area>s_nedv</Area>
     <AreaUnits>012002001000</AreaUnits>
     <Purpose>purpose</Purpose>
