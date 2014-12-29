@@ -51,21 +51,29 @@ def main():
  log_file=logpar.find('log_file2').text
 
  try:
-  con = fdb.connect (host=hostname, database=database, user=username, 
-password=password,charset=concodepage,port=port)
+  con = fdb.connect (host=hostname, database=database, user=username, password=password,charset=concodepage,port=port)
  except  Exception, e:
   print("Ошибка при открытии базы данных:\n"+str(e))
   sys.exit(2)
  cur = con.cursor()
  #print str(type(pre)),str(type(pre))<>"<type 'NoneType'>"
  if str(type(pre))<>"<type 'NoneType'>":
+  print "PREPROCESS"
   ch=pre.findall('sql')
   #print ch[0].tag,ch[0].text
   for chh in ch:
    #print "CH",chh.text,chh.tag
    sq=chh.text.encode('UTF-8')
+   print '!',sq
    #print sq,str(type(sq))
-   preprocessing(cur,con,'UTF-8','CP1251',sq)
+   sql2='update ext_request set ext_request.processed=2  where  '+sq
+   try:
+    cur.execute(sql2)
+    print sql2
+   except Exception, e:
+    print sql2, str(e)
+   con.commit()
+   #preprocessing(cur,con,'UTF-8','CP1251',sq)
  ##f.close()
  con.close()
 #Определяем тип и путь файла

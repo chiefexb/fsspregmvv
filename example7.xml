@@ -10,6 +10,8 @@
 </database_params>
 <mvv>
  <preprocessing>
+  <sql>ext_request.mvv_agent_code='ФНС' and ext_request.entity_type not in (95,2)</sql>
+  <sql>ext_request.mvv_agent_code='ФНС' and ext_request.entity_type in (95,2) and ext_request.debtor_inn is null</sql>
  </preprocessing>
  <agent_code>ФНС</agent_code>
  <dept_code>ФНСКЧР</dept_code>
@@ -33,11 +35,13 @@
  <scheme>
 <Requests records=''>
  <Request>
-  <Packet_id>  </Packet_id>
-  <Request_id> </Request_id>
-  <Debitor_name> </Debitor_name>
-  <Debitor_birthday> </Debitor_birthday>
-  <Debitor_inn> </Debitor_inn>
+  <Packet_id>er_pack_id</Packet_id>
+  <Packet_date>er_pack_date</Packet_date>
+  <Request_id>er_req_id</Request_id>
+  <Request_date>er_req_date</Request_date>
+  <Debitor_name>er_debtor_name</Debitor_name>
+  <Debitor_birthday>er_debtor_birthday</Debitor_birthday>
+  <Debitor_inn>er_debtor_inn</Debitor_inn>
  </Request>
 </Requests>
  </scheme>

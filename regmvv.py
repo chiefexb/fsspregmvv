@@ -23,12 +23,13 @@ def getdivname (cur):
 def preprocessing(cur,con,systcp,dbcp,sql):
  #sql2=('update ext_request set ext_request.processed=2  where  '+str(sql)).decode(systcp).encode(dbcp)
  sql2='update ext_request set ext_request.processed=2  where  '+sql
+ print "!",sql2
  try:
   cur.execute(sql2)
  except Exception, e:
   print sql2, str(e)
  con.commit()
- return
+ return con
 
 def getnotprocessed(cur,systcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code):
  #print str(type(mvv_agent_code))
