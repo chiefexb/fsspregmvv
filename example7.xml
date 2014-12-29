@@ -1,0 +1,90 @@
+<config>
+<codepage>UTF-8</codepage>
+<database_params>
+ <username>SYSDBA</username>
+ <password>masterkey</password>
+ <hostname>10.9.4.16</hostname>
+ <database>ncore-fssp</database>
+ <connection_codepage>WIN1251</connection_codepage>
+ <codepage>CP1251</codepage>
+</database_params>
+<mvv>
+ <preprocessing>
+ </preprocessing>
+ <agent_code>ФНС</agent_code>
+ <dept_code>ФНСКЧР</dept_code>
+ <agreement_code>ФНСИНТ</agreement_code>
+</mvv>
+<logging>
+  <log_path>/root/git/fsspregmvv/</log_path>
+  <log_file>fns.log</log_file>
+  <log_file2>fns2.log</log_file2> 
+</logging>
+
+<file>
+ <codepage>UTF-8</codepage>
+ <output_path>/home/chief/work/fnsout/</output_path>
+ <input_path>/home/chief/work/regin/</input_path>
+ <input_path_arc>/home/chief/work/regarc/</input_path_arc>
+  <input_path_err>/home/chief/work/regerr/</input_path_err>
+ <type>xml</type>
+ <numeric>normal</numeric>
+ <prefix>fns</prefix>
+ <scheme>
+<Requests records=''>
+ <Request>
+  <Packet_id>  </Packet_id>
+  <Request_id> </Request_id>
+  <Debitor_name> </Debitor_name>
+  <Debitor_birthday> </Debitor_birthday>
+  <Debitor_inn> </Debitor_inn>
+ </Request>
+</Requests>
+ </scheme>
+  <scheme>
+<RequestRightsPersonsReply depth='3'>
+ <RequestID>request_id</RequestID>
+ <ReplyDate>reply_date</ReplyDate>
+ <OrganizationName></OrganizationName>
+ <RegionID></RegionID>
+ <Persons answers="" >
+ <Person answerstart="">
+  <PersonID>er_req_id</PersonID>
+  <FirstName>firstname</FirstName>
+  <SecondName>secondname</SecondName>
+  <LastName>lastname</LastName>
+  <BirthDate>er_debtor_birthday</BirthDate>
+  <Document answer='01' >
+   <Type_Document>rr_type_doc</Type_Document>
+   <Name>pass</Name>
+   <Series>ser_doc</Series>
+   <Number>num_doc</Number>
+   <Date>date_doc</Date>
+   <IssueOrgan>issue_organ</IssueOrgan>
+  </Document>
+  <Rights answer='11'>
+   <Right>
+    <CadastralNumber>kadastr_n</CadastralNumber>
+    <RegNumber>inv_n_nedv</RegNumber>
+    <StartDate>startdate</StartDate>
+    <EndDate>enddate</EndDate>
+    <Area>s_nedv</Area>
+    <AreaUnits>012002001000</AreaUnits>
+    <Purpose>purpose</Purpose>
+    <Share>share</Share>
+    <Address childrens="">
+     <Region>09</Region>
+     <District>Малокарачаевский</District>
+     <Street>Родниковая</Street>
+     <House>8а</House>
+     <Note>adres_nedv</Note>
+    </Address>
+   </Right>
+  </Rights>
+ </Person>
+ </Persons>
+</RequestRightsPersonsReply>
+</scheme>
+</file>
+</config>	
+
