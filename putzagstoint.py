@@ -106,7 +106,7 @@ def main():
    for a in ans:
     for i in range(0,len(fld)):
      aa[fld[i]]=a.find(fld[i])
-    sql1='INSERT INTO EXT_INPUT_HEADER (ID, PACK_NUMBER, PROCEED, AGENT_CODE, AGENT_DEPT_CODE, AGENT_AGREEMENT_CODE, EXTERNAL_KEY, METAOBJECTNAME, DATE_IMPORT, SOURCE_BARCODE) VALUES (id, packet_id, 0, agent_code, dept_code, agreement_code , extkey, 'EXT_REPORT', NULL, NULL);'
+    sqlparam= (id, packet_id, 0, agent_code, dept_code, agreement_code , extkey, 'EXT_REPORT', None, None)
    #for j in range(0,len(fl)):
    # id=getgenerator(cur,"SEQ_DOCUMENT") #"SEQ_EXT_INPUT_HEADER")
    # d=datetime.datetime.now()
