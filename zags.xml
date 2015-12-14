@@ -1,0 +1,16 @@
+<config>
+ <main_database>
+  <hostname>localhost</hostname>
+  <dbname>ncore-fssp</dbname>
+  <user>SYSDBA</user>
+  <password></password>
+ </main_database>
+ <mvv>
+   <agent_code>ГИБДД</agent_code>
+   <dept_code>САХ3</dept_code>
+   <agreement_code>ГИБДД САХ</agreement_code>
+ </mvv>
+ <input_path>/home/chief/gibdd/in/</input_path>
+ <input_arc_path>/home/chief/gibdd/in_arc/</input_arc_path>
+ <output_path>/home/chief/gibdd/out/</output_path>
+</config>
