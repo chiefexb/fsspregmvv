@@ -67,11 +67,10 @@ def main():
  except  Exception, e:
   print("Ошибка при открытии базы данных:\n"+str(e))
   sys.exit(2)
- sql1="INSERT INTO EXT_INPUT_HEADER (ID, PACK_NUMBER, PROCEED, AGENT_CODE, AGENT_DEPT_CODE, AGENT_AGREEMENT_CODE, EXTERNAL_KEY, METAOBJECTNAME, DATE_IMPORT, SOURCE_BARCODE) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?)"
- sql2="INSERT INTO EXT_DEBT_FIX (ID, ID_NUM, PD_NUM, IP_NUM, ID_DATE, PD_DATE, PAY_SUM, DEBTOR_ADR, DEBTOR_INN, DEBTOR_KPP, DEBTOR_OGRN, IS_PAYING_OFF, ID_EXTERNAL_KEY, DEBTOR_BIRTH_YEAR, DEBTOR_BIRTH_DATE, DEBTOR_NAME, CHANGEDBT_REASON_CODE, PENALTY_DATE, PAYMENT_PURPOSE) VALUES (?, ?,?, ?, ?, ?, ?, ?,?, ?,?, ?, ?, ?,?, ?, ?,?, ?)"
- sql3=""
+ sql1="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES(?,?,?,?,?,?,?,?,?,?)"
+ sql2="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC,type_doc_code) VALUES (?,?,?,?,?,?,?,?,?)"
  cur = con.cursor() 
- fld=['packet_id','id', 'ip_id','osp.packet_id','doc_number','id_dbtr_fullname','nametypeaz','namezags','numaz','numsv','mestolsub1','datesm','mestosm','prichsm']
+ fld=['packet_id','id', 'ip_id','packet_id','doc_number','id_dbtr_fullname','nametypeaz','namezags','numaz','dateaz','numsv','mestolsub1','datesm','mestosm','prichsm']
  for ff in listdir(input_path):
   inform(u"Начинаем вставлять данные об оплате из файла:"+ff.decode('UTF-8'))
   with Profiler() as p:
@@ -95,24 +94,39 @@ def main():
    cur.execute(sq2)
    maxid=cur.fetchone()[0]
    print gg,maxid
-   if gg<maxid:
-    st=u'Какая-то редиска не пользуется генератором SEQ_EXT_INPUT_HEADER. Исправляю!!'
-    informwarn(st)
-    sq3='ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(maxid)
-    cur.execute(sq3)
-    con.commit()
-    
+   #if gg<maxid:
+   # st=u'Какая-то редиска не пользуется генератором SEQ_EXT_INPUT_HEADER. Исправляю!!'
+   # informwarn(st)
+   # sq3='ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(maxid)
+   # cur.execute(sq3)
+   # con.commit()
+   packet_id=getgenerator(cur,"DX_PACK") #"SEQ_EXT_INPUT_HEADER") 
    print gg
    for a in ans:
     for i in range(0,len(fld)):
-     aa[fld[i]]=a.find(fld[i])
-    sqlparam= (id, packet_id, 0, agent_code, dept_code, agreement_code , extkey, 'EXT_REPORT', None, None)
-   #for j in range(0,len(fl)):
-   # id=getgenerator(cur,"SEQ_DOCUMENT") #"SEQ_EXT_INPUT_HEADER")
-   # d=datetime.datetime.now()
-    #hsh=hashlib.md5()
-    #hsh.update(str(id))
-    #extkey=hsh.hexdigest()
+     if str (type (a.find(fld[i]).text) )=="<type 'NoneType'>":
+      aa[fld[i]]='б/н'
+     else:
+      aa[fld[i]]=(a.find(fld[i]).text).strip(' ')
+    #for j in range(0,len(fl)):
+    id=getgenerator(cur,"EXT_INFORMATION") #"SEQ_DOCUMENT") #"SEQ_EXT_INPUT_HEADER")
+    d=datetime.datetime.now()
+    hsh=hashlib.md5()
+    hsh.update(str(id))
+    extkey=hsh.hexdigest()
+    hsh.update( aa['id'] )
+    extkey2=hsh.hexdigest()
+    print aa['id_dbtr_fullname'], len(aa['id_dbtr_fullname'])
+    print aa['numaz'], len(aa['numaz'])
+    sqlparam1=(id,d,'01',aa['id_dbtr_fullname'],extkey2,None,None,0,extkey,None)
+    sqlparam2= (id ,aa['numsv'], aa['dateaz'],aa['numaz'],str(aa['datesm']),aa['id_dbtr_fullname'],aa['mestosm'],aa['namezags'],61)
+    print sqlparam1,len(sqlparam1)
+    print sqlparam2,len(sqlparam2)
+    print '1'
+    cur.execute(sql1,sqlparam1)
+    print 2
+    cur.execute(sql2,sqlparam2)
+    con.commit()	
     #cur.execute ("SELECT  doc_ip_doc.id , document.doc_number, doc_ip_doc.id_dbtr_name, DOC_IP.IP_EXEC_PRIST_NAME FROM DOC_IP_DOC DOC_IP_DOC JOIN DOC_IP ON DOC_IP_DOC.ID=DOC_IP.ID JOIN DOCUMENT ON DOC_IP.ID=DOCUMENT.ID    where document.doc_number="+quoted(ip_num))
     #rr=cur.fetchall()
     #st=''
