@@ -8,7 +8,7 @@ import fdb
 import sys
 import timeit
 import time
-
+from cStringIO import StringIO
 def inform(st):
  logging.info(st)
  print st
@@ -67,8 +67,11 @@ def main():
  except  Exception, e:
   print("Ошибка при открытии базы данных:\n"+str(e))
   sys.exit(2)
- sql1="INSERT INTO EXT_INFORMATION (ID, ACT_DATE, KIND_DATA_TYPE, ENTITY_NAME, EXTERNAL_KEY, ENTITY_BIRTHDATE, ENTITY_BIRTHYEAR, PROCEED, DOCUMENT_KEY, ENTITY_INN) VALUES(?,?,?,?,?,?,?,?,?,?)"
- sql2="INSERT INTO EXT_IDENTIFICATION_DATA (ID, NUM_DOC, DATE_DOC, CODE_DEP, SER_DOC, FIO_DOC, STR_ADDR, ISSUED_DOC,type_doc_code) VALUES (?,?,?,?,?,?,?,?,?)"
+ sql1="INSERT INTO DOCUMENT (DOCSTATUSID,DOCUMENTCLASSID, DOC_DATE, CREATE_DATE, ID, METAOBJECTNAME) VALUES (?,?,?,?,?,?) "
+ sql2="INSERT INTO I_IP_OTHER (ID, INDOC_TYPE, INDOC_TYPE_NAME, I_IP_OTHER_CONTENT, NUM_POSTFIX) VALUES (?,?, ?, ?, ?)"
+ sql3="INSERT INTO  I (ID,OFF_SPECIAL_CONTROL,CONTR_IS_INITIATOR) VALUES (?,?,?)"
+ sql4="INSERT INTO I_IP (ID,IP_ID) VALUES (?,?)"
+ #INSERT INTO I_IP_OTHER (ID, INDOC_TYPE, INDOC_TYPE_NAME, I_IP_OTHER_CONTENT, NUM_POSTFIX) VALUES (91121011252366, NULL, NULL, NULL, NULL);
  cur = con.cursor() 
  fld=['packet_id','id', 'ip_id','packet_id','doc_number','id_dbtr_fullname','nametypeaz','namezags','numaz','dateaz','numsv','mestolsub1','datesm','mestosm','prichsm']
  for ff in listdir(input_path):
@@ -87,21 +90,21 @@ def main():
    #'ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH 91121012388036'
    #select max(id) from ext_input_header 
    #TEST Генератора
-   sq="SELECT GEN_ID(SEQ_EXT_INPUT_HEADER, 0) FROM RDB$DATABASE"
-   cur.execute(sq)
-   gg=cur.fetchone()[0]
-   sq2='select max(id) from ext_input_header'
-   cur.execute(sq2)
-   maxid=cur.fetchone()[0]
-   print gg,maxid
+   #sq="SELECT GEN_ID(SEQ_EXT_INPUT_HEADER, 0) FROM RDB$DATABASE"
+   #cur.execute(sq)
+   #gg=cur.fetchone()[0]
+   #sq2='select max(id) from ext_input_header'
+   #cur.execute(sq2)
+   #maxid=cur.fetchone()[0]
+   #print gg,maxid
    #if gg<maxid:
    # st=u'Какая-то редиска не пользуется генератором SEQ_EXT_INPUT_HEADER. Исправляю!!'
    # informwarn(st)
    # sq3='ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(maxid)
    # cur.execute(sq3)
    # con.commit()
-   packet_id=getgenerator(cur,"DX_PACK") #"SEQ_EXT_INPUT_HEADER") 
-   print gg
+   #packet_id=getgenerator(cur,"DX_PACK") #"SEQ_EXT_INPUT_HEADER") 
+   #print gg
    for a in ans:
     for i in range(0,len(fld)):
      if str (type (a.find(fld[i]).text) )=="<type 'NoneType'>":
@@ -109,23 +112,32 @@ def main():
      else:
       aa[fld[i]]=(a.find(fld[i]).text).strip(' ')
     #for j in range(0,len(fl)):
-    id=getgenerator(cur,"EXT_INFORMATION") #"SEQ_DOCUMENT") #"SEQ_EXT_INPUT_HEADER")
+    id=getgenerator(cur,"SEQ_DOCUMENT")       #"EXT_INFORMATION") #"SEQ_DOCUMENT") #"SEQ_EXT_INPUT_HEADER")
     d=datetime.datetime.now()
-    hsh=hashlib.md5()
-    hsh.update(str(id))
-    extkey=hsh.hexdigest()
-    hsh.update( aa['id'] )
-    extkey2=hsh.hexdigest()
-    print aa['id_dbtr_fullname'], len(aa['id_dbtr_fullname'])
-    print aa['numaz'], len(aa['numaz'])
-    sqlparam1=(id,d,'01',aa['id_dbtr_fullname'],extkey2,None,None,0,extkey,None)
-    sqlparam2= (id ,aa['numsv'], aa['dateaz'],aa['numaz'],str(aa['datesm']),aa['id_dbtr_fullname'],aa['mestosm'],aa['namezags'],61)
+    #hsh=hashlib.md5()
+    #hsh.update(str(id))
+    #extkey=hsh.hexdigest()
+    #hsh.update( aa['id'] )
+    #extkey2=hsh.hexdigest()
+    #print aa['id_dbtr_fullname'], len(aa['id_dbtr_fullname'])
+    #print aa['numaz'], len(aa['numaz'])
+    sqlparam1= (105,272,d,d,id,"I_IP_OTHER")         #(DOCSTATUSID, DOC_DATE, CREATE_DATE, ID, METAOBJECTNAME)
+    text= StringIO('Должник умерший')
+    sqlparam2= (id,None,None,u'Умерший',None)             #  (ID, INDOC_TYPE, INDOC_TYPE_NAME, I_IP_OTHER_CONTENT, NUM_POSTFIX) VALUES (91121011252366, NULL, NULL, NULL, NULL);
+    sqlparam3= (id,0,0)              #(ID,OFF_SPECIAL_CONTROL,CONTR_IS_INITIATOR)
+    sqlparam4= (id,int(aa['ip_id'])) #(ID,IP_ID) 
+    #sqlparam1=(id,d,'01',aa['id_dbtr_fullname'],extkey2,None,None,0,extkey,None)
+    #sqlparam2= (id ,aa['numsv'], aa['dateaz'],aa['numaz'],str(aa['datesm']),aa['id_dbtr_fullname'],aa['mestosm'],aa['namezags'],61)
     print sqlparam1,len(sqlparam1)
     print sqlparam2,len(sqlparam2)
     print '1'
     cur.execute(sql1,sqlparam1)
     print 2
     cur.execute(sql2,sqlparam2)
+    print 3
+    cur.execute(sql3,sqlparam3)
+    print 4
+    cur.execute(sql4,sqlparam4)
     con.commit()	
     #cur.execute ("SELECT  doc_ip_doc.id , document.doc_number, doc_ip_doc.id_dbtr_name, DOC_IP.IP_EXEC_PRIST_NAME FROM DOC_IP_DOC DOC_IP_DOC JOIN DOC_IP ON DOC_IP_DOC.ID=DOC_IP.ID JOIN DOCUMENT ON DOC_IP.ID=DOCUMENT.ID    where document.doc_number="+quoted(ip_num))
     #rr=cur.fetchall()
