@@ -122,8 +122,8 @@ def main():
     #print aa['id_dbtr_fullname'], len(aa['id_dbtr_fullname'])
     #print aa['numaz'], len(aa['numaz'])
     sqlparam1= (105,272,d,d,id,"I_IP_OTHER")         #(DOCSTATUSID, DOC_DATE, CREATE_DATE, ID, METAOBJECTNAME)
-    text= StringIO('Должник умерший')
-    sqlparam2= (id,None,None,u'Умерший',None)             #  (ID, INDOC_TYPE, INDOC_TYPE_NAME, I_IP_OTHER_CONTENT, NUM_POSTFIX) VALUES (91121011252366, NULL, NULL, NULL, NULL);
+    text= ( u'Сообщаем Вам что по имеющимя данным ЗАГС '+unicode(str(aa['namezags']).decode('UTF-8')) )#+ u', должник является умершим  . Номер свидетельства '+aa['numsv']+u'дата свитетельства '+aa['dateaz']) #+u', место смерти '+unicode(aa['mestosm'])+u',дата смерти '+aa['datesm']+ '.')
+    sqlparam2= (id,None,None,text,None)             #  (ID, INDOC_TYPE, INDOC_TYPE_NAME, I_IP_OTHER_CONTENT, NUM_POSTFIX) VALUES (91121011252366, NULL, NULL, NULL, NULL);
     sqlparam3= (id,0,0)              #(ID,OFF_SPECIAL_CONTROL,CONTR_IS_INITIATOR)
     sqlparam4= (id,int(aa['ip_id'])) #(ID,IP_ID) 
     #sqlparam1=(id,d,'01',aa['id_dbtr_fullname'],extkey2,None,None,0,extkey,None)
