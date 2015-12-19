@@ -91,7 +91,7 @@ def main():
     id=getgenerator(cur,"SEQ_DOCUMENT")       #"EXT_INFORMATION") #"SEQ_DOCUMENT") #"SEQ_EXT_INPUT_HEADER")
     d=datetime.datetime.now()
     sqlparam1= (105,272,d,d,id,"I_IP_OTHER")         #(DOCSTATUSID, DOC_DATE, CREATE_DATE, ID, METAOBJECTNAME)
-    tt=[u'Сообщаем Вам что по имеющимя данным ЗАГСа <<', aa['namezags'],  u'>>, должник',aa['id_dbtr_fullname'] ,u' является умершим. Номер свидетельства "', aa['numsv'], u'", дата свитетельства "',aa['dateaz'] , u'", место смерти ', (aa['mestosm']), u', дата смерти ', aa['datesm'] , '.']
+    tt=[u'Сообщаем Вам что по имеющимя данным ЗАГСа <<', aa['namezags'],  u'>>, должник ',aa['id_dbtr_fullname'] ,u' является умершим. Номер свидетельства "', aa['numsv'], u'", дата свитетельства "',aa['dateaz'] , u'", место смерти ', (aa['mestosm']), u', дата смерти ', aa['datesm'] , '.']
     text=''
     for t in tt:
      #print t
