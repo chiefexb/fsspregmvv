@@ -71,97 +71,48 @@ def main():
  sql2="INSERT INTO I_IP_OTHER (ID, INDOC_TYPE, INDOC_TYPE_NAME, I_IP_OTHER_CONTENT, NUM_POSTFIX) VALUES (?,?, ?, ?, ?)"
  sql3="INSERT INTO  I (ID,OFF_SPECIAL_CONTROL,CONTR_IS_INITIATOR,contr_name, agent_code,agent_dept_code,agreement_code) VALUES (?,?,?,?,?,?,?)"
  sql4="INSERT INTO I_IP (ID,IP_ID) VALUES (?,?)"
- #INSERT INTO I_IP_OTHER (ID, INDOC_TYPE, INDOC_TYPE_NAME, I_IP_OTHER_CONTENT, NUM_POSTFIX) VALUES (91121011252366, NULL, NULL, NULL, NULL);
  cur = con.cursor() 
  fld=['packet_id','id', 'ip_id','packet_id','doc_number','id_dbtr_fullname','nametypeaz','namezags','numaz','dateaz','numsv','mestolsub1','datesm','mestosm','prichsm']
  for ff in listdir(input_path):
   inform(u"Начинаем вставлять данные об оплате из файла:"+ff.decode('UTF-8'))
   with Profiler() as p:
-   #f1=file(input_path+ff)
-   #fl=f1.readlines()
-   #st='ФИО СПИ;Номер ИП;Должник;Номер ИД;Сумма платежа;Дата платежа'
-   #packid=getgenerator(cur,"DX_PACK")
    xmlfile=file(input_path+ff)
    xml=etree.parse(xmlfile)
    xmlroot=xml.getroot()
    ans=xmlroot.findall('answer')
    print ans[0].getchildren()
    aa={}
-   #'ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH 91121012388036'
-   #select max(id) from ext_input_header 
-   #TEST Генератора
-   #sq="SELECT GEN_ID(SEQ_EXT_INPUT_HEADER, 0) FROM RDB$DATABASE"
-   #cur.execute(sq)
-   #gg=cur.fetchone()[0]
-   #sq2='select max(id) from ext_input_header'
-   #cur.execute(sq2)
-   #maxid=cur.fetchone()[0]
-   #print gg,maxid
-   #if gg<maxid:
-   # st=u'Какая-то редиска не пользуется генератором SEQ_EXT_INPUT_HEADER. Исправляю!!'
-   # informwarn(st)
-   # sq3='ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH '+str(maxid)
-   # cur.execute(sq3)
-   # con.commit()
-   #packet_id=getgenerator(cur,"DX_PACK") #"SEQ_EXT_INPUT_HEADER") 
-   #print gg
    for a in ans:
     for i in range(0,len(fld)):
      if str (type (a.find(fld[i]).text) )=="<type 'NoneType'>":
       aa[fld[i]]='б/н'
      else:
       aa[fld[i]]=(a.find(fld[i]).text).strip(' ')
-    #for j in range(0,len(fl)):
     id=getgenerator(cur,"SEQ_DOCUMENT")       #"EXT_INFORMATION") #"SEQ_DOCUMENT") #"SEQ_EXT_INPUT_HEADER")
     d=datetime.datetime.now()
-    #hsh=hashlib.md5()
-    #hsh.update(str(id))
-    #extkey=hsh.hexdigest()
-    #hsh.update( aa['id'] )
-    #extkey2=hsh.hexdigest()
-    #print aa['id_dbtr_fullname'], len(aa['id_dbtr_fullname'])
-    #print aa['numaz'], len(aa['numaz'])
     sqlparam1= (105,272,d,d,id,"I_IP_OTHER")         #(DOCSTATUSID, DOC_DATE, CREATE_DATE, ID, METAOBJECTNAME)
-    tt=[u'Сообщаем Вам что по имеющимя данным ЗАГСа <<', aa['namezags'],  u'>>, должник является умершим. Номер свидетельства "', aa['numsv'], u'", дата свитетельства "',aa['dateaz'] , u'", место смерти ', (aa['mestosm']), u', дата смерти ', aa['datesm'] , '.']
+    tt=[u'Сообщаем Вам что по имеющимя данным ЗАГСа <<', aa['namezags'],  u'>>, должник',aa['id_dbtr_fullname'] ,u' является умершим. Номер свидетельства "', aa['numsv'], u'", дата свитетельства "',aa['dateaz'] , u'", место смерти ', (aa['mestosm']), u', дата смерти ', aa['datesm'] , '.']
     text=''
     for t in tt:
-     print t
+     #print t
      text=text+convtotype(['','C'],t,'UTF-8','UTF-8' )
-    print text
+    #print text
     sqlparam2= (id,None,None,text,None)             #  (ID, INDOC_TYPE, INDOC_TYPE_NAME, I_IP_OTHER_CONTENT, NUM_POSTFIX) VALUES (91121011252366, NULL, NULL, NULL, NULL);
     sqlparam3= (id,0,0,aa['namezags'], agent_code,dept_code,agreement_code)              #(ID,OFF_SPECIAL_CONTROL,CONTR_IS_INITIATOR)
     sqlparam4= (id,int(aa['ip_id'])) #(ID,IP_ID) 
-    #sqlparam1=(id,d,'01',aa['id_dbtr_fullname'],extkey2,None,None,0,extkey,None)
-    #sqlparam2= (id ,aa['numsv'], aa['dateaz'],aa['numaz'],str(aa['datesm']),aa['id_dbtr_fullname'],aa['mestosm'],aa['namezags'],61)
     print sqlparam1,len(sqlparam1)
     print sqlparam2,len(sqlparam2)
-    print '1'
+    #print '1'
     cur.execute(sql1,sqlparam1)
-    print 2
+    #print 2
     cur.execute(sql2,sqlparam2)
-    print 3
+    #print 3
     cur.execute(sql3,sqlparam3)
-    print 4
+    #print 4
     cur.execute(sql4,sqlparam4)
     con.commit()	
-    #cur.execute ("SELECT  doc_ip_doc.id , document.doc_number, doc_ip_doc.id_dbtr_name, DOC_IP.IP_EXEC_PRIST_NAME FROM DOC_IP_DOC DOC_IP_DOC JOIN DOC_IP ON DOC_IP_DOC.ID=DOC_IP.ID JOIN DOCUMENT ON DOC_IP.ID=DOCUMENT.ID    where document.doc_number="+quoted(ip_num))
-    #rr=cur.fetchall()
-    #st=''
-    #if len (rr) <>0:
-     #'ФИО СПИ;Номер ИП;Должник;Номер ИД;Сумма платежа;Дата платежа'
-     #extkey=str(rr[0][0])
-     #prim=(fls[8]+clm+fls[9]+clm+ff).decode('UTF-8')
-     #sql1params=(id, packid, 0, agent_code, dept_code, agreement_code, extkey, "EXT_DEBT_FIX", pd_date,None)
-     #sql2params=(id,id_num, None, ip_num, id_date, pd_date, pay_sum, None, None, None,None, 1, extkey, None, None, fio, None,None, prim);
-     #cur.execute(sql1,sql1params)
-     #cur.execute(sql2,sql2params)
-    #else:
-     #informwarn(u"Файл:"+ff.decode('UTF-8')+u". Не найдено ИП:"+ip_num)
-  #inform(u"Меряем время коммита:")
-  #with Profiler() as p:
-  # con.commit()
-  #f1.close()
-  #rename(input_path+ff, input_arc_path+ff)
+  xmlfile.close()
+  rename(input_path+ff, input_arc_path+ff)
  f.close()
  con.close()
 
