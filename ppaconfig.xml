@@ -1,0 +1,16 @@
+<config>
+<codepage>UTF-8</codepage>
+<database_params>
+ <username>SYSDBA</username>
+ <password></password>
+ <hostname>10.9.34.34</hostname>
+ <database>test</database>
+ <connection_codepage>WIN1251</connection_codepage>
+ <codepage>CP1251</codepage>
+</database_params>
+<file>
+ <input_path>/home/disk/allsamba/sberbank/in/</input_path>
+ <input_path_arc>/home/disk/allsamba/sberbank/in_arc/</input_path_arc>
+</file>
+
+</config>

@@ -88,9 +88,16 @@ def main():
     #extkey=hsh.hexdigest()
     fls= fl[j].split(";")
     id_num=fls[0]
-    id_date=datetime.datetime.strptime(fls[1],'%d.%m.%Y') 
+    print "DD",fls[1],fls[6],str(type(fls[1])),str(type(fls[6]))
+    try:
+     id_date=datetime.datetime.strptime(fls[1],'%d.%m.%Y') 
+    except:
+     id_date=None
     fio=(fls[2]+' '+fls[3]+' '+fls[4]).decode('UTF-8')
-    pd_date=datetime.datetime.strptime(fls[6],'%d.%m.%Y')
+    try:
+     pd_date=datetime.datetime.strptime(fls[6],'%d.%m.%Y')
+    except:
+     pd_date=None
     pay_sum=float(fls[5])
     ip_num=fls[14].decode('UTF-8')
     cur.execute ("SELECT  doc_ip_doc.id , document.doc_number, doc_ip_doc.id_dbtr_name, DOC_IP.IP_EXEC_PRIST_NAME FROM DOC_IP_DOC DOC_IP_DOC JOIN DOC_IP ON DOC_IP_DOC.ID=DOC_IP.ID JOIN DOCUMENT ON DOC_IP.ID=DOCUMENT.ID    where document.doc_number="+quoted(ip_num))
