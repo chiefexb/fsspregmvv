@@ -10,6 +10,10 @@ import fdb
 import sys
 from os import *
 import logging
+def quoted(a):
+ st="'"+a+"'"
+ return st
+
 class Profiler(object):
     def __enter__(self):
         self._startTime = time.time()
@@ -68,77 +72,108 @@ def main():
  sq3="INSERT INTO EXT_PPA_LINES (ID, LINE_AMOUNT, IP_NUMBER, DEBTOR_NAME, LINE_EXTERNAL_KEY, DEBTOR_INN, DEBTOR_BIRTHDATE, DEBTOR_OGRN, DEBTOR_ADDRESS, DEBTOR_KPP, EXTERNAL_KEY) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
  contrtype=1
 #1010201000000
- for ff in listdir(input_path):
-  xmlfile=file(input_path+ff) #'rr4.xml')
-  print ff
-  #ext_input_header
-  xml=etree.parse(xmlfile)
-  xmlroot=xml.getroot()  
-  #initgen  ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH 91021000000002
-  cur.execute("select max(id),gen_id(seq_ext_input_header,0) from ext_input_header")
-  r=cur.fetchone()
-  print type(r[0]),type(r[1]),r[0],r[1]
-  if r[1]<r[0]:
-   print 'Max' 
-   cur.execute ( "ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH "+str(r[0]))
-   con.commit()
-  id=getgenerator(cur,'SEQ_EXT_INPUT_HEADER')
-  packetid=getgenerator(cur,'DX_PACK')
-  agent_code=u'СБРФ'
-  agent_dept_code=u'СБРФСТАВР'
-  agent_agreement_code =u'СБРФИНТ'
-  dt=datetime.now()
+ if  len(listdir(input_path))==0:
+  inform(u'Нет файлов для загрузки')
+ else:
+   for ff in listdir(input_path):
+    xmlfile=file(input_path+ff) #'rr4.xml')
+    print ff
+    #ext_input_header
+    xml=etree.parse(xmlfile)
+    xmlroot=xml.getroot()  
+    #initgen  ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH 91021000000002
+    cur.execute("select max(id),gen_id(seq_ext_input_header,0) from ext_input_header")
+    r=cur.fetchone()
+    print type(r[0]),type(r[1]),r[0],r[1]
+    if r[1]<r[0]:
+     print 'Max' 
+     cur.execute ( "ALTER SEQUENCE SEQ_EXT_INPUT_HEADER RESTART WITH "+str(r[0]))
+     con.commit()
+    id=getgenerator(cur,'SEQ_EXT_INPUT_HEADER')
+    packetid=getgenerator(cur,'DX_PACK')
+    agent_code=u'СБРФ'
+    agent_dept_code=u'СБРФСТАВР'
+    agent_agreement_code =u'СБРФИНТ'
+    dt=datetime.now()
   
-  dataarea=xmlroot.find('DataArea')
-  header=dataarea.find('Header')
-  report=header.find('Report')
-  #id=1
-  #extkey=header.find('DocGUID').text
-  hsh=hashlib.md5()
-  hsh.update( str(id))
-  extkey =hsh.hexdigest()
-  print extkey
+    dataarea=xmlroot.find('DataArea')
+    header=dataarea.find('Header')
+    report=header.find('Report')
+    #id=1
+    #extkey=header.find('DocGUID').text
+    hsh=hashlib.md5()
+    hsh.update( str(id))
+    extkey =hsh.hexdigest()
+    print extkey
 
-  pr1=(id, packetid, 0, agent_code, agent_dept_code, agent_agreement_code, extkey, 'EXT_PPA', dt, '')
-  #ext_ppa
-  #print extkey,(len(extkey))
-  payyer_inn=report.find('INN_PLAT_PP').text
-  print payyer_inn
-  paydoc_dates= report.find('DATE_PP').text
-  paydoc_date=datetime.strptime(paydoc_dates, "%Y-%m-%d")
-  paydoc_amount= float( report.find('SUM_PP').text)/100
-  paydoc_number= report.find('NOM_PP').text
-  
-  payyer_name=u'ОАО "СБЕРБАНК РОССИИ"'
-  paydoc_ground= report.find('NOM_PP').text
-  payyer_bank_name=payyer_name
-  payyer_kpp=report.find('KPP_PLAT_PP').text
-  regpp=report.findall('RegPP')
-  payyer_accout=regpp[0].find('NOM_LS_PLAT').text
-  #1010201000000
-  pr2=(id, payyer_inn, paydoc_date, paydoc_amount, paydoc_number, payyer_accout, payyer_accout, payyer_name, paydoc_ground, payyer_bank_name, None, payyer_kpp, '040173604', contrtype)
-  #print paydoc_date,payyer_accout
-  cur.execute(sq1,pr1)
-  cur.execute (sq2,pr2)
-  con.commit()
-  for r in regpp:
-   id=getgenerator(cur,'EXT_PPA_LINES')
-   line_amount=float( r.find('SUM_REESTR_PP').text)/100
-   pr=(r.find('PURPOSE').text).split(';')
-   ip_number=pr[1].lstrip(u'НОМЕР ИП:')
-   debtor_name=( r.find('FIO_PLAT').text)
-   hsh=hashlib.md5()
-   hsh.update(str(id))
-   line_externalkey =hsh.hexdigest()
-   #line_externalkey=r.find('NOM_LINE').text
-   if r.find('INN_PLAT').text=='0':
-    debtor_inn='0'
-   else:
-    debtor_inn=r.find('INN_PLAT').text
-   pr3=(id, line_amount, ip_number, debtor_name,extkey, debtor_inn, None, None, None, None, extkey)   
-   print extkey
-   cur.execute(sq3,pr3)
-  con.commit()
+    pr1=(id, packetid, 0, agent_code, agent_dept_code, agent_agreement_code, extkey, 'EXT_PPA', dt, '')
+    #ext_ppa
+    #print extkey,(len(extkey))
+    payyer_inn=report.find('INN_PLAT_PP').text
+    print payyer_inn ,len (payyer_inn)
+    if len (payyer_inn)==10:
+     payyer_inn='0123456789'
+    paydoc_dates= report.find('DATE_PP').text
+    paydoc_date=datetime.strptime(paydoc_dates, "%Y-%m-%d")
+    paydoc_amount= float( report.find('SUM_PP').text)/100
+    paydoc_number= report.find('NOM_PP').text
+    payyer_bik=report.find('ID_KO').text
+    regpp=report.findall('RegPP')
+    cur.execute ('select bik_namep,bik_ksnp from nsi_bik   where nsi_bik.bik_newnum='+quoted(payyer_bik))
+    print 'select bik_namep,bik_ksnp from nsi_bik   where nsi_bik.bik_newnum='+quoted(payyer_bik)
+    r2=cur.fetchone()
+    payyer_accout=regpp[0].find('NOM_LS_PLAT').text
+    if len(r2)<>0:
+     payyer_name= r2[0]
+     payyer_cor=r2[1]
+    else:
+     payyer_name=u'ОАО "СБЕРБАНК РОССИИ"'
+     payyer_cor=payyer_accout
+     print "ERR",payyer_cor
+    paydoc_ground= report.find('NOM_PP').text
+    payyer_bank_name=payyer_name
+    payyer_kpp=report.find('KPP_PLAT_PP').text
+    #1010201000000
+    pr2=(id, payyer_inn, paydoc_date, paydoc_amount, paydoc_number, payyer_accout, payyer_cor, payyer_name, paydoc_ground, payyer_bank_name, '1027700132195', payyer_kpp, payyer_bik, contrtype)
+    #print paydoc_date,payyer_accout
+    cur.execute(sq1,pr1)
+    cur.execute (sq2,pr2)
+    con.commit()
+    for r in regpp:
+     id=getgenerator(cur,'EXT_PPA_LINES')
+     line_amount=float( r.find('SUM_REESTR_PP').text)/100
+     pr=(r.find('PURPOSE').text).split(';')
+     ip_number=(pr[1].lstrip(u'НОМЕР ИП:')).replace (u'\\',u'/') 
+     print ip_number
+     debtor_name=( r.find('FIO_PLAT').text)
+     hsh=hashlib.md5()
+     hsh.update(str(id))
+     line_externalkey =hsh.hexdigest()
+     cur.execute ('select document.doc_number,doc_ip_doc.id_dbtr_born,doc_ip_doc.id_dbtr_inn, doc_ip_doc.id_dbtr_adr from doc_ip_doc join  document on document.id =doc_ip_doc.id   where document.doc_number starting with '+quoted(ip_number))
+     r2=cur.fetchone()
+     dateborn=None
+     address=None
+     debtor_inn=None 
+     if r2:
+      ip_number=r2[0]
+      dateborn=r2[1]
+      address=r2[3]
+      if r2[2]<>None:
+       debtor_inn='0123456789'
+       #r2[2]
+     if (debtor_inn==None):
+      if  r.find('INN_PLAT').text=='0':
+       debtor_inn='0123456789'
+        #011234567890
+      else:
+       debtor_inn=r.find('INN_PLAT').text
+          #ID, LINE_AMOUNT, IP_NUMBER, DEBTOR_NAME, LINE_EXTERNAL_KEY, DEBTOR_INN, DEBTOR_BIRTHDATE,  DEBTOR_OGRN, DEBTOR_ADDRESS, DEBTOR_KPP, EXTERNAL_KEY
+     pr3=(id, line_amount, ip_number, debtor_name, line_externalkey, debtor_inn, dateborn, None, address, None, extkey)   
+     print extkey,'ERR',pr3
+     cur.execute(sq3,pr3)
+    con.commit()
+    xmlfile.close()
+    rename(input_path+ff, input_arc_path+ff)     
  con.close()
 if __name__ == "__main__":
     main()
