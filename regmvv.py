@@ -23,13 +23,12 @@ def getdivname (cur):
 def preprocessing(cur,con,systcp,dbcp,sql):
  #sql2=('update ext_request set ext_request.processed=2  where  '+str(sql)).decode(systcp).encode(dbcp)
  sql2='update ext_request set ext_request.processed=2  where  '+sql
- print "!",sql2
  try:
   cur.execute(sql2)
  except Exception, e:
   print sql2, str(e)
  con.commit()
- return con
+ return
 
 def getnotprocessed(cur,systcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code):
  #print str(type(mvv_agent_code))
@@ -560,7 +559,6 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
    for rr in right:
     id=getgenerator(cur,"SEQ_DOCUMENT")
     ipid=getipid (cur,dbsystcp,dbcp,req_id)
-    print "TEST IPID=",ipid
     #print "IPID",ipid
     #print 'RR TAG',rr.tag,etree.tostring(rr)
     hsh=hashlib.md5()
@@ -605,13 +603,7 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     rightv={}
     for dd in ans[aa][2].keys():
      #print "DD",dd,getxmlvalue(dd,ans[aa],rr),ans[aa][2].values()
-     if dd =='enddate':
-      if len(getxmlvalue(dd,ans[aa],rr))==0:
-       pass
-      else:
-       rightv[dd]=getxmlvalue(dd,ans[aa],rr)
-     else:
-      rightv[dd]=getxmlvalue(dd,ans[aa],rr)
+     rightv[dd]=getxmlvalue(dd,ans[aa],rr)
     #print rightv
     #Вставка response
     #print str(type (rightv['purpose']))
@@ -620,7 +612,7 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
     #for rrr in rightv.keys():
     # datastr=datastr+rightv[rrr].decode('UTF-8')+cln
     #print "END", len (rightv['enddate'])
-    #print "<<ENDDATE>>", rightv['enddate'],str(type(rightv['enddate'])),len(rightv['enddate'])
+    #print "END", rightv['enddate']
     if not ('enddate' in rightv.keys()):
      #print extkey ans[aa][1]
      sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'01',id,packid,extkey,datastr)
@@ -637,9 +629,9 @@ def setpositive(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept
      sqltemp.append(sq4)
     else:
      informwarn (u'Данные с ошибкой, сведения о ранее принадлежавшей недвижимости '+str(req_id))
-     sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'02',id,packid,extkey,"Нет сведений")
-     for sqt in sqq:
-      sqltemp.append(sqt)
+     #sqq=setresponse(cur,con,dbsystcp,dbcp,mvv_agent_code,mvv_agreement_code,mvv_dept_code,req_id,dt,'02',id,packid,extkey,"Данные с ошибкой, сведения о ранее принадлежавшей недвижимости")
+     #for sqt in sqq:
+     # sqltemp.append(sqt)
      #print "SQ4",sq4
     #cur.execute(sq3)
 #.decode('UTF-8').encode('CP1251'))
@@ -755,7 +747,10 @@ def setattribs(cur,dbcp,dbfcp,xml,xmlscheme,rr,delta,num,param):
  cur.execute(sq)
  docs=cur.fetchall()
  #print "DOCS",docs
- documentclassid=convtotype(['tp','C'],docs[0][0],'UTF-8','UTF-8')
+ if len(docs) >0 :
+  documentclassid=convtotype(['tp','C'],docs[0][0],'UTF-8','UTF-8')
+ else: 
+  documentclassid=u'1' 
  for kk in xmlscheme.attrib.keys():
   if xmlscheme.attrib[kk] in const:
    #print kk,str(type(rr[const[zapros.attrib[kk]]]))
