@@ -217,7 +217,7 @@ def main():
     f2.close()
   inform(u'Выгружено: '+str(rrr)+ u' запросов. В '+str(p)+ u' пакетах') 
   #Убрать
-  #setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
+  setprocessed(cur,con,'UTF-8',codepage,packets[pp][0])
 
  elif filetype=='xmlatrib' or filetype=='pfr':
   fileorgamd=filepar.find('orgamd').text

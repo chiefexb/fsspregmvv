@@ -69,7 +69,7 @@ def main():
   sys.exit(2)
  sql1="INSERT INTO DOCUMENT (DOCSTATUSID,DOCUMENTCLASSID, DOC_DATE, CREATE_DATE, ID, METAOBJECTNAME) VALUES (?,?,?,?,?,?) "
  sql2="INSERT INTO I_IP_OTHER (ID, INDOC_TYPE, INDOC_TYPE_NAME, I_IP_OTHER_CONTENT, NUM_POSTFIX) VALUES (?,?, ?, ?, ?)"
- sql3="INSERT INTO  I (ID,OFF_SPECIAL_CONTROL,CONTR_IS_INITIATOR,contr_name, agent_code,agent_dept_code,agreement_code) VALUES (?,?,?,?,?,?,?)"
+ sql3="INSERT INTO  I (ID,OFF_SPECIAL_CONTROL,CONTR_IS_INITIATOR,contr_name, agent_code,agent_dept_code,agreement_code,INITIATOR_EMAIL_COPY) VALUES (?,?,?,?,?,?,?,?)"
  sql4="INSERT INTO I_IP (ID,IP_ID) VALUES (?,?)"
  cur = con.cursor() 
  fld=['packet_id','id', 'ip_id','packet_id','doc_number','id_dbtr_fullname','nametypeaz','namezags','numaz','dateaz','numsv','mestolsub1','datesm','mestosm','prichsm']
@@ -98,17 +98,24 @@ def main():
      text=text+convtotype(['','C'],t,'UTF-8','UTF-8' )
     #print text
     sqlparam2= (id,None,None,text,None)             #  (ID, INDOC_TYPE, INDOC_TYPE_NAME, I_IP_OTHER_CONTENT, NUM_POSTFIX) VALUES (91121011252366, NULL, NULL, NULL, NULL);
-    sqlparam3= (id,0,0,aa['namezags'], agent_code,dept_code,agreement_code)              #(ID,OFF_SPECIAL_CONTROL,CONTR_IS_INITIATOR)
+    print 'NAMEZAGS', aa['namezags']
+    sqlparam3= (id,0,0,aa['namezags'], agent_code,dept_code,agreement_code,False)              #(ID,OFF_SPECIAL_CONTROL,CONTR_IS_INITIATOR)
     sqlparam4= (id,int(aa['ip_id'])) #(ID,IP_ID) 
-    print sqlparam1,len(sqlparam1)
-    print sqlparam2,len(sqlparam2)
-    #print '1'
+    #print sqlparam1,len(sqlparam1)
+    #print sqlparam2,len(sqlparam2)
+    print sqlparam3,len(sqlparam3)
+    #print '1',sqlparam2
     cur.execute(sql1,sqlparam1)
-    #print 2
+    #print 2,sqlparam2
+
     cur.execute(sql2,sqlparam2)
-    #print 3
+    #print 3,sqlparam2
+    #print sql3
+    #st=u''
+    #for sp in sqlparam3:
+    #    st=st+unicode(sp)+u','
+    #print '~!'+sql3+u'('+st
     cur.execute(sql3,sqlparam3)
-    #print 4
     cur.execute(sql4,sqlparam4)
     con.commit()	
   xmlfile.close()
